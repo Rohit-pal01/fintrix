@@ -258,7 +258,11 @@
       border: 1px solid #e2e8f0 !important;
       color: #0284c7 !important;
     }
-  </style>
+    html.light .glass-subcard p {
+      background-color: #f1f5f9 !important;
+      color: #1e293b !important;
+      border-color: #cbd5e1 !important;
+    }
   </style>
 </head>
 <body class="min-h-screen flex flex-col">
@@ -994,12 +998,18 @@
                         <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 font-mono font-bold">${c.rows} ledger row(s)</span>
                       </div>
                       <p class="text-[11px] text-[var(--text-sub)] mt-1 font-medium">Computed mathematically across relational tables: <span class="font-mono font-bold text-cyan-600 dark:text-cyan-300">${c.tables.join(', ')}</span> with zero arithmetic hallucination.</p>
-                      <details class="mt-2 text-xs">
-                        <summary class="cursor-pointer font-bold text-cyan-600 dark:text-cyan-400 hover:underline flex items-center justify-between">
-                          <span class="text-[10px] font-mono"><i class="fa-solid fa-code text-[9px] mr-1"></i> Technical SQL Query (Auditor Proof)</span>
-                          <span class="text-[9px] opacity-70">Expand Query</span>
+                      <details class="mt-2 text-xs group">
+                        <summary class="cursor-pointer font-bold text-cyan-700 dark:text-cyan-400 flex items-center justify-between p-2 rounded-lg bg-cyan-500/10 hover:bg-cyan-500/15 dark:bg-cyan-950/30 dark:hover:bg-cyan-950/50 border border-cyan-500/20 transition list-none">
+                          <span class="text-[10px] font-mono flex items-center gap-1.5">
+                            <i class="fa-solid fa-code text-cyan-600 dark:text-cyan-400"></i>
+                            <span>Technical SQL Query (Auditor Proof)</span>
+                          </span>
+                          <span class="text-[9px] font-mono px-2 py-0.5 rounded bg-cyan-500/15 text-cyan-800 dark:text-cyan-300 font-bold flex items-center gap-1">
+                            <span class="group-open:hidden">View Query <i class="fa-solid fa-chevron-down text-[8px] ml-0.5"></i></span>
+                            <span class="hidden group-open:inline">Hide Query <i class="fa-solid fa-chevron-up text-[8px] ml-0.5"></i></span>
+                          </span>
                         </summary>
-                        <pre class="mt-2 p-2.5 bg-black/5 dark:bg-black/50 rounded-lg text-[var(--text-sub)] overflow-x-auto text-[11px] font-mono border border-cyan-500/20">${c.query}</pre>
+                        <pre class="mt-2 p-2.5 bg-slate-100 dark:bg-black/50 rounded-lg text-slate-800 dark:text-cyan-200 overflow-x-auto text-[11px] font-mono border border-slate-200 dark:border-cyan-500/20">${c.query}</pre>
                       </details>
                     </div>
                   `;
@@ -1010,7 +1020,7 @@
                         <span class="flex items-center gap-1.5"><i class="fa-solid fa-file-lines text-cyan-500 dark:text-cyan-400"></i> ${c.doc} &bull; Page ${c.page}</span>
                         <span class="text-[10px] px-2 py-0.5 rounded bg-cyan-500/15 text-cyan-600 dark:text-cyan-400 font-mono font-bold">${c.section}</span>
                       </div>
-                      <p class="mt-1.5 p-2 bg-black/5 dark:bg-black/40 rounded-lg italic text-[11px] leading-relaxed font-medium text-[var(--text-sub)] border border-cyan-500/15">"${c.snippet}"</p>
+                      <p class="mt-1.5 p-2.5 bg-slate-100 dark:bg-slate-900/60 rounded-lg italic text-[11px] leading-relaxed font-medium text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-cyan-500/20">"${c.snippet}"</p>
                     </div>
                   `;
                 }

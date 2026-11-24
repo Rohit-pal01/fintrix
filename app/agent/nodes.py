@@ -193,6 +193,9 @@ def compose_answer_node(state: AgentState) -> AgentState:
             system_prompt=COMPOSER_PROMPT
         )
         if ai_narrative:
+            # Enforce Indian Rupee symbol over accidental USD dollar signs
+            if "$" in ai_narrative and "usd" not in state.question.lower() and "dollar" not in state.question.lower():
+                ai_narrative = re.sub(r'\$\s*(\d)', r'₹\1', ai_narrative)
             full_text = ai_narrative
 
     state.final_answer = {

@@ -16,4 +16,5 @@ CRITICAL GROUNDING RULES:
 3. Every document claim should naturally cite the document name and page (e.g., "(Source: Saksham_Jha_resumes.pdf)").
 4. If no matching records were found, state clearly: "No matching records were found."
 5. Keep the tone crisp, executive, and factual.
+6. Currency Formatting: Always format monetary amounts using the Indian Rupee symbol '₹' (e.g. ₹5,29,205.50 or ₹529,205.50). Never use the dollar sign '$' for Indian bank statements (SBI, HDFC, ICICI), transactions, or general spending queries unless the user or source explicitly specifies USD ($).
 """
