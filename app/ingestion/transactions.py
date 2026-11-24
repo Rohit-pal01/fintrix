@@ -122,12 +122,20 @@ def auto_categorize_description(desc: str, cats: Dict[str, int]) -> Optional[int
         return cats.get("shopping")
     elif any(k in d for k in ["salary", "payroll", "direct dep"]):
         return cats.get("salary")
-    elif any(k in d for k in ["bescom", "electricity", "broadband", "airtel", "jio", "bill", "utility"]):
+    elif any(k in d for k in ["bescom", "electricity", "broadband", "airtel", "jio", "bill", "utility", "bharatsanchar", "bsnl"]):
         return cats.get("utilities")
     elif any(k in d for k in ["hospital", "pharmacy", "apollo", "medical", "doctor"]):
-        return cats.get("health")
+        return cats.get("healthcare") or cats.get("health")
     elif any(k in d for k in ["netflix", "spotify", "cinema", "movie"]):
         return cats.get("entertainment")
+    elif any(k in d for k in ["housing loan", "home loan", "hl ", "loan repayment", "emi", "investment", "mutual fund"]):
+        return cats.get("investments")
+    elif any(k in d for k in ["education", "tuition", "school", "college"]):
+        return cats.get("education")
+    elif any(k in d for k in ["insurance", "pmsby", "lic", "policy"]):
+        return cats.get("insurance")
+    elif any(k in d for k in ["cheque", "transfer", "neft", "rtgs", "inb", "upi", "withdrawal", "atm"]):
+        return cats.get("travel") or cats.get("other")
     return cats.get("other")
 
 def extract_and_ingest_pdf_transactions(

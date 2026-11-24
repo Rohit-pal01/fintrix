@@ -231,26 +231,28 @@ def get_financial_summary(user_id: int = 1, db: Session = Depends(get_db)):
     user_txns_count = db.query(Transaction).filter_by(user_id=user_id).count()
 
     if user_txns_count > 0:
-        # 1. User has transactions! Calculate actual category spending across all their records:
+        # 1. User has transactions! Calculate actual debits across all user transactions
+        # Outer join on Category ensures debits without an explicit category are not dropped
         spending = db.query(
-            Category.name, 
+            func.coalesce(Category.name, "Transfers & Other").label("cat_name"), 
             func.coalesce(func.sum(Transaction.amount), 0).label("total")
-        ).join(
-            Transaction, 
-            (Transaction.category_id == Category.category_id) & 
-            (Transaction.user_id == user_id) & 
-            (Transaction.direction == 'debit')
-        ).group_by(Category.name).all()
+        ).select_from(Transaction).outerjoin(
+            Category, 
+            Transaction.category_id == Category.category_id
+        ).filter(
+            Transaction.user_id == user_id,
+            Transaction.direction == 'debit'
+        ).group_by(func.coalesce(Category.name, "Transfers & Other")).all()
 
         category_summary = {s[0]: float(s[1]) for s in spending if float(s[1]) > 0}
 
-        # If categories were uncategorized, group by top debits:
+        # If categories were uncategorized or only grouped as general, break down by top transactions
         if not category_summary:
             top_txns = db.query(Transaction.description, Transaction.amount).filter(
                 Transaction.user_id == user_id,
                 Transaction.direction == 'debit'
             ).order_by(Transaction.amount.desc()).limit(6).all()
-            category_summary = {t[0][:15]: float(t[1]) for t in top_txns}
+            category_summary = {t[0][:20]: float(t[1]) for t in top_txns}
 
         # Dynamic budgets tailored to user's spending
         budget_summary = []
