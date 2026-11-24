@@ -18,42 +18,41 @@
 
   <style>
     /*
-      Radiant Royal Lavender & Light Sky Cyan Palette:
-      - Dark Cosmos Base: #070a12
-      - Royal Lavender: #c4b5fd / #a78bfa / #8b5cf6 / #7c3aed
-      - Light Sky Cyan: #38bdf8 / #7dd3fc
-      - Pure Light Base: #fbfbfe / #ffffff
+      Electric Cyan & Deep Cosmos Palette:
+      - Dark Cosmos Base: #070a13
+      - Electric Cyan: #06b6d4 / #0891b2 / #00f2fe / #38bdf8
+      - Pure Light Base: #f8fafc / #ffffff
     */
     :root {
-      --bg: #070a12;
-      --card-bg: rgba(13, 18, 30, 0.85);
-      --card-border: rgba(167, 139, 250, 0.25);
-      --subcard-bg: rgba(15, 23, 42, 0.72);
+      --bg: #070a13;
+      --card-bg: rgba(11, 17, 32, 0.85);
+      --card-border: rgba(6, 182, 212, 0.22);
+      --subcard-bg: rgba(15, 23, 42, 0.75);
       --text-main: #FFFFFF;
       --text-sub: #cbd5e1;
       --text-muted: #94a3b8;
-      --primary: #8b5cf6;
-      --primary-hover: #7c3aed;
-      --lavender: #c4b5fd;
-      --cyan: #38bdf8;
-      --glass-nav: rgba(7, 10, 18, 0.90);
+      --primary: #06b6d4;
+      --primary-hover: #0891b2;
+      --cyan: #06b6d4;
+      --cyan-light: #38bdf8;
+      --glass-nav: rgba(7, 10, 19, 0.90);
       --video-opacity: 0.65;
     }
 
     html.light {
-      --bg: #fbfbfe;
+      --bg: #f8fafc;
       --card-bg: #ffffff;
-      --card-border: #ede9fe;
-      --subcard-bg: #f5f3ff;
-      --text-main: #1e1b4b;
-      --text-sub: #475569;
+      --card-border: rgba(226, 232, 240, 0.95);
+      --subcard-bg: #f1f5f9;
+      --text-main: #0f172a;
+      --text-sub: #334155;
       --text-muted: #64748b;
-      --primary: #8b5cf6;
-      --primary-hover: #7c3aed;
-      --lavender: #8b5cf6;
-      --cyan: #38bdf8;
+      --primary: #0284c7;
+      --primary-hover: #0369a1;
+      --cyan: #0284c7;
+      --cyan-light: #38bdf8;
       --glass-nav: rgba(255, 255, 255, 0.95);
-      --video-opacity: 0.85;
+      --video-opacity: 0.60;
     }
 
     * { box-sizing: border-box; }
@@ -83,8 +82,8 @@
     }
     html.light .glass-card {
       background: #ffffff !important;
-      border: 1px solid #ede9fe !important;
-      box-shadow: 0 10px 30px -5px rgba(139, 92, 246, 0.06), 0 0 0 1px rgba(237, 233, 254, 0.8) !important;
+      border: 1px solid rgba(226, 232, 240, 0.95) !important;
+      box-shadow: 0 10px 30px -5px rgba(15, 23, 42, 0.05), 0 0 0 1px rgba(226, 232, 240, 0.8) !important;
     }
     .glass-subcard {
       background: var(--subcard-bg);
@@ -92,22 +91,22 @@
       box-shadow: 0 2px 10px -1px rgba(0, 0, 0, 0.03);
     }
     html.light .glass-subcard {
-      background: #f5f3ff !important;
-      border: 1px solid #ede9fe !important;
-      box-shadow: 0 2px 8px -2px rgba(139, 92, 246, 0.04) !important;
+      background: #f8fafc !important;
+      border: 1px solid rgba(226, 232, 240, 0.95) !important;
+      box-shadow: 0 2px 8px -2px rgba(15, 23, 42, 0.03) !important;
     }
     .glass-pill {
-      background: rgba(139, 92, 246, 0.12);
+      background: rgba(6, 182, 212, 0.12);
       backdrop-filter: blur(12px);
       border: 1px solid var(--card-border);
     }
     html.light .glass-pill {
       background: #ffffff !important;
-      border: 1px solid #ddd6fe !important;
-      box-shadow: 0 2px 6px rgba(139, 92, 246, 0.05) !important;
+      border: 1px solid rgba(203, 213, 225, 0.9) !important;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03) !important;
     }
 
-    /* Fixed Video Background (Light Purple / Lavender Earth in Both Modes) */
+    /* Fixed Video Background (Cyan/Sky Coordinates, ZERO Red/Pink) */
     .bg-video-container {
       position: fixed;
       inset: 0;
@@ -132,23 +131,23 @@
       filter: contrast(1.15) saturate(1.25);
       transition: opacity 0.3s ease;
     }
-    /* Light Mode: Invert black space to pure white + rotate to light lavender/purple earth = ZERO GREY FOG! */
+    /* Light Mode: 180deg invert gives pure oceanic cyan, eliminating red/pink glow */
     html.light .bg-video {
-      filter: invert(1) hue-rotate(245deg) contrast(1.3) brightness(1.02);
+      filter: invert(1) hue-rotate(180deg) contrast(1.2) brightness(1.05);
       mix-blend-mode: multiply;
-      opacity: 0.85;
+      opacity: 0.60;
     }
     .bg-gradient-overlay {
       position: fixed;
       inset: 0;
-      background: radial-gradient(circle at 50% 18%, rgba(139, 92, 246, 0.22), transparent 65%),
-                  linear-gradient(180deg, rgba(7, 10, 18, 0.20) 0%, rgba(7, 10, 18, 0.95) 75%, #070a12 100%);
+      background: radial-gradient(circle at 50% 18%, rgba(6, 182, 212, 0.20), transparent 65%),
+                  linear-gradient(180deg, rgba(7, 10, 19, 0.20) 0%, rgba(7, 10, 19, 0.95) 75%, #070a13 100%);
       z-index: 1;
       pointer-events: none;
     }
     html.light .bg-gradient-overlay {
-      background: radial-gradient(circle at 50% 18%, rgba(196, 181, 253, 0.25), transparent 65%),
-                  linear-gradient(180deg, rgba(251, 251, 254, 0.15) 0%, rgba(251, 251, 254, 0.85) 60%, #fbfbfe 100%);
+      background: radial-gradient(circle at 50% 18%, rgba(6, 182, 212, 0.12), transparent 65%),
+                  linear-gradient(180deg, rgba(248, 250, 252, 0.1) 0%, rgba(248, 250, 252, 0.85) 60%, #f8fafc 100%);
     }
 
     .app-content {
@@ -163,90 +162,90 @@
     }
     .tab-btn:hover {
       color: var(--text-main);
-      background: rgba(139, 92, 246, 0.15);
+      background: rgba(6, 182, 212, 0.15);
     }
     .tab-btn.active {
-      background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+      background: linear-gradient(135deg, #0284c7 0%, #06b6d4 100%);
       color: #ffffff !important;
       border: 1px solid rgba(255, 255, 255, 0.3);
-      box-shadow: 0 4px 15px rgba(139, 92, 246, 0.35);
+      box-shadow: 0 4px 15px rgba(6, 182, 212, 0.35);
     }
     html.dark .tab-btn.active {
-      background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
-      box-shadow: 0 0 20px rgba(139, 92, 246, 0.4);
+      background: linear-gradient(135deg, #0891b2 0%, #06b6d4 100%);
+      box-shadow: 0 0 20px rgba(6, 182, 212, 0.45);
     }
 
-    /* Vibrant Lavender & Light Cyan Text Gradient (NO Dark Blue) */
+    /* Vibrant Cyan & Sky Text Gradient */
     .hero-title-gradient {
-      background: linear-gradient(135deg, #c4b5fd 0%, #a78bfa 50%, #7dd3fc 100%);
+      background: linear-gradient(135deg, #38bdf8 0%, #06b6d4 50%, #60a5fa 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
     html.light .hero-title-gradient {
-      background: linear-gradient(135deg, #6d28d9 0%, #8b5cf6 50%, #38bdf8 100%);
+      background: linear-gradient(135deg, #0284c7 0%, #0891b2 50%, #0369a1 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
 
-    /* Console Box with Lavender Glow */
+    /* Console Box with Cyan Glow */
     .console-box {
-      box-shadow: 0 20px 60px -15px rgba(0, 0, 0, 0.7), 0 0 45px -10px rgba(139, 92, 246, 0.25);
+      box-shadow: 0 20px 60px -15px rgba(0, 0, 0, 0.7), 0 0 45px -10px rgba(6, 182, 212, 0.25);
     }
     html.light .console-box {
-      box-shadow: 0 15px 45px -10px rgba(139, 92, 246, 0.08), 0 0 0 1px rgba(237, 233, 254, 0.9);
+      box-shadow: 0 15px 45px -10px rgba(15, 23, 42, 0.08), 0 0 0 1px rgba(226, 232, 240, 0.8);
     }
 
     /* Hero Buttons */
     .btn-hero-launch {
-      background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 50%, #6366f1 100%);
+      background: linear-gradient(135deg, #06b6d4 0%, #0284c7 100%);
       color: #ffffff !important;
-      box-shadow: 0 4px 20px rgba(139, 92, 246, 0.4);
+      box-shadow: 0 4px 20px rgba(6, 182, 212, 0.35);
     }
     .btn-hero-launch:hover {
-      background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 50%, #4f46e5 100%);
-      box-shadow: 0 6px 25px rgba(139, 92, 246, 0.5);
+      background: linear-gradient(135deg, #0891b2 0%, #0369a1 100%);
+      box-shadow: 0 6px 25px rgba(6, 182, 212, 0.45);
     }
     .btn-hero-vault {
-      background: rgba(139, 92, 246, 0.18);
+      background: rgba(6, 182, 212, 0.15);
       color: #ffffff !important;
-      border: 1px solid rgba(196, 181, 253, 0.4);
+      border: 1px solid rgba(56, 189, 248, 0.4);
     }
     .btn-hero-vault i {
-      color: #c4b5fd;
+      color: #38bdf8;
     }
     html.light .btn-hero-vault {
       background: #ffffff !important;
-      color: #6d28d9 !important;
-      border: 2px solid #c4b5fd !important;
-      box-shadow: 0 4px 15px rgba(139, 92, 246, 0.12) !important;
+      color: #0369a1 !important;
+      border: 2px solid #38bdf8 !important;
+      box-shadow: 0 4px 15px rgba(6, 182, 212, 0.12) !important;
     }
     html.light .btn-hero-vault i {
-      color: #7c3aed !important;
+      color: #0284c7 !important;
     }
     html.light .btn-hero-vault:hover {
-      background: #f5f3ff !important;
-      border-color: #a78bfa !important;
-      color: #5b21b6 !important;
+      background: #f0fdfa !important;
+      border-color: #06b6d4 !important;
+      color: #0c4a6e !important;
     }
 
     /* Enterprise Clean Footer (Guaranteed No Dark Grey Block in Light Mode) */
     .app-footer {
-      background-color: #0b0f19;
-      border-top: 1px solid rgba(139, 92, 246, 0.2);
+      background-color: #070a13;
+      border-top: 1px solid rgba(6, 182, 212, 0.2);
       color: #cbd5e1;
       transition: background-color 0.3s ease, border-color 0.3s ease;
     }
     html.light .app-footer {
       background-color: #ffffff !important;
-      border-top: 1px solid #ede9fe !important;
+      border-top: 1px solid #e2e8f0 !important;
       color: #475569 !important;
-      box-shadow: 0 -10px 30px rgba(139, 92, 246, 0.04) !important;
+      box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.03) !important;
     }
     html.light .app-footer * {
       color: inherit;
     }
     html.light .app-footer .text-\[var\(--text-main\)\] {
-      color: #1e1b4b !important;
+      color: #0f172a !important;
     }
     html.light .app-footer .text-\[var\(--text-sub\)\] {
       color: #475569 !important;
@@ -255,9 +254,9 @@
       color: #64748b !important;
     }
     html.light .app-footer .glass-subcard {
-      background-color: #f5f3ff !important;
-      border: 1px solid #ddd6fe !important;
-      color: #6d28d9 !important;
+      background-color: #f8fafc !important;
+      border: 1px solid #e2e8f0 !important;
+      color: #0284c7 !important;
     }
   </style>
   </style>
@@ -276,13 +275,13 @@
   <header class="app-content sticky top-0 z-50 glass-nav px-6 py-3.5 flex items-center justify-between">
     <!-- Brand -->
     <div class="flex items-center space-x-3 cursor-pointer" onclick="switchView('hero')">
-      <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-purple-500 to-indigo-600 flex items-center justify-center font-bold text-white text-base shadow-lg shadow-purple-500/25">
+      <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center font-bold text-white text-base shadow-lg shadow-cyan-500/25">
         <i class="fa-solid fa-shield-halved text-white text-sm"></i>
       </div>
       <div>
         <div class="text-sm font-extrabold tracking-tight flex items-center gap-2">
           <span>Fintrix</span>
-          <span class="text-[9px] uppercase px-1.5 py-0.5 rounded-full bg-purple-500/15 text-purple-700 dark:text-purple-300 border border-purple-500/30 font-mono font-bold">Verifiable v2.4</span>
+          <span class="text-[9px] uppercase px-1.5 py-0.5 rounded-full bg-cyan-500/15 text-cyan-700 dark:text-cyan-300 border border-cyan-500/30 font-mono font-bold">Verifiable v2.4</span>
         </div>
         <p class="text-[11px] opacity-75 font-medium">Autonomous Financial Intelligence</p>
       </div>
@@ -307,7 +306,7 @@
     <!-- Right Side: Dark / Light Mode Toggle -->
     <div class="flex items-center space-x-2">
       <button onclick="toggleTheme()" id="theme-toggle-btn" class="glass-pill px-3 py-1.5 rounded-full text-xs font-medium flex items-center gap-1.5 hover:scale-105 active:scale-95 transition" title="Toggle Light / Dark Mode">
-        <i id="theme-icon" class="fa-solid fa-moon text-purple-400"></i>
+        <i id="theme-icon" class="fa-solid fa-moon text-cyan-400"></i>
         <span id="theme-text" class="text-[11px] font-mono font-semibold hidden sm:inline">Dark</span>
       </button>
     </div>
@@ -320,47 +319,47 @@
     <section id="view-hero" class="flex flex-col items-center justify-center text-center py-10 md:py-16 space-y-8">
       
       <!-- Pill Badge (Lavender & Light Sky Cyan) -->
-      <div class="inline-flex items-center gap-2 glass-pill px-4 py-1.5 rounded-full text-xs border border-purple-400/30 shadow-sm">
-        <span class="w-2 h-2 rounded-full bg-purple-500 animate-pulse"></span>
-        <span class="font-bold tracking-wide uppercase text-[10px] text-purple-700 dark:text-purple-300">Deterministic SQL + Grounded Hybrid RAG</span>
+      <div class="inline-flex items-center gap-2 glass-pill px-4 py-1.5 rounded-full text-xs border border-cyan-400/30 shadow-sm">
+        <span class="w-2 h-2 rounded-full bg-cyan-500 animate-pulse"></span>
+        <span class="font-bold tracking-wide uppercase text-[10px] text-cyan-700 dark:text-cyan-300">Deterministic SQL + Grounded Hybrid RAG</span>
       </div>
 
       <!-- Main Catchphrase -->
       <div class="space-y-4 max-w-4xl">
         <h1 class="text-5xl sm:text-6xl md:text-7xl font-black tracking-tight leading-[1.08] text-[var(--text-main)]">
-          Verifiable <br class="hidden sm:block">
+          Institutional <br class="hidden sm:block">
           <span class="hero-title-gradient">Financial Intelligence</span>
         </h1>
         <p class="text-base sm:text-lg max-w-2xl mx-auto font-medium opacity-90 leading-relaxed text-[var(--text-sub)]">
-          Zero hallucination finance. Computations run through mathematical PostgreSQL routines, and contractual clauses cite your indexed PDF documents with verifiable runtime proofs.
+          Deterministic relational ledger synthesis and cryptographically cited document retrieval. Computations execute through verified PostgreSQL routines with zero-drift runtime proofs.
         </p>
       </div>
 
       <!-- Primary Action Buttons -->
       <div class="flex flex-wrap items-center justify-center gap-4 pt-1">
         <button onclick="switchView('chat')" class="btn-hero-launch font-bold px-8 py-3.5 rounded-full text-sm transition flex items-center gap-2 shadow-lg hover:scale-105 active:scale-95 duration-200">
-          <span>Launch Financial AI</span>
+          <span>Launch Financial Assistant</span>
           <i class="fa-solid fa-arrow-right text-xs"></i>
         </button>
         <button onclick="switchView('documents')" class="btn-hero-vault font-bold px-7 py-3.5 rounded-full text-sm transition flex items-center gap-2.5 shadow-sm hover:scale-105 active:scale-95 duration-200">
           <i class="fa-solid fa-cloud-arrow-up text-base"></i>
-          <span>Upload Document</span>
+          <span>Upload Statement / Contract</span>
         </button>
       </div>
 
       <!-- Professional Interactive Architecture Showcase -->
       <div class="w-full max-w-5xl pt-8">
-        <div class="glass-card rounded-3xl p-6 md:p-8 console-box text-left border border-purple-500/20">
+        <div class="glass-card rounded-3xl p-6 md:p-8 console-box text-left border border-cyan-500/20">
           
-          <div class="flex flex-wrap items-center justify-between pb-6 border-b border-purple-500/15 gap-4">
+          <div class="flex flex-wrap items-center justify-between pb-6 border-b border-cyan-500/15 gap-4">
             <div>
-              <div class="text-xs uppercase tracking-widest text-purple-600 dark:text-purple-300 font-mono font-bold">Interactive System Runtime</div>
+              <div class="text-xs uppercase tracking-widest text-cyan-600 dark:text-cyan-300 font-mono font-bold">Interactive System Runtime</div>
               <h2 class="text-xl font-bold mt-0.5 text-[var(--text-main)]">Execution & Retrieval Pipeline</h2>
             </div>
             <!-- Live Status Indicators -->
             <div class="flex items-center gap-4 text-xs font-mono font-medium">
               <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-400"></span> Neon DB: Active</span>
-              <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-purple-400"></span> Gemini/Groq: Ready</span>
+              <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-cyan-400"></span> Gemini/Groq: Ready</span>
               <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-sky-400"></span> Hybrid BM25: Synced</span>
             </div>
           </div>
@@ -369,20 +368,20 @@
           <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-6">
             
             <!-- Step 1: Text-to-SQL Engine -->
-            <div class="p-5 rounded-2xl glass-subcard space-y-3 hover:border-purple-500 transition duration-300">
+            <div class="p-5 rounded-2xl glass-subcard space-y-3 hover:border-cyan-500 transition duration-300">
               <div class="flex items-center justify-between">
-                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-purple-500/15 text-purple-700 dark:text-purple-300 uppercase font-bold">Relational Core</span>
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-cyan-500/15 text-cyan-700 dark:text-cyan-300 uppercase font-bold">Relational Core</span>
                 <span class="text-xs font-bold text-emerald-500 dark:text-emerald-400">100% Execution Yield</span>
               </div>
               <h3 class="text-base font-bold flex items-center gap-2 text-[var(--text-main)]">
-                <i class="fa-solid fa-database text-purple-600 dark:text-purple-400"></i>
+                <i class="fa-solid fa-database text-cyan-600 dark:text-cyan-400"></i>
                 <span>Deterministic Text-to-SQL</span>
               </h3>
               <p class="text-xs font-medium leading-relaxed text-[var(--text-sub)]">
                 Translates natural queries into validated PostgreSQL aggregates across 13 relational tables with AST validation.
               </p>
               <div class="pt-2">
-                <button onclick="sendQuickPrompt('How much did I spend on food last month?')" class="text-[11px] font-bold text-purple-600 dark:text-purple-300 hover:underline flex items-center gap-1">
+                <button onclick="sendQuickPrompt('How much did I spend on food last month?')" class="text-[11px] font-bold text-cyan-600 dark:text-cyan-300 hover:underline flex items-center gap-1">
                   <span>Explore SQL Execution</span>
                   <i class="fa-solid fa-chevron-right text-[9px]"></i>
                 </button>
@@ -390,20 +389,20 @@
             </div>
 
             <!-- Step 2: Cross-Encoder RAG -->
-            <div class="p-5 rounded-2xl glass-subcard space-y-3 hover:border-violet-500 transition duration-300">
+            <div class="p-5 rounded-2xl glass-subcard space-y-3 hover:border-cyan-500 transition duration-300">
               <div class="flex items-center justify-between">
-                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-violet-500/15 text-violet-700 dark:text-violet-300 uppercase font-bold">Semantic Engine</span>
-                <span class="text-xs font-bold text-violet-600 dark:text-violet-400">98% Hit Rate@5</span>
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-cyan-500/15 text-cyan-700 dark:text-cyan-300 uppercase font-bold">Semantic Engine</span>
+                <span class="text-xs font-bold text-cyan-600 dark:text-cyan-400">98% Hit Rate@5</span>
               </div>
               <h3 class="text-base font-bold flex items-center gap-2 text-[var(--text-main)]">
-                <i class="fa-solid fa-file-invoice-dollar text-violet-600 dark:text-violet-400"></i>
+                <i class="fa-solid fa-file-invoice-dollar text-cyan-600 dark:text-cyan-400"></i>
                 <span>Hybrid Grounded RAG</span>
               </h3>
               <p class="text-xs font-medium leading-relaxed text-[var(--text-sub)]">
                 Pairs BM25 lexical token retrieval with dense semantic vectors and BGE cross-encoder reranking for contract verification.
               </p>
               <div class="pt-2">
-                <button onclick="sendQuickPrompt('What is the prepayment penalty on my floating rate home loan?')" class="text-[11px] font-bold text-violet-600 dark:text-violet-300 hover:underline flex items-center gap-1">
+                <button onclick="sendQuickPrompt('What is the prepayment penalty on my floating rate home loan?')" class="text-[11px] font-bold text-cyan-600 dark:text-cyan-300 hover:underline flex items-center gap-1">
                   <span>Explore Policy Retrieval</span>
                   <i class="fa-solid fa-chevron-right text-[9px]"></i>
                 </button>
@@ -414,7 +413,7 @@
             <div class="p-5 rounded-2xl glass-subcard space-y-3 hover:border-indigo-500 transition duration-300">
               <div class="flex items-center justify-between">
                 <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-indigo-500/15 text-indigo-700 dark:text-indigo-300 uppercase font-bold">Verification Gate</span>
-                <span class="text-xs font-bold text-purple-600 dark:text-purple-300">0.0% Hallucination</span>
+                <span class="text-xs font-bold text-cyan-600 dark:text-cyan-300">0.0% Hallucination</span>
               </div>
               <h3 class="text-base font-bold flex items-center gap-2 text-[var(--text-main)]">
                 <i class="fa-solid fa-shield-virus text-indigo-600 dark:text-indigo-400"></i>
@@ -470,15 +469,15 @@
       <div id="chat-messages" class="flex-1 glass-card rounded-3xl p-5 overflow-y-auto space-y-4 min-h-[440px] max-h-[580px]">
         <!-- Welcome Message -->
         <div class="flex items-start space-x-3 max-w-2xl">
-          <div class="w-8 h-8 rounded-xl bg-violet-600 text-white flex items-center justify-center flex-shrink-0 text-sm shadow">
+          <div class="w-8 h-8 rounded-xl bg-cyan-600 text-white flex items-center justify-center flex-shrink-0 text-sm shadow">
             <i class="fa-solid fa-shield-halved"></i>
           </div>
           <div class="glass-subcard rounded-2xl rounded-tl-sm p-4 text-sm space-y-2">
-            <p class="font-bold text-[var(--text-main)]">Hello! Welcome to <strong>Fintrix</strong>.</p>
+            <p class="font-bold text-[var(--text-main)] tracking-tight">Fintrix Autonomous Financial Intelligence System Initialized.</p>
             <p class="leading-relaxed text-xs font-medium text-[var(--text-sub)]">
-              Every numerical claim is backed by verified SQL queries, and every policy claim cites your uploaded documents directly. Ask anything about your finances or documents.
+              All ledger computations are compiled and executed directly against verified PostgreSQL schemas. Inquiries referencing contractual terms cite your uploaded PDF and document clauses with cryptographic runtime verification.
             </p>
-            <div class="text-[10px] text-[var(--text-muted)] italic pt-1 border-t border-violet-500/20 font-medium">
+            <div class="text-[10px] text-[var(--text-muted)] italic pt-1 border-t border-cyan-500/20 font-medium">
               Disclaimer: This is informational and not financial advice.
             </div>
           </div>
@@ -491,12 +490,12 @@
           id="chat-input" 
           type="text" 
           placeholder="Ask a question about your finances, loans, or uploaded documents..." 
-          class="w-full glass-card rounded-2xl pl-5 pr-28 py-4 text-sm text-[var(--text-main)] placeholder:text-[var(--text-muted)] font-medium focus:outline-none focus:ring-2 focus:ring-violet-500 transition shadow-inner"
+          class="w-full glass-card rounded-2xl pl-5 pr-28 py-4 text-sm text-[var(--text-main)] placeholder:text-[var(--text-muted)] font-medium focus:outline-none focus:ring-2 focus:ring-cyan-500 transition shadow-inner"
         />
         <button 
           type="submit" 
           id="send-btn"
-          class="absolute right-2.5 bg-violet-600 hover:bg-violet-700 text-white font-bold px-5 py-2 rounded-xl text-xs flex items-center space-x-1.5 shadow transition"
+          class="absolute right-2.5 bg-cyan-600 hover:bg-cyan-700 text-white font-bold px-5 py-2 rounded-xl text-xs flex items-center space-x-1.5 shadow transition"
         >
           <span>Ask</span>
           <i class="fa-solid fa-arrow-right text-[10px]"></i>
@@ -506,20 +505,20 @@
 
     <!-- VIEW 3: FINANCIAL SUMMARY -->
     <section id="view-summary" class="hidden space-y-6">
-      <div class="flex items-center justify-between pb-2 border-b border-violet-500/20">
+      <div class="flex items-center justify-between pb-2 border-b border-cyan-500/20">
         <div>
           <h2 class="text-lg font-bold text-[var(--text-main)]">Monthly Financial Overview</h2>
           <p class="text-xs font-medium text-[var(--text-sub)]">Real-time metrics calculated directly from PostgreSQL transactions.</p>
         </div>
         <button onclick="loadFinancialSummary()" class="text-xs glass-pill px-3 py-1.5 rounded-full transition font-semibold text-[var(--text-main)]">
-          <i class="fa-solid fa-rotate-right mr-1 text-violet-500"></i> Refresh Data
+          <i class="fa-solid fa-rotate-right mr-1 text-cyan-500"></i> Refresh Data
         </button>
       </div>
 
       <!-- Demo Fallback Notice Banner -->
-      <div id="summary-demo-banner" class="hidden p-4 rounded-2xl bg-violet-500/10 border border-violet-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+      <div id="summary-demo-banner" class="hidden p-4 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
         <div class="flex items-center space-x-3">
-          <div class="w-8 h-8 rounded-xl bg-violet-600/20 text-violet-600 dark:text-violet-400 flex items-center justify-center flex-shrink-0">
+          <div class="w-8 h-8 rounded-xl bg-cyan-600/20 text-cyan-600 dark:text-cyan-400 flex items-center justify-center flex-shrink-0">
             <i class="fa-solid fa-wand-magic-sparkles"></i>
           </div>
           <div>
@@ -527,7 +526,7 @@
             <div class="text-[var(--text-sub)] text-[11px]">You are viewing sample metrics. Upload your own bank statement in Document Vault to generate your real-time personal analytics!</div>
           </div>
         </div>
-        <button onclick="switchView('documents')" class="glass-pill px-3 py-1.5 rounded-xl text-violet-600 dark:text-violet-300 font-bold hover:border-violet-500 transition text-[11px] whitespace-nowrap self-start sm:self-auto">
+        <button onclick="switchView('documents')" class="glass-pill px-3 py-1.5 rounded-xl text-cyan-600 dark:text-cyan-300 font-bold hover:border-cyan-500 transition text-[11px] whitespace-nowrap self-start sm:self-auto">
           Upload Statement &rarr;
         </button>
       </div>
@@ -536,7 +535,7 @@
         <!-- Budgets Progress -->
         <div class="md:col-span-2 glass-card rounded-3xl p-6 space-y-4">
           <h3 class="text-sm font-bold flex items-center text-[var(--text-main)]">
-            <i class="fa-solid fa-bullseye text-violet-500 mr-2"></i> Budget vs Actual Spending
+            <i class="fa-solid fa-bullseye text-cyan-500 mr-2"></i> Budget vs Actual Spending
           </h3>
           <div id="budget-bars" class="space-y-4 pt-2"></div>
         </div>
@@ -553,7 +552,7 @@
       <!-- Category Chips -->
       <div class="glass-card rounded-3xl p-6 space-y-4">
         <h3 class="text-sm font-bold flex items-center text-[var(--text-main)]">
-          <i class="fa-solid fa-layer-group text-violet-500 mr-2"></i> Spending by Category
+          <i class="fa-solid fa-layer-group text-cyan-500 mr-2"></i> Spending by Category
         </h3>
         <div id="category-chips" class="grid grid-cols-2 sm:grid-cols-4 gap-3"></div>
       </div>
@@ -561,18 +560,18 @@
 
     <!-- VIEW 4: DOCUMENT VAULT -->
     <section id="view-documents" class="hidden space-y-6">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-2 border-b border-violet-500/20 gap-4">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-2 border-b border-cyan-500/20 gap-4">
         <div>
           <h2 class="text-lg font-bold text-[var(--text-main)]">Document Vault</h2>
           <p class="text-xs font-medium text-[var(--text-sub)]">Manage your personal indexed documents or inspect pre-loaded demo reference contracts.</p>
         </div>
         <div class="flex items-center gap-2.5">
-          <button onclick="resetSession()" class="text-xs glass-pill px-3.5 py-2 rounded-full text-[var(--text-sub)] hover:text-violet-500 transition flex items-center gap-1.5 font-medium border border-violet-500/20" title="Start a fresh private visitor session">
+          <button onclick="resetSession()" class="text-xs glass-pill px-3.5 py-2 rounded-full text-[var(--text-sub)] hover:text-cyan-500 transition flex items-center gap-1.5 font-medium border border-cyan-500/20" title="Start a fresh private visitor session">
             <i class="fa-solid fa-arrows-rotate text-[10px]"></i>
             <span class="hidden sm:inline">New Visitor Session</span>
           </button>
-          <label class="cursor-pointer bg-violet-600 hover:bg-violet-700 text-white font-bold px-4 py-2 rounded-full text-xs flex items-center space-x-2 transition shadow self-start sm:self-auto">
-            <i class="fa-solid fa-cloud-arrow-up text-violet-200"></i>
+          <label class="cursor-pointer bg-cyan-600 hover:bg-cyan-700 text-white font-bold px-4 py-2 rounded-full text-xs flex items-center space-x-2 transition shadow self-start sm:self-auto">
+            <i class="fa-solid fa-cloud-arrow-up text-cyan-200"></i>
             <span>Upload Document (PDF, Word, TXT)</span>
             <input type="file" id="pdf-upload-input" accept=".pdf,.docx,.doc,.md,.txt" class="hidden" onchange="handleFileUpload(event)">
           </label>
@@ -580,11 +579,11 @@
       </div>
 
       <!-- Vault Sub-Navigation: My Uploads vs Demo Samples -->
-      <div class="flex items-center space-x-2 border-b border-violet-500/20 pb-2">
+      <div class="flex items-center space-x-2 border-b border-cyan-500/20 pb-2">
         <button onclick="setVaultTab('user')" id="vault-tab-user" class="glass-pill px-4 py-1.5 rounded-full text-xs font-bold transition flex items-center gap-2 active">
-          <i class="fa-solid fa-user-shield text-[11px] text-violet-500"></i>
+          <i class="fa-solid fa-user-shield text-[11px] text-cyan-500"></i>
           <span>My Uploads</span>
-          <span id="vault-user-count" class="px-1.5 py-0.5 rounded-full bg-violet-500/20 text-violet-600 dark:text-violet-300 text-[10px] font-mono font-bold">0</span>
+          <span id="vault-user-count" class="px-1.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-600 dark:text-cyan-300 text-[10px] font-mono font-bold">0</span>
         </button>
         <button onclick="setVaultTab('demo')" id="vault-tab-demo" class="glass-pill px-4 py-1.5 rounded-full text-xs font-semibold transition flex items-center gap-2 opacity-75 hover:opacity-100">
           <i class="fa-solid fa-flask-vial text-[11px] text-cyan-500"></i>
@@ -594,9 +593,9 @@
       </div>
 
       <!-- Demo Info Notice Banner (Only shown in demo tab) -->
-      <div id="vault-demo-notice" class="hidden p-4 glass-subcard rounded-2xl border border-violet-500/20 flex items-start justify-between gap-4 text-xs">
+      <div id="vault-demo-notice" class="hidden p-4 glass-subcard rounded-2xl border border-cyan-500/20 flex items-start justify-between gap-4 text-xs">
         <div class="flex items-start gap-3">
-          <i class="fa-solid fa-shield-halved text-violet-500 text-base mt-0.5"></i>
+          <i class="fa-solid fa-shield-halved text-cyan-500 text-base mt-0.5"></i>
           <div class="space-y-1">
             <p class="font-bold text-[var(--text-main)]">System Baseline Reference Fixtures (Read-Only Demo)</p>
             <p class="text-[var(--text-sub)] font-medium leading-relaxed max-w-2xl">
@@ -604,15 +603,15 @@
             </p>
           </div>
         </div>
-        <button onclick="switchView('traces')" class="glass-pill px-3 py-1.5 rounded-xl text-xs font-bold text-violet-600 dark:text-violet-300 hover:border-violet-500 transition whitespace-nowrap flex items-center gap-1.5 flex-shrink-0">
+        <button onclick="switchView('traces')" class="glass-pill px-3 py-1.5 rounded-xl text-xs font-bold text-cyan-600 dark:text-cyan-300 hover:border-cyan-500 transition whitespace-nowrap flex items-center gap-1.5 flex-shrink-0">
           <i class="fa-solid fa-terminal text-[10px]"></i>
           <span>Inspect Traces</span>
         </button>
       </div>
 
-      <div class="glass-card rounded-3xl overflow-hidden border border-violet-500/20">
+      <div class="glass-card rounded-3xl overflow-hidden border border-cyan-500/20">
         <table id="vault-table" class="w-full text-left text-xs">
-          <thead class="bg-black/5 dark:bg-black/30 font-bold uppercase text-[10px] tracking-wider border-b border-violet-500/20 text-[var(--text-main)]">
+          <thead class="bg-black/5 dark:bg-black/30 font-bold uppercase text-[10px] tracking-wider border-b border-cyan-500/20 text-[var(--text-main)]">
             <tr>
               <th class="py-3.5 px-5">Filename</th>
               <th class="py-3.5 px-5">Category</th>
@@ -621,20 +620,20 @@
               <th class="py-3.5 px-5 text-right">Actions</th>
             </tr>
           </thead>
-          <tbody id="documents-table-body" class="divide-y divide-violet-500/15"></tbody>
+          <tbody id="documents-table-body" class="divide-y divide-cyan-500/15"></tbody>
         </table>
 
         <!-- Empty State Container for My Uploads -->
         <div id="vault-empty-state" class="hidden p-12 text-center space-y-3">
-          <div class="w-12 h-12 rounded-full bg-violet-500/10 text-violet-500 flex items-center justify-center mx-auto text-xl">
+          <div class="w-12 h-12 rounded-full bg-cyan-500/10 text-cyan-500 flex items-center justify-center mx-auto text-xl">
             <i class="fa-solid fa-folder-open"></i>
           </div>
           <h3 class="text-sm font-bold text-[var(--text-main)]">No personal documents uploaded yet</h3>
           <p class="text-xs text-[var(--text-sub)] max-w-sm mx-auto font-medium leading-relaxed">
             Upload your personal PDF bank statements, loan agreements, or resumes to query them with zero hallucinations.
           </p>
-          <label class="inline-flex cursor-pointer bg-violet-600 hover:bg-violet-700 text-white font-bold px-4 py-2 rounded-full text-xs items-center space-x-2 transition shadow mt-2">
-            <i class="fa-solid fa-cloud-arrow-up text-violet-200"></i>
+          <label class="inline-flex cursor-pointer bg-cyan-600 hover:bg-cyan-700 text-white font-bold px-4 py-2 rounded-full text-xs items-center space-x-2 transition shadow mt-2">
+            <i class="fa-solid fa-cloud-arrow-up text-cyan-200"></i>
             <span>Upload Your First File</span>
             <input type="file" accept=".pdf,.docx,.doc,.md,.txt" class="hidden" onchange="handleFileUpload(event)">
           </label>
@@ -644,7 +643,7 @@
 
     <!-- VIEW 5: TRACES INSPECTOR -->
     <section id="view-traces" class="hidden space-y-6">
-      <div class="flex items-center justify-between pb-2 border-b border-violet-500/20">
+      <div class="flex items-center justify-between pb-2 border-b border-cyan-500/20">
         <div>
           <h2 class="text-lg font-bold text-[var(--text-main)]">Execution Traces & Latency Inspector</h2>
           <p class="text-xs font-medium text-[var(--text-sub)]">Full audit trail of routing decisions, SQL repair loops, and retrieved chunks.</p>
@@ -657,12 +656,12 @@
 
     <!-- VIEW 6: EVALUATION BENCHMARKS -->
     <section id="view-evals" class="hidden space-y-6">
-      <div class="flex items-center justify-between pb-2 border-b border-violet-500/20">
+      <div class="flex items-center justify-between pb-2 border-b border-cyan-500/20">
         <div>
           <h2 class="text-lg font-bold text-[var(--text-main)]">Autonomous Evaluation Suites</h2>
           <p class="text-xs font-medium text-[var(--text-sub)]">Benchmark suites validating SQL yield, retrieval Hit Rate@K, and routing accuracy.</p>
         </div>
-        <button onclick="runLiveEvaluation()" id="btn-run-eval" class="bg-violet-600 hover:bg-violet-700 text-white font-bold px-4 py-2 rounded-full text-xs flex items-center space-x-2 transition shadow">
+        <button onclick="runLiveEvaluation()" id="btn-run-eval" class="bg-cyan-600 hover:bg-cyan-700 text-white font-bold px-4 py-2 rounded-full text-xs flex items-center space-x-2 transition shadow">
           <i class="fa-solid fa-play"></i>
           <span>Run Benchmark Suites</span>
         </button>
@@ -682,7 +681,7 @@
         </div>
         <div class="glass-card p-4 rounded-2xl">
           <div class="text-[10px] font-bold uppercase text-[var(--text-muted)]">Routing Accuracy</div>
-          <div class="text-2xl font-black text-violet-600 dark:text-violet-300 mt-1" id="eval-routing-acc">100.0%</div>
+          <div class="text-2xl font-black text-cyan-600 dark:text-cyan-300 mt-1" id="eval-routing-acc">100.0%</div>
           <div class="text-[10px] font-medium text-[var(--text-sub)] mt-0.5">Target: &ge; 90% (30 Cases)</div>
         </div>
         <div class="glass-card p-4 rounded-2xl">
@@ -703,7 +702,7 @@
         <!-- Col 1: Brand & Identity -->
         <div class="space-y-3">
           <div class="flex items-center space-x-2.5">
-            <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-violet-600 to-indigo-400 flex items-center justify-center font-bold text-white text-sm shadow">
+            <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center font-bold text-white text-sm shadow">
               <i class="fa-solid fa-shield-halved text-white"></i>
             </div>
             <span class="text-base font-extrabold tracking-tight text-[var(--text-main)]">Fintrix</span>
@@ -723,10 +722,10 @@
         <div class="space-y-2.5">
           <h4 class="text-xs font-bold uppercase tracking-wider text-[var(--text-main)]">Platform Engines</h4>
           <ul class="space-y-2 text-xs font-medium text-[var(--text-sub)]">
-            <li><button onclick="switchView('chat')" class="hover:text-violet-600 dark:hover:text-violet-300 transition">Text-to-SQL Engine</button></li>
-            <li><button onclick="switchView('documents')" class="hover:text-violet-600 dark:hover:text-violet-300 transition">Hybrid BM25 + Vector RAG</button></li>
-            <li><button onclick="switchView('summary')" class="hover:text-violet-600 dark:hover:text-violet-300 transition">Financial Summary Dashboard</button></li>
-            <li><button onclick="switchView('hero')" class="hover:text-violet-600 dark:hover:text-violet-300 transition">Interactive Architecture Overview</button></li>
+            <li><button onclick="switchView('chat')" class="hover:text-cyan-600 dark:hover:text-cyan-300 transition">Text-to-SQL Engine</button></li>
+            <li><button onclick="switchView('documents')" class="hover:text-cyan-600 dark:hover:text-cyan-300 transition">Hybrid BM25 + Vector RAG</button></li>
+            <li><button onclick="switchView('summary')" class="hover:text-cyan-600 dark:hover:text-cyan-300 transition">Financial Summary Dashboard</button></li>
+            <li><button onclick="switchView('hero')" class="hover:text-cyan-600 dark:hover:text-cyan-300 transition">Interactive Architecture Overview</button></li>
           </ul>
         </div>
 
@@ -737,8 +736,8 @@
             Low-level evaluation suites and execution traces for technical verification:
           </p>
           <ul class="space-y-2 text-xs font-medium text-[var(--text-sub)]">
-            <li><button onclick="switchView('traces')" class="hover:text-violet-600 dark:hover:text-violet-300 transition flex items-center gap-1.5"><i class="fa-solid fa-terminal text-[10px] text-violet-500"></i> Execution Trace Inspector</button></li>
-            <li><button onclick="switchView('evals')" class="hover:text-violet-600 dark:hover:text-violet-300 transition flex items-center gap-1.5"><i class="fa-solid fa-trophy text-[10px] text-amber-500"></i> Benchmark Eval Suites</button></li>
+            <li><button onclick="switchView('traces')" class="hover:text-cyan-600 dark:hover:text-cyan-300 transition flex items-center gap-1.5"><i class="fa-solid fa-terminal text-[10px] text-cyan-500"></i> Execution Trace Inspector</button></li>
+            <li><button onclick="switchView('evals')" class="hover:text-cyan-600 dark:hover:text-cyan-300 transition flex items-center gap-1.5"><i class="fa-solid fa-trophy text-[10px] text-amber-500"></i> Benchmark Eval Suites</button></li>
           </ul>
         </div>
 
@@ -754,7 +753,7 @@
               <span>SSL 256-Bit Encrypted Database Pool</span>
             </div>
             <div class="flex items-center gap-2">
-              <i class="fa-solid fa-server text-violet-500"></i>
+              <i class="fa-solid fa-server text-cyan-500"></i>
               <span>Containerized Cloud Deployment on Render</span>
             </div>
           </div>
@@ -766,13 +765,13 @@
       <div class="pt-8 mt-8 border-t border-slate-200/80 dark:border-white/10 flex flex-col sm:flex-row items-center justify-between text-xs text-[var(--text-muted)] gap-4">
         <!-- Social Icons -->
         <div class="flex items-center space-x-3">
-          <a href="https://github.com/Rohit-pal01/fintrix" target="_blank" class="w-8 h-8 rounded-full glass-subcard flex items-center justify-center text-[var(--text-main)] hover:text-violet-600 dark:hover:text-violet-300 transition shadow-sm" title="GitHub Repository">
+          <a href="https://github.com/Rohit-pal01/fintrix" target="_blank" class="w-8 h-8 rounded-full glass-subcard flex items-center justify-center text-[var(--text-main)] hover:text-cyan-600 dark:hover:text-cyan-300 transition shadow-sm" title="GitHub Repository">
             <i class="fa-brands fa-github text-sm"></i>
           </a>
-          <a href="https://linkedin.com" target="_blank" class="w-8 h-8 rounded-full glass-subcard flex items-center justify-center text-[var(--text-main)] hover:text-violet-600 dark:hover:text-violet-300 transition shadow-sm" title="LinkedIn">
+          <a href="https://linkedin.com" target="_blank" class="w-8 h-8 rounded-full glass-subcard flex items-center justify-center text-[var(--text-main)] hover:text-cyan-600 dark:hover:text-cyan-300 transition shadow-sm" title="LinkedIn">
             <i class="fa-brands fa-linkedin-in text-sm"></i>
           </a>
-          <a href="mailto:contact@fintrix.local" class="w-8 h-8 rounded-full glass-subcard flex items-center justify-center text-[var(--text-main)] hover:text-violet-600 dark:hover:text-violet-300 transition shadow-sm" title="Email Contact">
+          <a href="mailto:contact@fintrix.local" class="w-8 h-8 rounded-full glass-subcard flex items-center justify-center text-[var(--text-main)] hover:text-cyan-600 dark:hover:text-cyan-300 transition shadow-sm" title="Email Contact">
             <i class="fa-regular fa-envelope text-sm"></i>
           </a>
         </div>
@@ -908,7 +907,7 @@
       const div = document.createElement('div');
       div.className = "flex items-start justify-end space-x-3";
       div.innerHTML = `
-        <div class="bg-violet-600 text-white font-bold rounded-2xl rounded-tr-sm px-4 py-2.5 text-xs max-w-xl shadow">
+        <div class="bg-cyan-600 text-white font-bold rounded-2xl rounded-tr-sm px-4 py-2.5 text-xs max-w-xl shadow">
           ${text}
         </div>
       `;
@@ -930,26 +929,26 @@
       let citationsHtml = '';
       if (citations.length > 0) {
         citationsHtml = `
-          <div class="pt-2 border-t border-violet-500/20 space-y-2">
+          <div class="pt-2 border-t border-cyan-500/20 space-y-2">
             <div class="text-[10px] font-bold uppercase tracking-wider flex items-center text-[var(--text-main)]">
-              <i class="fa-solid fa-link mr-1 text-violet-500"></i> Grounded Citations (${citations.length})
+              <i class="fa-solid fa-link mr-1 text-cyan-500"></i> Grounded Citations (${citations.length})
             </div>
             <div class="space-y-2">
               ${citations.map((c, idx) => {
                 if (c.type === 'sql') {
                   return `
-                    <div class="glass-subcard rounded-xl p-3 text-xs border border-violet-500/20">
+                    <div class="glass-subcard rounded-xl p-3 text-xs border border-cyan-500/20">
                       <div class="flex items-center justify-between text-xs font-bold text-[var(--text-main)]">
-                        <span class="flex items-center gap-1.5"><i class="fa-solid fa-calculator text-violet-500 dark:text-violet-400"></i> Verified Numerical Computation</span>
+                        <span class="flex items-center gap-1.5"><i class="fa-solid fa-calculator text-cyan-500 dark:text-cyan-400"></i> Verified Numerical Computation</span>
                         <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 font-mono font-bold">${c.rows} ledger row(s)</span>
                       </div>
-                      <p class="text-[11px] text-[var(--text-sub)] mt-1 font-medium">Computed mathematically across relational tables: <span class="font-mono font-bold text-violet-600 dark:text-violet-300">${c.tables.join(', ')}</span> with zero arithmetic hallucination.</p>
+                      <p class="text-[11px] text-[var(--text-sub)] mt-1 font-medium">Computed mathematically across relational tables: <span class="font-mono font-bold text-cyan-600 dark:text-cyan-300">${c.tables.join(', ')}</span> with zero arithmetic hallucination.</p>
                       <details class="mt-2 text-xs">
-                        <summary class="cursor-pointer font-bold text-violet-600 dark:text-violet-400 hover:underline flex items-center justify-between">
+                        <summary class="cursor-pointer font-bold text-cyan-600 dark:text-cyan-400 hover:underline flex items-center justify-between">
                           <span class="text-[10px] font-mono"><i class="fa-solid fa-code text-[9px] mr-1"></i> Technical SQL Query (Auditor Proof)</span>
                           <span class="text-[9px] opacity-70">Expand Query</span>
                         </summary>
-                        <pre class="mt-2 p-2.5 bg-black/5 dark:bg-black/50 rounded-lg text-[var(--text-sub)] overflow-x-auto text-[11px] font-mono border border-violet-500/20">${c.query}</pre>
+                        <pre class="mt-2 p-2.5 bg-black/5 dark:bg-black/50 rounded-lg text-[var(--text-sub)] overflow-x-auto text-[11px] font-mono border border-cyan-500/20">${c.query}</pre>
                       </details>
                     </div>
                   `;
@@ -975,7 +974,7 @@
         badgesHtml = `
           <div class="flex flex-wrap gap-1.5 pt-1">
             ${numbers.map(n => `
-              <span class="bg-violet-500/15 border border-violet-500/30 text-violet-700 dark:text-violet-300 text-[10px] px-2 py-0.5 rounded-md font-mono font-bold">
+              <span class="bg-cyan-500/15 border border-cyan-500/30 text-cyan-700 dark:text-cyan-300 text-[10px] px-2 py-0.5 rounded-md font-mono font-bold">
                 ${n.label}: ₹${Number(n.value).toLocaleString('en-IN')}
               </span>
             `).join('')}
@@ -984,12 +983,12 @@
       }
 
       div.innerHTML = `
-        <div class="w-8 h-8 rounded-xl bg-violet-600 text-white flex items-center justify-center flex-shrink-0 text-sm shadow">
+        <div class="w-8 h-8 rounded-xl bg-cyan-600 text-white flex items-center justify-center flex-shrink-0 text-sm shadow">
           <i class="fa-solid fa-shield-halved"></i>
         </div>
         <div class="glass-card rounded-2xl rounded-tl-sm p-4 text-xs space-y-3">
-          <div class="flex items-center justify-between text-[10px] pb-1 border-b border-violet-500/20 font-bold text-[var(--text-muted)]">
-            <span>Route: <strong class="text-violet-600 dark:text-violet-300 uppercase">${data.route}</strong></span>
+          <div class="flex items-center justify-between text-[10px] pb-1 border-b border-cyan-500/20 font-bold text-[var(--text-muted)]">
+            <span>Route: <strong class="text-cyan-600 dark:text-cyan-300 uppercase">${data.route}</strong></span>
             <span class="font-mono">Latency: ${data.latency_ms}ms</span>
           </div>
 
@@ -997,7 +996,7 @@
           ${badgesHtml}
           ${citationsHtml}
 
-          <div class="flex items-center justify-between pt-1 border-t border-violet-500/20 text-[10px] font-medium text-[var(--text-sub)]">
+          <div class="flex items-center justify-between pt-1 border-t border-cyan-500/20 text-[10px] font-medium text-[var(--text-sub)]">
             <span class="italic">${ans.disclaimer || "Not financial advice."}</span>
             <div class="flex items-center space-x-2">
               <span>Helpful?</span>
@@ -1057,14 +1056,14 @@
         bContainer.innerHTML = '';
         data.budgets.forEach(b => {
           const pct = Math.min(100, Math.round((b.spent / b.limit) * 100));
-          const colorClass = pct > 90 ? 'bg-rose-500' : (pct > 75 ? 'bg-amber-500' : 'bg-violet-600');
+          const colorClass = pct > 90 ? 'bg-rose-500' : (pct > 75 ? 'bg-amber-500' : 'bg-cyan-600');
           bContainer.innerHTML += `
             <div>
               <div class="flex justify-between text-xs font-bold mb-1 text-[var(--text-main)]">
                 <span class="capitalize">${b.category}</span>
                 <span class="font-mono text-[var(--text-sub)]">₹${b.spent.toLocaleString()} / ₹${b.limit.toLocaleString()} (${pct}%)</span>
               </div>
-              <div class="w-full bg-black/10 dark:bg-black/30 rounded-full h-2 overflow-hidden border border-violet-500/20">
+              <div class="w-full bg-black/10 dark:bg-black/30 rounded-full h-2 overflow-hidden border border-cyan-500/20">
                 <div class="${colorClass} h-2 rounded-full" style="width: ${pct}%"></div>
               </div>
             </div>
@@ -1179,14 +1178,14 @@
         tbody.innerHTML += `
           <tr class="hover:bg-black/5 dark:hover:bg-white/5 transition font-semibold">
             <td class="py-3.5 px-5 text-[var(--text-main)] flex items-center">
-              <i class="fa-regular fa-file-pdf text-violet-500 dark:text-violet-400 mr-2 text-sm"></i>
+              <i class="fa-regular fa-file-pdf text-cyan-500 dark:text-cyan-400 mr-2 text-sm"></i>
               <span class="truncate max-w-xs sm:max-w-md">${doc.filename}</span>
               ${isSystem 
                 ? '<span class="ml-2.5 inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-bold bg-slate-500/10 text-slate-500 dark:text-slate-400 border border-slate-500/20"><i class="fa-solid fa-lock text-[8px]"></i> Baseline Demo</span>' 
-                : '<span class="ml-2.5 inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-bold bg-violet-500/15 text-violet-600 dark:text-violet-300 border border-violet-500/30">User Upload</span>'}
+                : '<span class="ml-2.5 inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-bold bg-cyan-500/15 text-cyan-600 dark:text-cyan-300 border border-cyan-500/30">User Upload</span>'}
             </td>
             <td class="py-3.5 px-5 capitalize text-[var(--text-sub)]">${doc.doc_type}</td>
-            <td class="py-3.5 px-5 font-mono text-violet-600 dark:text-violet-300 font-bold">${doc.chunk_count} chunks</td>
+            <td class="py-3.5 px-5 font-mono text-cyan-600 dark:text-cyan-300 font-bold">${doc.chunk_count} chunks</td>
             <td class="py-3.5 px-5 text-[var(--text-muted)] text-[11px]">${doc.uploaded_at ? doc.uploaded_at.split('T')[0] : 'N/A'}</td>
             <td class="py-3.5 px-5 text-right">
               ${isSystem 
@@ -1237,14 +1236,14 @@
     function renderTraceInspector(data) {
       const c = document.getElementById('latest-trace-container');
       c.innerHTML = `
-        <div class="flex justify-between items-center pb-2 border-b border-violet-500/20 font-bold">
+        <div class="flex justify-between items-center pb-2 border-b border-cyan-500/20 font-bold">
           <div>
             <span class="text-xs font-mono text-[var(--text-muted)]">Trace ID: ${data.trace_id}</span>
-            <span class="ml-3 px-2 py-0.5 rounded text-[10px] uppercase font-bold bg-violet-500/15 text-violet-600 dark:text-violet-300 border border-violet-500/30">${data.route}</span>
+            <span class="ml-3 px-2 py-0.5 rounded text-[10px] uppercase font-bold bg-cyan-500/15 text-cyan-600 dark:text-cyan-300 border border-cyan-500/30">${data.route}</span>
           </div>
           <span class="text-xs font-mono text-[var(--text-muted)]">${data.latency_ms} ms</span>
         </div>
-        <pre class="bg-slate-900 text-slate-100 dark:bg-black/60 dark:text-cyan-200 p-4 rounded-2xl text-xs font-mono overflow-x-auto max-h-96 border border-violet-500/20 shadow-inner">${JSON.stringify(data, null, 2)}</pre>
+        <pre class="bg-slate-900 text-slate-100 dark:bg-black/60 dark:text-cyan-200 p-4 rounded-2xl text-xs font-mono overflow-x-auto max-h-96 border border-cyan-500/20 shadow-inner">${JSON.stringify(data, null, 2)}</pre>
       `;
     }
 

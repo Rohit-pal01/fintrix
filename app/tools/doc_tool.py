@@ -119,10 +119,34 @@ class DocumentRetriever:
                 "home_loan_agreement.pdf",
                 "term_life_insurance.pdf"
             }
-            filtered_chunks = [
+            user_personal_chunks = [
                 c for c in self.chunks 
-                if c.get("user_id") == user_id or c.get("doc", "").lower() in system_docs
+                if c.get("user_id") == user_id and c.get("doc", "").lower() not in system_docs
             ]
+            
+            # Check if query explicitly targets sample demo contracts
+            query_lower = query.lower()
+            mentions_sample = any(
+                sd in query_lower or 
+                sd.replace(".pdf", "").replace("_", " ") in query_lower or
+                "hdfc" in query_lower or "icici" in query_lower or "car loan" in query_lower
+                for sd in system_docs
+            )
+
+            if user_personal_chunks and not mentions_sample:
+                # User uploaded personal documents: strictly isolate search to personal uploads!
+                filtered_chunks = user_personal_chunks
+            elif user_personal_chunks and mentions_sample:
+                # User has personal docs but explicitly asked about sample demo fixtures
+                filtered_chunks = user_personal_chunks + [
+                    c for c in self.chunks if c.get("doc", "").lower() in system_docs
+                ]
+            else:
+                # Visitor has not uploaded personal documents yet: use demo fixtures
+                filtered_chunks = [
+                    c for c in self.chunks 
+                    if c.get("doc", "").lower() in system_docs
+                ]
 
         if not filtered_chunks:
             return SearchDocsOutput(results=[], confidence=0.0, mode_used=mode)
@@ -151,14 +175,16 @@ class DocumentRetriever:
             conf = results[0].score if results else 0.0
             return SearchDocsOutput(results=results, confidence=conf, mode_used=mode)
 
-        # 2. Keyword Search (BM25)
+        # 2. Keyword Search (BM25 scoped to filtered_chunks)
         top_kw = []
-        if self.bm25:
+        if filtered_chunks:
+            corpus = [c["text"].lower().split() for c in filtered_chunks]
+            bm25_scoped = BM25Okapi(corpus)
             tokens = query.lower().split()
-            bm_scores = self.bm25.get_scores(tokens)
+            bm_scores = bm25_scoped.get_scores(tokens)
             indexed_scores = sorted(list(enumerate(bm_scores)), key=lambda x: x[1], reverse=True)
             for idx, s in indexed_scores[:top_k]:
-                c = self.chunks[idx]
+                c = filtered_chunks[idx]
                 top_kw.append({**c, "score": float(s)})
 
         if mode == "keyword_only":
