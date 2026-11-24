@@ -1,71 +1,73 @@
 # Fintrix: Verifiable Autonomous Financial Intelligence Platform
-### Enterprise-Grade Text-to-SQL & Hybrid RAG Engine with an Automated Evaluation & Factuality Guardrail Framework
+### Enterprise Text-to-SQL & Hybrid RAG Engine with an Automated Evaluation & Factuality Guardrail Framework
 
+[![Live Demo](https://img.shields.io/badge/Live_Demo-fintrix--159a.onrender.com-00C7B7?style=for-the-badge&logo=render&logoColor=white)](https://fintrix-159a.onrender.com/)
 [![Python 3.12](https://img.shields.io/badge/Python-3.12-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115+-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
 [![PostgreSQL](https://img.shields.io/badge/Neon_PostgreSQL-16-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)](https://neon.tech/)
 [![Pytest Suite](https://img.shields.io/badge/Tests-22%20Passed-brightgreen?style=for-the-badge&logo=pytest&logoColor=white)]()
-[![Evaluation Benchmark](https://img.shields.io/badge/Evaluation_Suite-140%20Gold%20Cases-purple?style=for-the-badge)]()
+[![Evaluation Benchmark](https://img.shields.io/badge/Benchmark_Suite-140%20Gold%20Cases-purple?style=for-the-badge)]()
 [![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)](https://opensource.org/licenses/MIT)
 
 ---
 
 ## 1. Executive Summary
 
-In financial and regulated enterprise domains, standard Large Language Model (LLM) agents pose significant operational and legal risks:
-1. **Probabilistic Arithmetic Failures:** Traditional Retrieval-Augmented Generation (RAG) models retrieve fragmented text chunks and attempt mathematical aggregations probabilistically, reliably hallucinating balances, expenses, and loan calculations.
+In financial and regulated enterprise domains, standard Large Language Model (LLM) agents pose severe operational and compliance risks:
+1. **Probabilistic Arithmetic Failures:** Traditional Retrieval-Augmented Generation (RAG) models retrieve fragmented text chunks and attempt mathematical aggregations probabilistically, reliably hallucinating account balances, spending totals, and loan amortization numbers.
 2. **Evaluation Blindness:** Without a frozen, empirical evaluation harness, engineering teams cannot detect regression when adjusting prompts, chunking boundaries, or model parameters.
-3. **Data Security & Cost Overhead:** Many enterprise systems rely entirely on third-party cloud APIs, creating data leakage risks for sensitive customer financial records and high recurring latency/costs.
+3. **Black-Box Trust Deficit:** Typical chat interfaces present ungrounded prose answers without providing an independent audit trail for users to verify calculations.
 
 **Fintrix is an enterprise financial intelligence platform engineered to eliminate these bottlenecks:**
-- **Deterministic Mathematical Grounding:** Digital PDF bank statements and CSV transactions are parsed into structured relational SQL tables. All financial computations are executed via relational algebra (100% precision down to the cent).
-- **Two-Stage Hybrid Information Retrieval:** Merges sparse BM25 token matching with dense semantic embeddings using Reciprocal Rank Fusion (RRF) and a Cross-Encoder reranking pass, achieving **98.0% Hit@5** and **0.9033 MRR** across legal contracts.
-- **Automated Real-Time Factuality Guardrails:** An inline deterministic verification node parses numerical claims and citations via regex, cross-referencing them against raw database rows and retrieved contract snippets to intercept hallucinations before responses reach the user.
-- **Self-Contained & Resilient Fallback Architecture:** Operates with zero third-party API dependencies in local Python mode ($0 cost), while supporting seamless failover across Google Gemini 1.5 Flash and Groq Llama 3.3.
+- **Deterministic Mathematical Grounding:** Digital PDF bank statements (SBI, HDFC, ICICI) and CSV transactions are parsed into structured relational SQL tables. All financial computations (balances, category spending, debits, credits) are executed via relational algebra (100% precision down to the exact paisa).
+- **Two-Stage Hybrid Information Retrieval:** Merges sparse BM25 token matching with dense semantic embeddings using Reciprocal Rank Fusion (RRF) and a Cross-Encoder reranking pass, achieving **98.0% Hit@5** and **0.9033 MRR** across legal contracts and policy documents.
+- **Glass-Box Verifiability (Audit Trail):** Every financial answer publishes the exact generated SQL query, target database tables, and raw database output. Users can paste the query directly into PostgreSQL to verify results in milliseconds.
+- **Automated Real-Time Factuality Guardrails:** An inline deterministic verification node parses numerical claims and currency figures, cross-referencing them against raw database rows and retrieved contract snippets to intercept hallucinations before responses reach the user.
+- **Self-Contained & Resilient Fallback Architecture:** Operates with zero third-party API dependencies in local Python mode ($0 cost), while supporting seamless failover across Google Gemini 2.5 Flash and Groq Llama 3.3.
 
 ---
 
 ## 2. Platform Architecture
 
 ```
-                                      USER INQUIRY / DOCUMENT UPLOAD
-                                                    │
-                                                    ▼
-                                   ┌──────────────────────────────────┐
-                                   │      FastAPI REST API Layer      │
-                                   │ (/api/chat, /api/documents, etc) │
-                                   └────────────────┬─────────────────┘
-                                                    │
-                                                    ▼
-                                   ┌──────────────────────────────────┐
-                                   │      LangGraph Router Agent      │
-                                   │  (Intent: SQL, Docs, Both, Ref)  │
-                                   └────────┬─────────────────┬───────┘
-                                            │                 │
-                         ┌──────────────────┘                 └──────────────────┐
-                         ▼                                                       ▼
-          ┌──────────────────────────────┐                        ┌──────────────────────────────┐
-          │      SQL Engine Subgraph     │                        │     Document RAG Subgraph    │
-          │ • Schema Context Extraction  │                        │ • PyMuPDF Extraction & Table │
-          │ • Safe Text-to-SQL Compiler  │                        │ • 384d Dense Vector Search   │
-          │ • AST Static Safety Analysis │                        │ • BM25 Keyword Search        │
-          │ • Row-Level Tenant Scoping   │                        │ • Reciprocal Rank Fusion     │
-          │ • Bounded Self-Repair Loop   │                        │ • Cross-Encoder Reranker     │
-          └──────────────┬───────────────┘                        └──────────────┬───────────────┘
-                         │                                                       │
-                         └──────────────────────────┬────────────────────────────┘
-                                                    │
-                                                    ▼
-                                   ┌──────────────────────────────────┐
-                                   │    Answer Composer & Verifier    │
-                                   │ • Structured Source Citations    │
-                                   │ • Inline Hallucination Gatekeeper│
-                                   │ • Distributed Trace Telemetry    │
-                                   └────────────────┬─────────────────┘
-                                                    │
-                                                    ▼
-                                       VERIFIED FINANCIAL OUTPUT
-                                  (Answer + Grounded Citations + Badges)
+                                USER INQUIRY / DOCUMENT UPLOAD
+                                              │
+                                              ▼
+                             ┌──────────────────────────────────┐
+                             │      FastAPI REST API Layer      │
+                             │ (/api/chat, /api/documents, etc) │
+                             └────────────────┬─────────────────┘
+                                              │
+                                              ▼
+                             ┌──────────────────────────────────┐
+                             │      LangGraph Router Agent      │
+                             │  (Intent: SQL, Docs, Both, Ref)  │
+                             └────────┬─────────────────┬───────┘
+                                      │                 │
+                   ┌──────────────────┘                 └──────────────────┐
+                   ▼                                                       ▼
+    ┌──────────────────────────────┐                        ┌──────────────────────────────┐
+    │      SQL Engine Subgraph     │                        │     Document RAG Subgraph    │
+    │ • Schema Context Extraction  │                        │ • PyMuPDF Extraction & Table │
+    │ • Safe Text-to-SQL Compiler  │                        │ • 384d Dense Vector Search   │
+    │ • AST Static Safety Analysis │                        │ • BM25 Keyword Search        │
+    │ • Row-Level Tenant Scoping   │                        │ • Reciprocal Rank Fusion     │
+    │ • Bounded Self-Repair Loop   │                        │ • Cross-Encoder Reranker     │
+    └──────────────┬───────────────┘                        └──────────────┬───────────────┘
+                   │                                                       │
+                   └──────────────────────────┬────────────────────────────┘
+                                              │
+                                              ▼
+                             ┌──────────────────────────────────┐
+                             │    Answer Composer & Verifier    │
+                             │ • Structured Source Citations    │
+                             │ • Inline Hallucination Gatekeeper│
+                             │ • Distributed Trace Telemetry    │
+                             └────────────────┬─────────────────┘
+                                              │
+                                              ▼
+                                 VERIFIED FINANCIAL OUTPUT
+                            (Answer + Grounded Citations + Badges)
 ```
 
 ---
@@ -75,14 +77,14 @@ In financial and regulated enterprise domains, standard Large Language Model (LL
 Fintrix treats system evaluation as an empirical, reproducible discipline using frozen ground-truth test sets.
 
 ```
-                           EVALUATION BENCHMARK SUITE (140 Cases)
-                                             │
-         ┌───────────────────────────────────┼───────────────────────────────────┐
-         ▼                                   ▼                                   ▼
-[Text-to-SQL Execution]             [Information Retrieval]             [Agent Intent Routing]
-   • 60 Structured Cases               • 50 Legal Contract Cases           • 30 Intent Routing Cases
-   • Execution Accuracy (100%)         • Hit@1, Hit@5, MRR                 • Intent Accuracy (100%)
-   • Yield Rate (98.3%)                • Ablation Comparisons              • Misclassification Tracing
+                     EVALUATION BENCHMARK SUITE (140 Cases)
+                                       │
+   ┌───────────────────────────────────┼───────────────────────────────────┐
+   ▼                                   ▼                                   ▼
+[Text-to-SQL Execution]       [Information Retrieval]             [Agent Intent Routing]
+ • 60 Structured Cases         • 50 Legal Contract Cases           • 30 Intent Routing Cases
+ • Execution Accuracy (100%)   • Hit@1, Hit@5, MRR                 • Intent Accuracy (100%)
+ • Yield Rate (98.3%)          • Ablation Comparisons              • Misclassification Tracing
 ```
 
 ### A. Text-to-SQL Execution Benchmark (60 Gold Questions)
@@ -118,42 +120,91 @@ To validate retrieval design decisions empirically, 50 complex legal questions w
 
 ---
 
-## 4. Anti-Hallucination Guardrail Engine
+## 4. LLM Evals vs. Runtime Guardrails
 
-Fintrix prevents financial misinformation through a **4-stage runtime verification pipeline**:
+A key design principle of Fintrix is the clean separation between **Runtime Safety Guardrails** and **LLM Evals**:
 
-```
-Draft Answer Generated
-         │
-         ▼
-[Regex Number Parsing] ──► Extracts all amounts, percentages, and currencies ($ / ₹)
-         │
-         ▼
-[Ground-Truth Extraction] ──► Pulls raw numbers from executed SQL rows and retrieved PDF chunks
-         │
-         ▼
-[Factuality Cross-Check] ──► Confirms every drafted digit exists verbatim in ground-truth pool
-         │
-         ├── If unverified numbers found ──► Flags "Hallucination Detected", Confidence: Low
-         └── If 100% matched ─────────────► Attaches Verified Badge + Exact Document & Page Citation
-```
+| Dimension | Runtime Guardrail (Safety Filter) | LLM Evals (Measurement Framework) |
+| :--- | :--- | :--- |
+| **Scope** | Evaluates **one single live answer** before showing it to the user. | Tests the model across **hundreds of test cases** to measure statistical accuracy. |
+| **Execution** | **Online / Synchronous** during live user chat. | **Offline / Continuous** in automated CI/CD and periodic benchmarks. |
+| **Mechanism** | Regex parses drafted numbers and matches them against database rows. | Computes formal metrics: **Execution Accuracy %**, **HitRate@K**, **MRR**, **Latency**. |
+| **Core Question** | *"Is this specific answer safe and grounded right now?"* | *"How accurate and reliable is our overall system across all financial scenarios?"* |
 
 ---
 
-## 5. Technology Stack & Key Dependencies
+## 5. Verifiable AI & The Glass-Box Audit Trail
+
+Every answer returned by the Fintrix assistant contains a complete cryptographic and database audit trail:
+
+```json
+{
+  "trace_id": "998d17f5-702d-46cd-88c0-2680e04f40dd",
+  "route": "sql",
+  "final_answer": {
+    "answer": "Your available balance is ₹1,75,208.82...",
+    "numbers": [
+      {
+        "label": "available_balance",
+        "value": 175208.82,
+        "source": "sql",
+        "query_id": "q_43d2a9a7"
+      }
+    ],
+    "citations": [
+      {
+        "type": "sql",
+        "query_id": "q_43d2a9a7",
+        "query": "SELECT (COALESCE((SELECT SUM(opening_balance) FROM accounts WHERE user_id = 11), 0) + COALESCE((SELECT SUM(CASE WHEN direction = 'credit' THEN amount ELSE -amount END) FROM transactions WHERE user_id = 11), 0)) AS available_balance;",
+        "tables": ["accounts", "transactions"]
+      }
+    ]
+  }
+}
+```
+
+### Verifying Queries in Neon PostgreSQL
+Users and auditors do not need to trust the model. You can copy the generated SQL query directly from the trace inspector, paste it into the **Neon SQL Editor**, and execute it directly:
+```sql
+SELECT (
+  COALESCE((SELECT SUM(opening_balance) FROM accounts WHERE user_id = 11), 0) 
+  + 
+  COALESCE((SELECT SUM(CASE WHEN direction = 'credit' THEN amount ELSE -amount END) FROM transactions WHERE user_id = 11), 0)
+) AS available_balance;
+```
+**Database output returned:** `175208.82` (100% verified against statement records).
+
+---
+
+## 6. Multi-Format Document Ingestion & Ledger Extraction
+
+Fintrix supports comprehensive multi-format document ingestion:
+1. **Bank Statements (PDF):**
+   - **Running Balance Scanner:** PyMuPDF regex scanner extracts date, narration, debit/credit amounts, and running balances directly into SQL transactions.
+   - **Opening Balance Detection:** Header regex extracts statement opening balances into `accounts.opening_balance`.
+   - **Strict Ledger Deduplication:** Composite hash `(user_id, txn_date, amount, direction)` prevents duplicate entries across statement re-uploads.
+2. **Bills & Utility Invoices (`app/ingestion/billing.py`):**
+   - Automatically scans uploaded invoices and receipts for **Due Dates**, **Amounts Due**, and **Biller Names**, creating real records in the `bills` table.
+   - Extracts **Credit Limits** and **Monthly Spending Limits** into the `budgets` table with zero artificial multipliers.
+3. **Contracts & Policies (PDF, DOCX, Markdown, TXT):**
+   - Sentence-aware semantic chunking with ONNX 384-dimensional dense embeddings and BM25 index synchronization.
+
+---
+
+## 7. Technology Stack & Key Dependencies
 
 - **Backend Framework:** FastAPI, Uvicorn, Pydantic v2
 - **Agent Orchestration:** LangGraph (StateGraph, TypedDict State, Conditional Routing)
 - **Relational Databases:** Neon PostgreSQL 16 (Cloud Production), SQLite (Local Development)
 - **ORM & Data Layer:** SQLAlchemy 2.0 with connection pooling and statement pre-ping
-- **PDF Extraction:** PyMuPDF (`fitz`) with table detection and bounding-box clipping
-- **Search & Retrieval:** BM25Okapi, Dense Vector Embeddings (384-dim), Reciprocal Rank Fusion
-- **Evaluation Suite:** Pytest, Pytest-Asyncio, Custom Information Retrieval Metric Evaluators
+- **PDF Extraction:** PyMuPDF (`fitz`) with table detection and bounding-box text clipping
+- **Search & Retrieval:** Rank-BM25, Dense Vector Embeddings (384-dim), Reciprocal Rank Fusion
+- **Evaluation Suite:** Pytest, Pytest-Asyncio, Custom Retrieval & SQL Benchmark Evaluators
 - **Frontend Layer:** Zero-dependency Single-Page Application (HTML5, Tailwind CSS via CDN, Vanilla JS)
 
 ---
 
-## 6. Installation & Local Development
+## 8. Installation & Local Development
 
 ### Prerequisites
 - Python 3.10+ (Python 3.12 recommended)
@@ -206,7 +257,7 @@ Open **`http://localhost:8000`** in your browser to access the interactive dashb
 
 ---
 
-## 7. Cloud Production Deployment (Render + Neon PostgreSQL)
+## 9. Cloud Production Deployment (Render + Neon PostgreSQL)
 
 ### Step 1: Provision Cloud Database
 1. Create a free PostgreSQL instance at [Neon.tech](https://neon.tech).
@@ -224,7 +275,7 @@ Open **`http://localhost:8000`** in your browser to access the interactive dashb
    - **Start Command:** `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
    - **Plan:** `Free`
 
-### Step 3: Inject Environment Variables
+### Step 3: Configure Environment Variables
 In the Render Web Service dashboard under **Environment**, configure:
 
 | Variable Key | Sample Value | Purpose |
@@ -238,7 +289,7 @@ Render automatically provisions the container, initializes schema models, and ex
 
 ---
 
-## 8. Repository Layout
+## 10. Repository Layout
 
 ```
 fintrix/
@@ -256,6 +307,9 @@ fintrix/
 │   │   ├── metrics.py         # MRR, Hit@K, SQL Yield, and accuracy scoring algorithms
 │   │   └── rag_baseline.py    # Naive RAG baseline demonstrating aggregation errors
 │   ├── ingestion/             # PyMuPDF parser, table-to-SQL extractor, and semantic chunker
+│   │   ├── billing.py         # Real bill due date, due amount, and credit limit parser
+│   │   ├── chunker.py         # Sentence-aware semantic document chunker
+│   │   └── transactions.py    # PDF bank statement running balance regex & table ingestion
 │   └── tools/                 # AST SQL validator and Hybrid RRF document retriever
 ├── data/documents/            # Baseline financial contracts (Home Loan, Insurance, Statements)
 ├── tests/                     # 22 automated unit, safety, and benchmark tests
@@ -268,6 +322,6 @@ fintrix/
 
 ---
 
-## 9. License
+## 11. License
 
 This project is licensed under the **MIT License**.
