@@ -6,6 +6,7 @@ import re
 from datetime import datetime, date
 from typing import List, Dict, Any, Tuple, Optional
 from sqlalchemy.orm import Session
+from sqlalchemy import func
 from app.db.models import Transaction, Category, Account
 
 def generate_txn_hash(user_id: int, txn_date: str, amount: float, merchant: str, description: str) -> str:
@@ -214,6 +215,13 @@ def extract_and_ingest_pdf_transactions(
                 seen_hashes.add(h)
                 exists = db.query(Transaction.txn_id).filter_by(source_hash=h).first()
                 if not exists:
+                    exists = db.query(Transaction.txn_id).filter(
+                        Transaction.user_id == user_id,
+                        Transaction.txn_date == parsed_d,
+                        func.abs(Transaction.amount - act_amt) < 0.001,
+                        Transaction.direction == direction
+                    ).first()
+                if not exists:
                     cat_id = auto_categorize_description(desc, cats)
                     txns_to_add.append(Transaction(
                         user_id=user_id,
@@ -320,6 +328,13 @@ def extract_and_ingest_pdf_transactions(
                         continue
 
                     exists = db.query(Transaction.txn_id).filter_by(source_hash=h).first()
+                    if not exists:
+                        exists = db.query(Transaction.txn_id).filter(
+                            Transaction.user_id == user_id,
+                            Transaction.txn_date == parsed_d,
+                            func.abs(Transaction.amount - amt) < 0.001,
+                            Transaction.direction == direction
+                        ).first()
                     if exists:
                         duplicates += 1
                         continue
@@ -371,6 +386,13 @@ def extract_and_ingest_pdf_transactions(
                         continue
 
                     exists = db.query(Transaction.txn_id).filter_by(source_hash=h).first()
+                    if not exists:
+                        exists = db.query(Transaction.txn_id).filter(
+                            Transaction.user_id == user_id,
+                            Transaction.txn_date == parsed_d,
+                            func.abs(Transaction.amount - amt) < 0.001,
+                            Transaction.direction == direction
+                        ).first()
                     if exists:
                         duplicates += 1
                         continue
