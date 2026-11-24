@@ -67,6 +67,10 @@ FEW_SHOT_EXAMPLES = [
         "sql": "SELECT COALESCE(SUM(t.amount), 0) AS total_food_spending FROM transactions t JOIN categories c ON t.category_id = c.category_id WHERE t.user_id = {user_id} AND c.name = 'food' AND t.direction = 'debit' AND t.txn_date >= '2026-10-01' AND t.txn_date <= '2026-10-31';"
     },
     {
+        "question": "What is my total spending by category?",
+        "sql": "SELECT c.name AS category, COALESCE(SUM(t.amount), 0) AS total_spent FROM categories c JOIN transactions t ON c.category_id = t.category_id WHERE t.user_id = {user_id} AND t.direction = 'debit' GROUP BY c.name ORDER BY total_spent DESC;"
+    },
+    {
         "question": "What is my total spending by category this month?",
         "sql": "SELECT c.name AS category, COALESCE(SUM(t.amount), 0) AS total_spent FROM categories c LEFT JOIN transactions t ON c.category_id = t.category_id AND t.user_id = {user_id} AND t.direction = 'debit' AND t.txn_date >= '2026-11-01' AND t.txn_date <= '2026-11-30' WHERE c.type = 'expense' GROUP BY c.name ORDER BY total_spent DESC;"
     },
@@ -218,6 +222,13 @@ def deterministic_text_to_sql(question: str, user_id: int) -> str:
                 f"AND t.user_id = {user_id} AND t.direction = 'debit' "
                 f"AND t.txn_date >= '2026-10-01' AND t.txn_date <= '2026-10-31' "
                 f"WHERE c.type = 'expense' GROUP BY c.name ORDER BY total_spent DESC;")
+
+    # General Spending by category (across all user transactions / statement period)
+    if "category" in q or ("breakdown" in q and "spending" in q):
+        return (f"SELECT c.name AS category, COALESCE(SUM(t.amount), 0) AS total_spent "
+                f"FROM categories c JOIN transactions t ON c.category_id = t.category_id "
+                f"WHERE t.user_id = {user_id} AND t.direction = 'debit' "
+                f"GROUP BY c.name ORDER BY total_spent DESC;")
 
     # Top merchants
     if "merchant" in q:
