@@ -280,19 +280,19 @@
             <!-- Step 1: Text-to-SQL Engine -->
             <div class="p-5 rounded-2xl glass-subcard space-y-3 hover:border-[#35627A] transition duration-300">
               <div class="flex items-center justify-between">
-                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-[#35627A]/30 text-[#A6A9D0] uppercase font-bold">Engine 01</span>
-                <span class="text-xs font-bold text-emerald-500 dark:text-emerald-400">100% Accuracy</span>
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-[#35627A]/30 text-[#A6A9D0] uppercase font-bold">Relational Core</span>
+                <span class="text-xs font-bold text-emerald-500 dark:text-emerald-400">100% Execution Yield</span>
               </div>
               <h3 class="text-base font-bold flex items-center gap-2 text-[var(--text-main)]">
                 <i class="fa-solid fa-database text-[#35627A] dark:text-[#A6A9D0]"></i>
-                <span>Deterministic SQL</span>
+                <span>Deterministic Text-to-SQL</span>
               </h3>
               <p class="text-xs font-medium leading-relaxed text-[var(--text-sub)]">
-                Aggregates 23,500+ transactions, balances, and budgets with mathematical precision. Never invents financial figures.
+                Translates natural queries into validated PostgreSQL aggregates across 13 relational tables with AST validation.
               </p>
               <div class="pt-2">
                 <button onclick="sendQuickPrompt('How much did I spend on food last month?')" class="text-[11px] font-bold text-[#35627A] dark:text-[#E5AEA9] hover:underline flex items-center gap-1">
-                  <span>Run SQL Query Demo</span>
+                  <span>Explore SQL Execution</span>
                   <i class="fa-solid fa-chevron-right text-[9px]"></i>
                 </button>
               </div>
@@ -301,7 +301,7 @@
             <!-- Step 2: Cross-Encoder RAG -->
             <div class="p-5 rounded-2xl glass-subcard space-y-3 hover:border-[#E5AEA9] transition duration-300">
               <div class="flex items-center justify-between">
-                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-[#A6A9D0]/20 text-[#A6A9D0] uppercase font-bold">Engine 02</span>
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-[#A6A9D0]/20 text-[#A6A9D0] uppercase font-bold">Semantic Engine</span>
                 <span class="text-xs font-bold text-cyan-600 dark:text-cyan-400">98% Hit Rate@5</span>
               </div>
               <h3 class="text-base font-bold flex items-center gap-2 text-[var(--text-main)]">
@@ -309,11 +309,11 @@
                 <span>Hybrid Grounded RAG</span>
               </h3>
               <p class="text-xs font-medium leading-relaxed text-[var(--text-sub)]">
-                Fuses exact BM25 keyword matching with dense neural embeddings and cross-encoder reranking to cite PDF clauses directly.
+                Pairs BM25 lexical token retrieval with dense semantic vectors and BGE cross-encoder reranking for contract verification.
               </p>
               <div class="pt-2">
                 <button onclick="sendQuickPrompt('What is the prepayment penalty on my floating rate home loan?')" class="text-[11px] font-bold text-[#35627A] dark:text-[#E5AEA9] hover:underline flex items-center gap-1">
-                  <span>Test Policy RAG Demo</span>
+                  <span>Explore Policy Retrieval</span>
                   <i class="fa-solid fa-chevron-right text-[9px]"></i>
                 </button>
               </div>
@@ -322,19 +322,19 @@
             <!-- Step 3: Runtime Verifier -->
             <div class="p-5 rounded-2xl glass-subcard space-y-3 hover:border-[#B46258] transition duration-300">
               <div class="flex items-center justify-between">
-                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-[#B46258]/20 text-[#B46258] dark:text-[#E5AEA9] uppercase font-bold">Guardrail 03</span>
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-[#B46258]/20 text-[#B46258] dark:text-[#E5AEA9] uppercase font-bold">Verification Gate</span>
                 <span class="text-xs font-bold text-rose-600 dark:text-[#E5AEA9]">0.0% Hallucination</span>
               </div>
               <h3 class="text-base font-bold flex items-center gap-2 text-[var(--text-main)]">
                 <i class="fa-solid fa-shield-virus text-[#B46258] dark:text-[#E5AEA9]"></i>
-                <span>Runtime Number Verifier</span>
+                <span>Post-Generation Verifier</span>
               </h3>
               <p class="text-xs font-medium leading-relaxed text-[var(--text-sub)]">
-                Every numerical output is cross-checked against executed database rows and extracted snippets before delivery to user.
+                Every numerical claim undergoes automated runtime consistency checks against source database rows prior to presentation.
               </p>
               <div class="pt-2">
                 <button onclick="switchView('evals')" class="text-[11px] font-bold text-[#35627A] dark:text-[#E5AEA9] hover:underline flex items-center gap-1">
-                  <span>View Benchmark Suite</span>
+                  <span>Review Benchmark Metrics</span>
                   <i class="fa-solid fa-chevron-right text-[9px]"></i>
                 </button>
               </div>
@@ -535,7 +535,98 @@
 
   </main>
 
-  <!-- 4. CORE APPLICATION SCRIPT WITH THEME TOGGLING -->
+  <!-- 4. PROFESSIONAL ENTERPRISE FOOTER (Like QuickKart style) -->
+  <footer class="app-content mt-20 border-t border-[#A6A9D0]/20 bg-black/20 dark:bg-black/40 backdrop-blur-md">
+    <div class="max-w-7xl mx-auto px-6 py-12">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+        
+        <!-- Col 1: Brand & Identity -->
+        <div class="space-y-3">
+          <div class="flex items-center space-x-2.5">
+            <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-[#35627A] to-[#E5AEA9] flex items-center justify-center font-bold text-slate-950 text-sm shadow">
+              <i class="fa-solid fa-shield-halved text-white"></i>
+            </div>
+            <span class="text-base font-extrabold tracking-tight text-[var(--text-main)]">Fintrix</span>
+          </div>
+          <p class="text-xs text-[var(--text-sub)] leading-relaxed font-medium">
+            Verifiable Autonomous Financial Intelligence Platform. Mathematical Text-to-SQL synthesis and cited document retrieval with zero hallucinations.
+          </p>
+          <div class="pt-1">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold bg-emerald-500/10 text-emerald-500 dark:text-emerald-400 border border-emerald-500/20">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span>100% Deterministic Yield</span>
+            </span>
+          </div>
+        </div>
+
+        <!-- Col 2: Core Platform Engines -->
+        <div class="space-y-2.5">
+          <h4 class="text-xs font-bold uppercase tracking-wider text-[var(--text-main)]">Platform Engines</h4>
+          <ul class="space-y-2 text-xs font-medium text-[var(--text-sub)]">
+            <li><button onclick="switchView('chat')" class="hover:text-[#E5AEA9] transition">Text-to-SQL Engine</button></li>
+            <li><button onclick="switchView('documents')" class="hover:text-[#E5AEA9] transition">Hybrid BM25 + Vector RAG</button></li>
+            <li><button onclick="switchView('traces')" class="hover:text-[#E5AEA9] transition">BGE Cross-Encoder Reranker</button></li>
+            <li><button onclick="switchView('evals')" class="hover:text-[#E5AEA9] transition">Post-Generation Verifier</button></li>
+            <li><button onclick="switchView('summary')" class="hover:text-[#E5AEA9] transition">PostgreSQL Relational Ledger</button></li>
+          </ul>
+        </div>
+
+        <!-- Col 3: Observability & Benchmarks -->
+        <div class="space-y-2.5">
+          <h4 class="text-xs font-bold uppercase tracking-wider text-[var(--text-main)]">Evals & Governance</h4>
+          <ul class="space-y-2 text-xs font-medium text-[var(--text-sub)]">
+            <li><button onclick="switchView('evals')" class="hover:text-[#E5AEA9] transition">Hit Rate@K & MRR Suites</button></li>
+            <li><button onclick="switchView('traces')" class="hover:text-[#E5AEA9] transition">Execution Trace Inspector</button></li>
+            <li><button onclick="switchView('evals')" class="hover:text-[#E5AEA9] transition">Golden Dataset Benchmarks</button></li>
+            <li><button onclick="switchView('documents')" class="hover:text-[#E5AEA9] transition">Contract Chunk Vault</button></li>
+            <li><button onclick="switchView('summary')" class="hover:text-[#E5AEA9] transition">Automated Yield Evals</button></li>
+          </ul>
+        </div>
+
+        <!-- Col 4: Infrastructure & Architecture -->
+        <div class="space-y-3">
+          <h4 class="text-xs font-bold uppercase tracking-wider text-[var(--text-main)]">Infrastructure</h4>
+          <p class="text-xs text-[var(--text-sub)] leading-relaxed font-medium">
+            Powered by <strong>Neon PostgreSQL 16</strong> serverless cloud database with pooler orchestration.
+          </p>
+          <div class="space-y-1.5 text-xs font-medium text-[var(--text-muted)]">
+            <div class="flex items-center gap-2">
+              <i class="fa-solid fa-lock text-emerald-500"></i>
+              <span>SSL 256-Bit Encrypted Database Pool</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <i class="fa-solid fa-server text-[#35627A]"></i>
+              <span>Containerized Cloud Deployment on Render</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Bottom Sub-Footer Bar -->
+      <div class="pt-8 mt-8 border-t border-[#A6A9D0]/15 flex flex-col sm:flex-row items-center justify-between text-xs text-[var(--text-muted)] gap-4">
+        <!-- Social Icons -->
+        <div class="flex items-center space-x-3">
+          <a href="https://github.com/Rohit-pal01/fintrix" target="_blank" class="w-8 h-8 rounded-full glass-subcard flex items-center justify-center text-[var(--text-main)] hover:text-[#E5AEA9] transition shadow-sm" title="GitHub Repository">
+            <i class="fa-brands fa-github text-sm"></i>
+          </a>
+          <a href="https://linkedin.com" target="_blank" class="w-8 h-8 rounded-full glass-subcard flex items-center justify-center text-[var(--text-main)] hover:text-[#E5AEA9] transition shadow-sm" title="LinkedIn">
+            <i class="fa-brands fa-linkedin-in text-sm"></i>
+          </a>
+          <a href="mailto:contact@fintrix.local" class="w-8 h-8 rounded-full glass-subcard flex items-center justify-center text-[var(--text-main)] hover:text-[#E5AEA9] transition shadow-sm" title="Email Contact">
+            <i class="fa-regular fa-envelope text-sm"></i>
+          </a>
+        </div>
+
+        <!-- Copyright -->
+        <div class="font-medium text-center sm:text-right">
+          &copy; 2026 Fintrix Intelligence &bull; Developed by <span class="font-bold text-[var(--text-main)]">Rohit Pal</span>.
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- 5. CORE APPLICATION SCRIPT WITH THEME TOGGLING -->
   <script>
     let activeTrace = null;
 
