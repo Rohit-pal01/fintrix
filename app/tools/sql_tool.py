@@ -48,9 +48,20 @@ CRITICAL RULES:
    - If the user explicitly specifies a year, filter by both: EXTRACT(MONTH FROM txn_date) = 5 AND EXTRACT(YEAR FROM txn_date) = 2018.
    - For relative phrases without a month name like "this month" or "last month", reference CURRENT DATE: 2026-11-24 (e.g. txn_date >= '2026-11-01' AND txn_date <= '2026-11-30').
 4. Only return valid single SELECT queries. No comments, no writes.
+5. For affordability, purchase feasibility, or available balance inquiries (e.g. "Can I buy a car of 10 lakh?", "Can I afford X?", "What is my balance?", "Do I have enough money?"):
+   Query the net available balance across verified ledger transactions:
+   SELECT COALESCE(SUM(CASE WHEN direction = 'credit' THEN amount ELSE -amount END), 0) AS available_balance FROM transactions WHERE user_id = {user_id};
 """
 
 FEW_SHOT_EXAMPLES = [
+    {
+        "question": "I want to purchase a car which cost 10 lakh rupee can I buy it tomorrow?",
+        "sql": "SELECT COALESCE(SUM(CASE WHEN direction = 'credit' THEN amount ELSE -amount END), 0) AS available_balance FROM transactions WHERE user_id = {user_id};"
+    },
+    {
+        "question": "What is my current account balance?",
+        "sql": "SELECT COALESCE(SUM(CASE WHEN direction = 'credit' THEN amount ELSE -amount END), 0) AS available_balance FROM transactions WHERE user_id = {user_id};"
+    },
     {
         "question": "How much did I spend on food last month?",
         "sql": "SELECT COALESCE(SUM(t.amount), 0) AS total_food_spending FROM transactions t JOIN categories c ON t.category_id = c.category_id WHERE t.user_id = {user_id} AND c.name = 'food' AND t.direction = 'debit' AND t.txn_date >= '2026-10-01' AND t.txn_date <= '2026-10-31';"
@@ -101,6 +112,11 @@ def deterministic_text_to_sql(question: str, user_id: int) -> str:
         "july": 7, "jul": 7, "august": 8, "aug": 8, "september": 9, "sep": 9,
         "october": 10, "oct": 10, "november": 11, "nov": 11, "december": 12, "dec": 12
     }
+
+    # Affordability / Purchase / Balance queries (e.g. "i want to purchase a car which cost 10 lakh rupee can i buy it tommorow?", "can i afford", "what is my balance", "how much money do i have")
+    if any(k in q for k in ["afford", "can i buy", "can i purchase", "want to buy", "want to purchase", "enough money", "have that much money", "my balance", "available balance", "account balance", "how much money do i have", "how much money i have", "current balance"]) or (("purchase" in q or "buy" in q) and ("car" in q or "cost" in q or "worth" in q or "can i" in q)):
+        return (f"SELECT COALESCE(SUM(CASE WHEN direction = 'credit' THEN amount ELSE -amount END), 0) AS available_balance "
+                f"FROM transactions WHERE user_id = {user_id};")
 
     # Credit / deposit / credited in month (e.g. "total amount credited in may month", "how many time amount credited in may")
     if any(k in q for k in ["credit", "deposit", "credited", "deposited", "received"]):
