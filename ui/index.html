@@ -464,20 +464,51 @@
 
     <!-- VIEW 4: DOCUMENT VAULT -->
     <section id="view-documents" class="hidden space-y-6">
-      <div class="flex items-center justify-between pb-2 border-b border-violet-500/20">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-2 border-b border-violet-500/20 gap-4">
         <div>
-          <h2 class="text-lg font-bold text-[var(--text-main)]">Document Vault (RAG Corpus)</h2>
-          <p class="text-xs font-medium text-[var(--text-sub)]">Uploaded financial policies, statements, and resumes indexed into hybrid vector chunks.</p>
+          <h2 class="text-lg font-bold text-[var(--text-main)]">Document Vault</h2>
+          <p class="text-xs font-medium text-[var(--text-sub)]">Manage your personal indexed documents or inspect pre-loaded demo reference contracts.</p>
         </div>
-        <label class="cursor-pointer bg-violet-600 hover:bg-violet-700 text-white font-bold px-4 py-2 rounded-full text-xs flex items-center space-x-2 transition shadow">
+        <label class="cursor-pointer bg-violet-600 hover:bg-violet-700 text-white font-bold px-4 py-2 rounded-full text-xs flex items-center space-x-2 transition shadow self-start sm:self-auto">
           <i class="fa-solid fa-cloud-arrow-up text-violet-200"></i>
           <span>Upload Document (PDF, Word, TXT)</span>
           <input type="file" id="pdf-upload-input" accept=".pdf,.docx,.doc,.md,.txt" class="hidden" onchange="handleFileUpload(event)">
         </label>
       </div>
 
+      <!-- Vault Sub-Navigation: My Uploads vs Demo Samples -->
+      <div class="flex items-center space-x-2 border-b border-violet-500/20 pb-2">
+        <button onclick="setVaultTab('user')" id="vault-tab-user" class="glass-pill px-4 py-1.5 rounded-full text-xs font-bold transition flex items-center gap-2 active">
+          <i class="fa-solid fa-user-shield text-[11px] text-violet-500"></i>
+          <span>My Uploads</span>
+          <span id="vault-user-count" class="px-1.5 py-0.5 rounded-full bg-violet-500/20 text-violet-600 dark:text-violet-300 text-[10px] font-mono font-bold">0</span>
+        </button>
+        <button onclick="setVaultTab('demo')" id="vault-tab-demo" class="glass-pill px-4 py-1.5 rounded-full text-xs font-semibold transition flex items-center gap-2 opacity-75 hover:opacity-100">
+          <i class="fa-solid fa-flask-vial text-[11px] text-cyan-500"></i>
+          <span>Pre-loaded Demo Samples</span>
+          <span id="vault-demo-count" class="px-1.5 py-0.5 rounded-full bg-slate-500/20 text-[var(--text-sub)] text-[10px] font-mono font-bold">6</span>
+        </button>
+      </div>
+
+      <!-- Demo Info Notice Banner (Only shown in demo tab) -->
+      <div id="vault-demo-notice" class="hidden p-4 glass-subcard rounded-2xl border border-violet-500/20 flex items-start justify-between gap-4 text-xs">
+        <div class="flex items-start gap-3">
+          <i class="fa-solid fa-shield-halved text-violet-500 text-base mt-0.5"></i>
+          <div class="space-y-1">
+            <p class="font-bold text-[var(--text-main)]">System Baseline Reference Fixtures (Read-Only Demo)</p>
+            <p class="text-[var(--text-sub)] font-medium leading-relaxed max-w-2xl">
+              These 6 sample agreements power the instant benchmark evaluation and homepage quick-prompts (e.g. prepayment terms, health insurance limits). They are permanently protected from deletion.
+            </p>
+          </div>
+        </div>
+        <button onclick="switchView('traces')" class="glass-pill px-3 py-1.5 rounded-xl text-xs font-bold text-violet-600 dark:text-violet-300 hover:border-violet-500 transition whitespace-nowrap flex items-center gap-1.5 flex-shrink-0">
+          <i class="fa-solid fa-terminal text-[10px]"></i>
+          <span>Inspect Traces</span>
+        </button>
+      </div>
+
       <div class="glass-card rounded-3xl overflow-hidden border border-violet-500/20">
-        <table class="w-full text-left text-xs">
+        <table id="vault-table" class="w-full text-left text-xs">
           <thead class="bg-black/5 dark:bg-black/30 font-bold uppercase text-[10px] tracking-wider border-b border-violet-500/20 text-[var(--text-main)]">
             <tr>
               <th class="py-3.5 px-5">Filename</th>
@@ -489,6 +520,22 @@
           </thead>
           <tbody id="documents-table-body" class="divide-y divide-violet-500/15"></tbody>
         </table>
+
+        <!-- Empty State Container for My Uploads -->
+        <div id="vault-empty-state" class="hidden p-12 text-center space-y-3">
+          <div class="w-12 h-12 rounded-full bg-violet-500/10 text-violet-500 flex items-center justify-center mx-auto text-xl">
+            <i class="fa-solid fa-folder-open"></i>
+          </div>
+          <h3 class="text-sm font-bold text-[var(--text-main)]">No personal documents uploaded yet</h3>
+          <p class="text-xs text-[var(--text-sub)] max-w-sm mx-auto font-medium leading-relaxed">
+            Upload your personal PDF bank statements, loan agreements, or resumes to query them with zero hallucinations.
+          </p>
+          <label class="inline-flex cursor-pointer bg-violet-600 hover:bg-violet-700 text-white font-bold px-4 py-2 rounded-full text-xs items-center space-x-2 transition shadow mt-2">
+            <i class="fa-solid fa-cloud-arrow-up text-violet-200"></i>
+            <span>Upload Your First File</span>
+            <input type="file" accept=".pdf,.docx,.doc,.md,.txt" class="hidden" onchange="handleFileUpload(event)">
+          </label>
+        </div>
       </div>
     </section>
 
@@ -923,38 +970,94 @@
       }
     }
 
+    let currentVaultTab = 'user';
+    let loadedDocuments = [];
+
+    function setVaultTab(tab) {
+      currentVaultTab = tab;
+      const btnUser = document.getElementById('vault-tab-user');
+      const btnDemo = document.getElementById('vault-tab-demo');
+      const demoNotice = document.getElementById('vault-demo-notice');
+
+      if (tab === 'user') {
+        btnUser.classList.add('active');
+        btnUser.classList.remove('opacity-75');
+        btnDemo.classList.remove('active');
+        btnDemo.classList.add('opacity-75');
+        if (demoNotice) demoNotice.classList.add('hidden');
+      } else {
+        btnDemo.classList.add('active');
+        btnDemo.classList.remove('opacity-75');
+        btnUser.classList.remove('active');
+        btnUser.classList.add('opacity-75');
+        if (demoNotice) demoNotice.classList.remove('hidden');
+      }
+      renderDocumentsTable();
+    }
+
     async function loadDocumentsList() {
       try {
         const res = await fetch('/api/documents?user_id=1');
         const data = await res.json();
-        const tbody = document.getElementById('documents-table-body');
-        tbody.innerHTML = '';
-        data.documents.forEach(doc => {
-          const isSystem = doc.is_system;
-          tbody.innerHTML += `
-            <tr class="hover:bg-black/5 dark:hover:bg-white/5 transition font-semibold">
-              <td class="py-3.5 px-5 text-[var(--text-main)] flex items-center">
-                <i class="fa-regular fa-file-pdf text-violet-500 dark:text-violet-400 mr-2 text-sm"></i>
-                <span class="truncate max-w-xs sm:max-w-md">${doc.filename}</span>
-                ${isSystem 
-                  ? '<span class="ml-2.5 inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-bold bg-slate-500/10 text-slate-500 dark:text-slate-400 border border-slate-500/20"><i class="fa-solid fa-lock text-[8px]"></i> Baseline Demo</span>' 
-                  : '<span class="ml-2.5 inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-bold bg-violet-500/15 text-violet-600 dark:text-violet-300 border border-violet-500/30">User Upload</span>'}
-              </td>
-              <td class="py-3.5 px-5 capitalize text-[var(--text-sub)]">${doc.doc_type}</td>
-              <td class="py-3.5 px-5 font-mono text-violet-600 dark:text-violet-300 font-bold">${doc.chunk_count} chunks</td>
-              <td class="py-3.5 px-5 text-[var(--text-muted)] text-[11px]">${doc.uploaded_at ? doc.uploaded_at.split('T')[0] : 'N/A'}</td>
-              <td class="py-3.5 px-5 text-right">
-                ${isSystem 
-                  ? '<span class="text-[10px] font-semibold text-[var(--text-muted)] opacity-60 inline-flex items-center gap-1"><i class="fa-solid fa-shield text-[9px]"></i> Protected</span>'
-                  : `<button onclick="deleteDoc(${doc.doc_id})" class="text-rose-500 hover:text-rose-700 text-xs transition p-1 hover:bg-rose-500/10 rounded" title="Delete document"><i class="fa-solid fa-trash"></i></button>`
-                }
-              </td>
-            </tr>
-          `;
-        });
+        loadedDocuments = data.documents || [];
+
+        // Update counts
+        const userDocs = loadedDocuments.filter(d => !d.is_system);
+        const demoDocs = loadedDocuments.filter(d => d.is_system);
+
+        const userCountBadge = document.getElementById('vault-user-count');
+        const demoCountBadge = document.getElementById('vault-demo-count');
+        if (userCountBadge) userCountBadge.innerText = userDocs.length;
+        if (demoCountBadge) demoCountBadge.innerText = demoDocs.length;
+
+        renderDocumentsTable();
       } catch (err) {
         console.error(err);
       }
+    }
+
+    function renderDocumentsTable() {
+      const tbody = document.getElementById('documents-table-body');
+      const table = document.getElementById('vault-table');
+      const emptyState = document.getElementById('vault-empty-state');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+
+      const isDemo = currentVaultTab === 'demo';
+      const filtered = loadedDocuments.filter(doc => isDemo ? doc.is_system : !doc.is_system);
+
+      if (!isDemo && filtered.length === 0) {
+        if (table) table.classList.add('hidden');
+        if (emptyState) emptyState.classList.remove('hidden');
+        return;
+      }
+
+      if (table) table.classList.remove('hidden');
+      if (emptyState) emptyState.classList.add('hidden');
+
+      filtered.forEach(doc => {
+        const isSystem = doc.is_system;
+        tbody.innerHTML += `
+          <tr class="hover:bg-black/5 dark:hover:bg-white/5 transition font-semibold">
+            <td class="py-3.5 px-5 text-[var(--text-main)] flex items-center">
+              <i class="fa-regular fa-file-pdf text-violet-500 dark:text-violet-400 mr-2 text-sm"></i>
+              <span class="truncate max-w-xs sm:max-w-md">${doc.filename}</span>
+              ${isSystem 
+                ? '<span class="ml-2.5 inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-bold bg-slate-500/10 text-slate-500 dark:text-slate-400 border border-slate-500/20"><i class="fa-solid fa-lock text-[8px]"></i> Baseline Demo</span>' 
+                : '<span class="ml-2.5 inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-bold bg-violet-500/15 text-violet-600 dark:text-violet-300 border border-violet-500/30">User Upload</span>'}
+            </td>
+            <td class="py-3.5 px-5 capitalize text-[var(--text-sub)]">${doc.doc_type}</td>
+            <td class="py-3.5 px-5 font-mono text-violet-600 dark:text-violet-300 font-bold">${doc.chunk_count} chunks</td>
+            <td class="py-3.5 px-5 text-[var(--text-muted)] text-[11px]">${doc.uploaded_at ? doc.uploaded_at.split('T')[0] : 'N/A'}</td>
+            <td class="py-3.5 px-5 text-right">
+              ${isSystem 
+                ? '<span class="text-[10px] font-semibold text-[var(--text-muted)] opacity-60 inline-flex items-center gap-1"><i class="fa-solid fa-shield text-[9px]"></i> Protected Demo</span>'
+                : `<button onclick="deleteDoc(${doc.doc_id})" class="text-rose-500 hover:text-rose-700 text-xs transition p-1 hover:bg-rose-500/10 rounded" title="Delete document"><i class="fa-solid fa-trash"></i></button>`
+              }
+            </td>
+          </tr>
+        `;
+      });
     }
 
     async function handleFileUpload(e) {
@@ -973,6 +1076,7 @@
         });
         const data = await res.json();
         alert(data.message);
+        setVaultTab('user');
         loadDocumentsList();
       } catch (err) {
         alert("Upload failed.");
