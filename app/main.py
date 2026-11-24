@@ -35,18 +35,17 @@ app.include_router(router, prefix="/api")
 
 # Serve UI if ui directory exists
 UI_DIR = os.path.join(os.path.dirname(__file__), "..", "ui")
-LANDING_FILE = os.path.join(os.path.dirname(__file__), "..", "landing.html")
 
 if os.path.exists(UI_DIR):
     @app.get("/")
     def serve_index():
+        # Serves the full-viewport video hero landing page
         return FileResponse(os.path.join(UI_DIR, "index.html"))
 
-    @app.get("/landing")
-    def serve_landing():
-        if os.path.exists(LANDING_FILE):
-            return FileResponse(LANDING_FILE)
-        return FileResponse(os.path.join(UI_DIR, "index.html"))
+    @app.get("/app")
+    def serve_app():
+        # Serves the full Fintrix intelligence app (Chat, Summary, Vault, Traces, Evals)
+        return FileResponse(os.path.join(UI_DIR, "app.html"))
 
     app.mount("/static", StaticFiles(directory=UI_DIR), name="static")
 
