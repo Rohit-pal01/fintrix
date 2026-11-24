@@ -294,7 +294,9 @@ def verify_answer_node(state: AgentState) -> AgentState:
             try:
                 v = float(val)
                 valid_numbers.add(v)
+                valid_numbers.add(round(v, 2))
                 valid_numbers.add(abs(v))
+                valid_numbers.add(round(abs(v), 2))
                 if q_target:
                     valid_numbers.add(round(abs(q_target - v), 2))
                     valid_numbers.add(round(abs(q_target - abs(v)), 2))

@@ -174,7 +174,8 @@ def extract_and_ingest_pdf_transactions(
                     opening_balance=opening_balance
                 )
                 db.add(account)
-                db.flush()
+                db.commit()
+                db.refresh(account)
                 acc_id = account.account_id
             else:
                 account.opening_balance = opening_balance
