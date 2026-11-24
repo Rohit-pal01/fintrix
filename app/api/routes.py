@@ -149,9 +149,18 @@ async def upload_document(
         "transactions_extracted_to_sql": sql_txns_inserted
     }
 
+SYSTEM_DOCS = {
+    "bank_statement_hdfc.pdf",
+    "bank_statement_icici.pdf",
+    "car_loan_agreement.pdf",
+    "health_insurance_policy.pdf",
+    "home_loan_agreement.pdf",
+    "term_life_insurance.pdf"
+}
+
 @router.get("/documents")
 def list_documents(user_id: int = 1, db: Session = Depends(get_db)):
-    """Lists all stored documents with chunk statistics."""
+    """Lists all stored documents with chunk statistics and protection flags."""
     docs = db.query(Document).filter_by(user_id=user_id).all()
     results = []
     for d in docs:
@@ -161,21 +170,28 @@ def list_documents(user_id: int = 1, db: Session = Depends(get_db)):
             "filename": d.filename,
             "doc_type": d.doc_type,
             "uploaded_at": d.uploaded_at.isoformat() if d.uploaded_at else None,
-            "chunk_count": c_count
+            "chunk_count": c_count,
+            "is_system": d.filename.lower() in SYSTEM_DOCS
         })
     return {"documents": results}
 
 @router.delete("/documents/{doc_id}")
 def delete_document(doc_id: int, db: Session = Depends(get_db)):
-    """Deletes a document along with all its chunks."""
+    """Deletes a document along with all its chunks, protecting baseline demo files."""
     doc = db.query(Document).filter_by(doc_id=doc_id).first()
     if not doc:
         raise HTTPException(status_code=404, detail="Document not found.")
 
+    if doc.filename.lower() in SYSTEM_DOCS:
+        raise HTTPException(
+            status_code=403, 
+            detail="Default baseline system documents are protected and cannot be deleted."
+        )
+
     db.delete(doc)
     db.commit()
     sync_retriever()
-    return {"message": f"Document {doc_id} deleted successfully."}
+    return {"message": f"Document '{doc.filename}' deleted successfully."}
 
 @router.post("/transactions/ingest")
 def ingest_transactions(req: IngestTransactionsRequest, db: Session = Depends(get_db)):

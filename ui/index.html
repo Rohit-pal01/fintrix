@@ -13,44 +13,43 @@
 
   <style>
     /*
-      Exact Sapphire Ash Morning Palette with High-Contrast Dark & Crisp Light Modes:
-      - Deep Sapphire Navy: #15222E (Deep), #35627A (Sapphire Slate)
-      - Soft Rose Ash: #E5AEA9
-      - Terracotta Accent: #B46258
-      - Lavender Muted Mist: #A6A9D0
-      - Ash Morning Gray: #8E9A98
-      - Morning Pure White: #F8FAFC / #FFFFFF
+      Lavender & Cyber Cyan Earth-Harmonized Palette:
+      - Deep Cosmos Navy: #090d16
+      - Pure Lavender: #A6A9D0 / #c4b5fd
+      - Royal Violet: #6366f1 / #8b5cf6 / #7c3aed
+      - Electric Cyan: #38bdf8 / #06b6d4
+      - Pure Crisp Light: #ffffff / #f8fafc
     */
     :root {
-      --bg: #0b1319;
-      --card-bg: rgba(21, 34, 46, 0.78);
+      --bg: #090d16;
+      --card-bg: rgba(15, 23, 42, 0.78);
       --card-border: rgba(166, 169, 208, 0.22);
-      --subcard-bg: rgba(11, 19, 25, 0.65);
+      --subcard-bg: rgba(15, 23, 42, 0.65);
       --text-main: #FFFFFF;
       --text-sub: #cbd5e1;
-      --text-muted: #8E9A98;
-      --sapphire: #35627A;
-      --lavender: #A6A9D0;
-      --rose-ash: #E5AEA9;
-      --terracotta: #B46258;
-      --glass-nav: rgba(11, 19, 25, 0.88);
-      --video-opacity: 0.52;
+      --text-muted: #94a3b8;
+      --primary: #8b5cf6;
+      --primary-hover: #7c3aed;
+      --lavender: #c4b5fd;
+      --cyan: #38bdf8;
+      --glass-nav: rgba(9, 13, 22, 0.85);
+      --video-opacity: 0.55;
     }
 
     html.light {
       --bg: #f8fafc;
-      --card-bg: rgba(255, 255, 255, 0.96);
-      --card-border: rgba(53, 98, 122, 0.16);
-      --subcard-bg: #f1f5f9;
+      --card-bg: rgba(255, 255, 255, 0.95);
+      --card-border: rgba(99, 102, 241, 0.16);
+      --subcard-bg: #ffffff;
       --text-main: #0f172a;
       --text-sub: #334155;
       --text-muted: #64748b;
-      --sapphire: #35627A;
-      --lavender: #64748b;
-      --rose-ash: #b4534f;
-      --terracotta: #9a3412;
-      --glass-nav: rgba(255, 255, 255, 0.94);
-      --video-opacity: 0.38;
+      --primary: #6366f1;
+      --primary-hover: #4f46e5;
+      --lavender: #6366f1;
+      --cyan: #0284c7;
+      --glass-nav: rgba(255, 255, 255, 0.95);
+      --video-opacity: 0.32;
     }
 
     * { box-sizing: border-box; }
@@ -76,15 +75,21 @@
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       border: 1px solid var(--card-border);
+      box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
     }
     .glass-subcard {
       background: var(--subcard-bg);
       border: 1px solid var(--card-border);
+      box-shadow: 0 2px 10px -1px rgba(0, 0, 0, 0.03);
     }
     .glass-pill {
       background: rgba(166, 169, 208, 0.12);
       backdrop-filter: blur(12px);
       border: 1px solid var(--card-border);
+    }
+    html.light .glass-pill {
+      background: rgba(241, 245, 249, 0.9);
+      border: 1px solid rgba(203, 213, 225, 0.8);
     }
 
     /* Fixed Video Background */
@@ -109,24 +114,23 @@
       object-fit: cover;
       object-position: 50% 12%;
       opacity: var(--video-opacity);
-      filter: contrast(1.18) saturate(1.15);
+      filter: contrast(1.15) saturate(1.2);
       transition: opacity 0.3s ease;
     }
     html.light .bg-video {
-      filter: contrast(1.35) brightness(0.65) saturate(1.4);
+      filter: contrast(1.22) brightness(0.92) saturate(1.3);
     }
     .bg-gradient-overlay {
       position: fixed;
       inset: 0;
-      background: radial-gradient(circle at 50% 18%, rgba(53, 98, 122, 0.30), transparent 65%),
-                  radial-gradient(circle at 80% 80%, rgba(229, 174, 169, 0.12), transparent 50%),
-                  linear-gradient(180deg, rgba(11, 19, 25, 0.20) 0%, rgba(11, 19, 25, 0.94) 75%, #0b1319 100%);
+      background: radial-gradient(circle at 50% 18%, rgba(99, 102, 241, 0.25), transparent 65%),
+                  linear-gradient(180deg, rgba(9, 13, 22, 0.20) 0%, rgba(9, 13, 22, 0.95) 75%, #090d16 100%);
       z-index: 1;
       pointer-events: none;
     }
     html.light .bg-gradient-overlay {
-      background: radial-gradient(circle at 50% 20%, rgba(53, 98, 122, 0.18), transparent 70%),
-                  linear-gradient(180deg, rgba(248, 250, 252, 0.15) 0%, rgba(248, 250, 252, 0.75) 60%, #f8fafc 100%);
+      background: radial-gradient(circle at 50% 20%, rgba(196, 181, 253, 0.35), transparent 70%),
+                  linear-gradient(180deg, rgba(248, 250, 252, 0.15) 0%, rgba(248, 250, 252, 0.82) 60%, #f8fafc 100%);
     }
 
     .app-content {
@@ -144,28 +148,32 @@
       background: rgba(166, 169, 208, 0.18);
     }
     .tab-btn.active {
-      background: var(--sapphire);
+      background: var(--primary);
       color: #ffffff !important;
-      border: 1px solid rgba(229, 174, 169, 0.45);
-      box-shadow: 0 0 20px rgba(53, 98, 122, 0.55);
+      border: 1px solid rgba(196, 181, 253, 0.45);
+      box-shadow: 0 0 20px rgba(99, 102, 241, 0.5);
     }
 
-    /* High Contrast Text Gradient */
+    /* High Contrast Violet / Lavender Text Gradient */
     .hero-title-gradient {
-      background: linear-gradient(135deg, #FFFFFF 0%, #A6A9D0 45%, #E5AEA9 80%, #B46258 100%);
+      background: linear-gradient(135deg, #FFFFFF 10%, #c4b5fd 55%, #818cf8 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
     html.light .hero-title-gradient {
-      background: linear-gradient(135deg, #0f172a 0%, #35627A 50%, #9a3412 100%);
+      background: linear-gradient(135deg, #0f172a 10%, #6366f1 55%, #8b5cf6 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
 
-    /* Console Box with Sapphire Glow */
+    /* Console Box with Lavender / Violet Glow */
     .console-box {
-      box-shadow: 0 20px 60px -15px rgba(0, 0, 0, 0.7), 0 0 45px -10px rgba(53, 98, 122, 0.35);
+      box-shadow: 0 20px 60px -15px rgba(0, 0, 0, 0.7), 0 0 45px -10px rgba(99, 102, 241, 0.3);
     }
+    html.light .console-box {
+      box-shadow: 0 15px 45px -10px rgba(99, 102, 241, 0.12), 0 2px 10px rgba(0, 0, 0, 0.04);
+    }
+  </style>
   </style>
 </head>
 <body class="min-h-screen flex flex-col">
@@ -182,19 +190,19 @@
   <header class="app-content sticky top-0 z-50 glass-nav px-6 py-3.5 flex items-center justify-between">
     <!-- Brand -->
     <div class="flex items-center space-x-3 cursor-pointer" onclick="switchView('hero')">
-      <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#35627A] to-[#E5AEA9] flex items-center justify-center font-bold text-slate-950 text-base shadow-lg shadow-[#35627A]/40">
+      <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-violet-600 to-indigo-400 flex items-center justify-center font-bold text-white text-base shadow-lg shadow-violet-500/30">
         <i class="fa-solid fa-shield-halved text-white text-sm"></i>
       </div>
       <div>
         <div class="text-sm font-extrabold tracking-tight flex items-center gap-2">
           <span>Fintrix</span>
-          <span class="text-[9px] uppercase px-1.5 py-0.5 rounded-full bg-[#A6A9D0]/20 text-[#A6A9D0] border border-[#A6A9D0]/30 font-mono font-bold">Verifiable v2.4</span>
+          <span class="text-[9px] uppercase px-1.5 py-0.5 rounded-full bg-violet-500/15 text-violet-600 dark:text-violet-300 border border-violet-500/30 font-mono font-bold">Verifiable v2.4</span>
         </div>
         <p class="text-[11px] opacity-75 font-medium">Autonomous Financial Intelligence</p>
       </div>
     </div>
 
-    <!-- Center Floating Nav Island -->
+    <!-- Center Floating Nav Island (Consumer-focused: 4 Core Capabilities) -->
     <nav class="flex items-center space-x-1.5 glass-pill px-3 py-1.5 rounded-full shadow-inner">
       <button onclick="switchView('hero')" id="nav-btn-hero" class="tab-btn active px-3.5 py-1.5 rounded-full text-xs font-semibold">
         <i class="fa-solid fa-house mr-1.5 text-[11px]"></i> Home
@@ -202,24 +210,18 @@
       <button onclick="switchView('chat')" id="nav-btn-chat" class="tab-btn px-3.5 py-1.5 rounded-full text-xs font-medium">
         <i class="fa-solid fa-comments mr-1.5 text-[11px]"></i> Assistant
       </button>
-      <button onclick="switchView('summary')" id="nav-btn-summary" class="tab-btn px-3.5 py-1.5 rounded-full text-xs font-medium">
-        <i class="fa-solid fa-chart-pie mr-1.5 text-[11px]"></i> Financial Summary
-      </button>
       <button onclick="switchView('documents')" id="nav-btn-documents" class="tab-btn px-3.5 py-1.5 rounded-full text-xs font-medium">
         <i class="fa-solid fa-folder-open mr-1.5 text-[11px]"></i> Document Vault
       </button>
-      <button onclick="switchView('traces')" id="nav-btn-traces" class="tab-btn px-3.5 py-1.5 rounded-full text-xs font-medium">
-        <i class="fa-solid fa-network-wired mr-1.5 text-[11px]"></i> Traces
-      </button>
-      <button onclick="switchView('evals')" id="nav-btn-evals" class="tab-btn px-3.5 py-1.5 rounded-full text-xs font-medium">
-        <i class="fa-solid fa-trophy mr-1.5 text-[11px]"></i> Benchmarks
+      <button onclick="switchView('summary')" id="nav-btn-summary" class="tab-btn px-3.5 py-1.5 rounded-full text-xs font-medium">
+        <i class="fa-solid fa-chart-pie mr-1.5 text-[11px]"></i> Financial Summary
       </button>
     </nav>
 
     <!-- Right Side: Dark / Light Mode Toggle -->
     <div class="flex items-center space-x-2">
       <button onclick="toggleTheme()" id="theme-toggle-btn" class="glass-pill px-3 py-1.5 rounded-full text-xs font-medium flex items-center gap-1.5 hover:scale-105 active:scale-95 transition" title="Toggle Light / Dark Mode">
-        <i id="theme-icon" class="fa-solid fa-moon text-[#A6A9D0]"></i>
+        <i id="theme-icon" class="fa-solid fa-moon text-violet-400"></i>
         <span id="theme-text" class="text-[11px] font-mono font-semibold hidden sm:inline">Dark</span>
       </button>
     </div>
@@ -231,10 +233,10 @@
     <!-- VIEW 1: HERO VIEW -->
     <section id="view-hero" class="flex flex-col items-center justify-center text-center py-10 md:py-16 space-y-8">
       
-      <!-- Pill Badge -->
-      <div class="inline-flex items-center gap-2 glass-pill px-4 py-1.5 rounded-full text-xs border border-[#A6A9D0]/30 shadow-sm">
-        <span class="w-2 h-2 rounded-full bg-[#E5AEA9] animate-pulse"></span>
-        <span class="font-semibold tracking-wide uppercase text-[10px] text-[#A6A9D0]">Dual-Engine Verifiable Intelligence</span>
+      <!-- Pill Badge (Lavender theme matching revolving Earth) -->
+      <div class="inline-flex items-center gap-2 glass-pill px-4 py-1.5 rounded-full text-xs border border-violet-500/30 shadow-sm">
+        <span class="w-2 h-2 rounded-full bg-violet-400 animate-pulse"></span>
+        <span class="font-semibold tracking-wide uppercase text-[10px] text-violet-600 dark:text-violet-300">Deterministic SQL + Hybrid RAG</span>
       </div>
 
       <!-- Main Catchphrase -->
@@ -250,30 +252,30 @@
 
       <!-- Primary Action Buttons -->
       <div class="flex flex-wrap items-center justify-center gap-4 pt-1">
-        <button onclick="switchView('chat')" class="bg-gradient-to-r from-[#35627A] via-[#487c9b] to-[#E5AEA9] hover:opacity-95 text-white font-bold px-8 py-3.5 rounded-full text-sm transition flex items-center gap-2 shadow-xl hover:scale-105 active:scale-95 duration-200">
+        <button onclick="switchView('chat')" class="bg-gradient-to-r from-violet-600 via-indigo-600 to-cyan-500 hover:opacity-95 text-white font-bold px-8 py-3.5 rounded-full text-sm transition flex items-center gap-2 shadow-xl hover:scale-105 active:scale-95 duration-200">
           <span>Launch Financial AI</span>
           <i class="fa-solid fa-arrow-right text-xs"></i>
         </button>
-        <button onclick="switchView('documents')" class="glass-pill hover:bg-white/10 font-bold px-6 py-3.5 rounded-full text-sm transition flex items-center gap-2 border border-[#A6A9D0]/30 text-[var(--text-main)]">
-          <i class="fa-solid fa-file-pdf text-[#E5AEA9]"></i>
+        <button onclick="switchView('documents')" class="glass-pill hover:bg-white/10 font-bold px-6 py-3.5 rounded-full text-sm transition flex items-center gap-2 border border-violet-500/30 text-[var(--text-main)]">
+          <i class="fa-solid fa-file-pdf text-violet-500 dark:text-violet-400"></i>
           <span>Document Vault</span>
         </button>
       </div>
 
       <!-- Professional Interactive Architecture Showcase -->
       <div class="w-full max-w-5xl pt-8">
-        <div class="glass-card rounded-3xl p-6 md:p-8 console-box text-left border border-[#A6A9D0]/20">
+        <div class="glass-card rounded-3xl p-6 md:p-8 console-box text-left border border-violet-500/20">
           
-          <div class="flex flex-wrap items-center justify-between pb-6 border-b border-[#A6A9D0]/15 gap-4">
+          <div class="flex flex-wrap items-center justify-between pb-6 border-b border-violet-500/15 gap-4">
             <div>
-              <div class="text-xs uppercase tracking-widest text-[#A6A9D0] font-mono font-bold">Interactive System Runtime</div>
+              <div class="text-xs uppercase tracking-widest text-violet-500 dark:text-violet-300 font-mono font-bold">Interactive System Runtime</div>
               <h2 class="text-xl font-bold mt-0.5 text-[var(--text-main)]">Execution & Retrieval Pipeline</h2>
             </div>
             <!-- Live Status Indicators -->
             <div class="flex items-center gap-4 text-xs font-mono font-medium">
               <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-400"></span> Neon DB: Active</span>
               <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-cyan-400"></span> Gemini/Groq: Ready</span>
-              <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-indigo-400"></span> Hybrid BM25: Synced</span>
+              <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-violet-400"></span> Hybrid BM25: Synced</span>
             </div>
           </div>
 
@@ -281,20 +283,20 @@
           <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-6">
             
             <!-- Step 1: Text-to-SQL Engine -->
-            <div class="p-5 rounded-2xl glass-subcard space-y-3 hover:border-[#35627A] transition duration-300">
+            <div class="p-5 rounded-2xl glass-subcard space-y-3 hover:border-violet-500 transition duration-300">
               <div class="flex items-center justify-between">
-                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-[#35627A]/30 text-[#A6A9D0] uppercase font-bold">Relational Core</span>
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-violet-500/15 text-violet-600 dark:text-violet-300 uppercase font-bold">Relational Core</span>
                 <span class="text-xs font-bold text-emerald-500 dark:text-emerald-400">100% Execution Yield</span>
               </div>
               <h3 class="text-base font-bold flex items-center gap-2 text-[var(--text-main)]">
-                <i class="fa-solid fa-database text-[#35627A] dark:text-[#A6A9D0]"></i>
+                <i class="fa-solid fa-database text-violet-500 dark:text-violet-400"></i>
                 <span>Deterministic Text-to-SQL</span>
               </h3>
               <p class="text-xs font-medium leading-relaxed text-[var(--text-sub)]">
                 Translates natural queries into validated PostgreSQL aggregates across 13 relational tables with AST validation.
               </p>
               <div class="pt-2">
-                <button onclick="sendQuickPrompt('How much did I spend on food last month?')" class="text-[11px] font-bold text-[#35627A] dark:text-[#E5AEA9] hover:underline flex items-center gap-1">
+                <button onclick="sendQuickPrompt('How much did I spend on food last month?')" class="text-[11px] font-bold text-violet-600 dark:text-violet-300 hover:underline flex items-center gap-1">
                   <span>Explore SQL Execution</span>
                   <i class="fa-solid fa-chevron-right text-[9px]"></i>
                 </button>
@@ -302,20 +304,20 @@
             </div>
 
             <!-- Step 2: Cross-Encoder RAG -->
-            <div class="p-5 rounded-2xl glass-subcard space-y-3 hover:border-[#E5AEA9] transition duration-300">
+            <div class="p-5 rounded-2xl glass-subcard space-y-3 hover:border-cyan-500 transition duration-300">
               <div class="flex items-center justify-between">
-                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-[#A6A9D0]/20 text-[#A6A9D0] uppercase font-bold">Semantic Engine</span>
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-cyan-500/15 text-cyan-600 dark:text-cyan-300 uppercase font-bold">Semantic Engine</span>
                 <span class="text-xs font-bold text-cyan-600 dark:text-cyan-400">98% Hit Rate@5</span>
               </div>
               <h3 class="text-base font-bold flex items-center gap-2 text-[var(--text-main)]">
-                <i class="fa-solid fa-file-invoice-dollar text-[#35627A] dark:text-[#E5AEA9]"></i>
+                <i class="fa-solid fa-file-invoice-dollar text-cyan-500 dark:text-cyan-400"></i>
                 <span>Hybrid Grounded RAG</span>
               </h3>
               <p class="text-xs font-medium leading-relaxed text-[var(--text-sub)]">
                 Pairs BM25 lexical token retrieval with dense semantic vectors and BGE cross-encoder reranking for contract verification.
               </p>
               <div class="pt-2">
-                <button onclick="sendQuickPrompt('What is the prepayment penalty on my floating rate home loan?')" class="text-[11px] font-bold text-[#35627A] dark:text-[#E5AEA9] hover:underline flex items-center gap-1">
+                <button onclick="sendQuickPrompt('What is the prepayment penalty on my floating rate home loan?')" class="text-[11px] font-bold text-cyan-600 dark:text-cyan-300 hover:underline flex items-center gap-1">
                   <span>Explore Policy Retrieval</span>
                   <i class="fa-solid fa-chevron-right text-[9px]"></i>
                 </button>
@@ -323,25 +325,30 @@
             </div>
 
             <!-- Step 3: Runtime Verifier -->
-            <div class="p-5 rounded-2xl glass-subcard space-y-3 hover:border-[#B46258] transition duration-300">
+            <div class="p-5 rounded-2xl glass-subcard space-y-3 hover:border-indigo-500 transition duration-300">
               <div class="flex items-center justify-between">
-                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-[#B46258]/20 text-[#B46258] dark:text-[#E5AEA9] uppercase font-bold">Verification Gate</span>
-                <span class="text-xs font-bold text-rose-600 dark:text-[#E5AEA9]">0.0% Hallucination</span>
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-indigo-500/15 text-indigo-600 dark:text-indigo-300 uppercase font-bold">Verification Gate</span>
+                <span class="text-xs font-bold text-violet-600 dark:text-violet-300">0.0% Hallucination</span>
               </div>
               <h3 class="text-base font-bold flex items-center gap-2 text-[var(--text-main)]">
-                <i class="fa-solid fa-shield-virus text-[#B46258] dark:text-[#E5AEA9]"></i>
+                <i class="fa-solid fa-shield-virus text-indigo-500 dark:text-indigo-400"></i>
                 <span>Post-Generation Verifier</span>
               </h3>
               <p class="text-xs font-medium leading-relaxed text-[var(--text-sub)]">
                 Every numerical claim undergoes automated runtime consistency checks against source database rows prior to presentation.
               </p>
               <div class="pt-2">
-                <button onclick="switchView('evals')" class="text-[11px] font-bold text-[#35627A] dark:text-[#E5AEA9] hover:underline flex items-center gap-1">
+                <button onclick="switchView('evals')" class="text-[11px] font-bold text-indigo-600 dark:text-indigo-300 hover:underline flex items-center gap-1">
                   <span>Review Benchmark Metrics</span>
                   <i class="fa-solid fa-chevron-right text-[9px]"></i>
                 </button>
               </div>
             </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
 
           </div>
         </div>
@@ -382,7 +389,7 @@
       <div id="chat-messages" class="flex-1 glass-card rounded-3xl p-5 overflow-y-auto space-y-4 min-h-[440px] max-h-[580px]">
         <!-- Welcome Message -->
         <div class="flex items-start space-x-3 max-w-2xl">
-          <div class="w-8 h-8 rounded-xl bg-[#35627A] text-white flex items-center justify-center flex-shrink-0 text-sm shadow">
+          <div class="w-8 h-8 rounded-xl bg-violet-600 text-white flex items-center justify-center flex-shrink-0 text-sm shadow">
             <i class="fa-solid fa-shield-halved"></i>
           </div>
           <div class="glass-subcard rounded-2xl rounded-tl-sm p-4 text-sm space-y-2">
@@ -390,7 +397,7 @@
             <p class="leading-relaxed text-xs font-medium text-[var(--text-sub)]">
               Every numerical claim is backed by verified SQL queries, and every policy claim cites your uploaded documents directly. Ask anything about your finances or documents.
             </p>
-            <div class="text-[10px] text-[var(--text-muted)] italic pt-1 border-t border-[#A6A9D0]/20 font-medium">
+            <div class="text-[10px] text-[var(--text-muted)] italic pt-1 border-t border-violet-500/20 font-medium">
               Disclaimer: This is informational and not financial advice.
             </div>
           </div>
@@ -403,12 +410,12 @@
           id="chat-input" 
           type="text" 
           placeholder="Ask a question about your finances, loans, or uploaded documents..." 
-          class="w-full glass-card rounded-2xl pl-5 pr-28 py-4 text-sm text-[var(--text-main)] placeholder:text-[var(--text-muted)] font-medium focus:outline-none focus:ring-2 focus:ring-[#35627A] transition shadow-inner"
+          class="w-full glass-card rounded-2xl pl-5 pr-28 py-4 text-sm text-[var(--text-main)] placeholder:text-[var(--text-muted)] font-medium focus:outline-none focus:ring-2 focus:ring-violet-500 transition shadow-inner"
         />
         <button 
           type="submit" 
           id="send-btn"
-          class="absolute right-2.5 bg-[#35627A] hover:bg-[#487c9b] text-white font-bold px-5 py-2 rounded-xl text-xs flex items-center space-x-1.5 shadow transition"
+          class="absolute right-2.5 bg-violet-600 hover:bg-violet-700 text-white font-bold px-5 py-2 rounded-xl text-xs flex items-center space-x-1.5 shadow transition"
         >
           <span>Ask</span>
           <i class="fa-solid fa-arrow-right text-[10px]"></i>
@@ -418,13 +425,13 @@
 
     <!-- VIEW 3: FINANCIAL SUMMARY -->
     <section id="view-summary" class="hidden space-y-6">
-      <div class="flex items-center justify-between pb-2 border-b border-[#A6A9D0]/20">
+      <div class="flex items-center justify-between pb-2 border-b border-violet-500/20">
         <div>
           <h2 class="text-lg font-bold text-[var(--text-main)]">Monthly Financial Overview</h2>
           <p class="text-xs font-medium text-[var(--text-sub)]">Real-time metrics calculated directly from PostgreSQL transactions.</p>
         </div>
         <button onclick="loadFinancialSummary()" class="text-xs glass-pill px-3 py-1.5 rounded-full transition font-semibold text-[var(--text-main)]">
-          <i class="fa-solid fa-rotate-right mr-1"></i> Refresh Data
+          <i class="fa-solid fa-rotate-right mr-1 text-violet-500"></i> Refresh Data
         </button>
       </div>
 
@@ -432,7 +439,7 @@
         <!-- Budgets Progress -->
         <div class="md:col-span-2 glass-card rounded-3xl p-6 space-y-4">
           <h3 class="text-sm font-bold flex items-center text-[var(--text-main)]">
-            <i class="fa-solid fa-bullseye text-[#35627A] mr-2"></i> Budget vs Actual Spending
+            <i class="fa-solid fa-bullseye text-violet-500 mr-2"></i> Budget vs Actual Spending
           </h3>
           <div id="budget-bars" class="space-y-4 pt-2"></div>
         </div>
@@ -440,7 +447,7 @@
         <!-- Upcoming Bills -->
         <div class="glass-card rounded-3xl p-6 space-y-4">
           <h3 class="text-sm font-bold flex items-center text-[var(--text-main)]">
-            <i class="fa-solid fa-receipt text-[#A6A9D0] mr-2"></i> Upcoming & Overdue Bills
+            <i class="fa-solid fa-receipt text-cyan-500 mr-2"></i> Upcoming & Overdue Bills
           </h3>
           <div id="bills-list" class="space-y-2.5"></div>
         </div>
@@ -449,7 +456,7 @@
       <!-- Category Chips -->
       <div class="glass-card rounded-3xl p-6 space-y-4">
         <h3 class="text-sm font-bold flex items-center text-[var(--text-main)]">
-          <i class="fa-solid fa-layer-group text-[#E5AEA9] mr-2"></i> Spending by Category
+          <i class="fa-solid fa-layer-group text-violet-500 mr-2"></i> Spending by Category
         </h3>
         <div id="category-chips" class="grid grid-cols-2 sm:grid-cols-4 gap-3"></div>
       </div>
@@ -457,21 +464,21 @@
 
     <!-- VIEW 4: DOCUMENT VAULT -->
     <section id="view-documents" class="hidden space-y-6">
-      <div class="flex items-center justify-between pb-2 border-b border-[#A6A9D0]/20">
+      <div class="flex items-center justify-between pb-2 border-b border-violet-500/20">
         <div>
           <h2 class="text-lg font-bold text-[var(--text-main)]">Document Vault (RAG Corpus)</h2>
           <p class="text-xs font-medium text-[var(--text-sub)]">Uploaded financial policies, statements, and resumes indexed into hybrid vector chunks.</p>
         </div>
-        <label class="cursor-pointer bg-[#35627A] hover:bg-[#487c9b] text-white font-bold px-4 py-2 rounded-full text-xs flex items-center space-x-2 transition shadow">
-          <i class="fa-solid fa-cloud-arrow-up text-[#E5AEA9]"></i>
+        <label class="cursor-pointer bg-violet-600 hover:bg-violet-700 text-white font-bold px-4 py-2 rounded-full text-xs flex items-center space-x-2 transition shadow">
+          <i class="fa-solid fa-cloud-arrow-up text-violet-200"></i>
           <span>Upload Document (PDF, Word, TXT)</span>
           <input type="file" id="pdf-upload-input" accept=".pdf,.docx,.doc,.md,.txt" class="hidden" onchange="handleFileUpload(event)">
         </label>
       </div>
 
-      <div class="glass-card rounded-3xl overflow-hidden border border-[#A6A9D0]/20">
+      <div class="glass-card rounded-3xl overflow-hidden border border-violet-500/20">
         <table class="w-full text-left text-xs">
-          <thead class="bg-black/10 dark:bg-black/30 font-bold uppercase text-[10px] tracking-wider border-b border-[#A6A9D0]/20 text-[var(--text-main)]">
+          <thead class="bg-black/5 dark:bg-black/30 font-bold uppercase text-[10px] tracking-wider border-b border-violet-500/20 text-[var(--text-main)]">
             <tr>
               <th class="py-3.5 px-5">Filename</th>
               <th class="py-3.5 px-5">Category</th>
@@ -480,14 +487,14 @@
               <th class="py-3.5 px-5 text-right">Actions</th>
             </tr>
           </thead>
-          <tbody id="documents-table-body" class="divide-y divide-[#A6A9D0]/15"></tbody>
+          <tbody id="documents-table-body" class="divide-y divide-violet-500/15"></tbody>
         </table>
       </div>
     </section>
 
     <!-- VIEW 5: TRACES INSPECTOR -->
     <section id="view-traces" class="hidden space-y-6">
-      <div class="flex items-center justify-between pb-2 border-b border-[#A6A9D0]/20">
+      <div class="flex items-center justify-between pb-2 border-b border-violet-500/20">
         <div>
           <h2 class="text-lg font-bold text-[var(--text-main)]">Execution Traces & Latency Inspector</h2>
           <p class="text-xs font-medium text-[var(--text-sub)]">Full audit trail of routing decisions, SQL repair loops, and retrieved chunks.</p>
@@ -500,12 +507,12 @@
 
     <!-- VIEW 6: EVALUATION BENCHMARKS -->
     <section id="view-evals" class="hidden space-y-6">
-      <div class="flex items-center justify-between pb-2 border-b border-[#A6A9D0]/20">
+      <div class="flex items-center justify-between pb-2 border-b border-violet-500/20">
         <div>
           <h2 class="text-lg font-bold text-[var(--text-main)]">Autonomous Evaluation Suites</h2>
           <p class="text-xs font-medium text-[var(--text-sub)]">Benchmark suites validating SQL yield, retrieval Hit Rate@K, and routing accuracy.</p>
         </div>
-        <button onclick="runLiveEvaluation()" id="btn-run-eval" class="bg-[#35627A] hover:bg-[#487c9b] text-white font-bold px-4 py-2 rounded-full text-xs flex items-center space-x-2 transition shadow">
+        <button onclick="runLiveEvaluation()" id="btn-run-eval" class="bg-violet-600 hover:bg-violet-700 text-white font-bold px-4 py-2 rounded-full text-xs flex items-center space-x-2 transition shadow">
           <i class="fa-solid fa-play"></i>
           <span>Run Benchmark Suites</span>
         </button>
@@ -525,12 +532,12 @@
         </div>
         <div class="glass-card p-4 rounded-2xl">
           <div class="text-[10px] font-bold uppercase text-[var(--text-muted)]">Routing Accuracy</div>
-          <div class="text-2xl font-black text-[#35627A] dark:text-[#A6A9D0] mt-1" id="eval-routing-acc">100.0%</div>
+          <div class="text-2xl font-black text-violet-600 dark:text-violet-300 mt-1" id="eval-routing-acc">100.0%</div>
           <div class="text-[10px] font-medium text-[var(--text-sub)] mt-0.5">Target: &ge; 90% (30 Cases)</div>
         </div>
         <div class="glass-card p-4 rounded-2xl">
           <div class="text-[10px] font-bold uppercase text-[var(--text-muted)]">SQL vs RAG Yield Delta</div>
-          <div class="text-2xl font-black text-[#B46258] dark:text-[#E5AEA9] mt-1">+100.0%</div>
+          <div class="text-2xl font-black text-cyan-600 dark:text-cyan-300 mt-1">+100.0%</div>
           <div class="text-[10px] font-medium text-[var(--text-sub)] mt-0.5">Target: &ge; +30.0%</div>
         </div>
       </div>
@@ -538,15 +545,15 @@
 
   </main>
 
-  <!-- 4. PROFESSIONAL ENTERPRISE FOOTER -->
-  <footer class="app-content mt-20 border-t border-[#A6A9D0]/20 bg-slate-900/40 dark:bg-black/50 backdrop-blur-md">
+  <!-- 4. CLEAN ENTERPRISE FOOTER (Matching QuickKart Light & Dark Excellence) -->
+  <footer class="app-content mt-20 border-t border-slate-200/90 dark:border-white/10 bg-white/95 dark:bg-black/60 backdrop-blur-xl transition duration-300">
     <div class="max-w-7xl mx-auto px-6 py-12">
       <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
         
         <!-- Col 1: Brand & Identity -->
         <div class="space-y-3">
           <div class="flex items-center space-x-2.5">
-            <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-[#35627A] to-[#E5AEA9] flex items-center justify-center font-bold text-slate-950 text-sm shadow">
+            <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-violet-600 to-indigo-400 flex items-center justify-center font-bold text-white text-sm shadow">
               <i class="fa-solid fa-shield-halved text-white"></i>
             </div>
             <span class="text-base font-extrabold tracking-tight text-[var(--text-main)]">Fintrix</span>
@@ -566,23 +573,22 @@
         <div class="space-y-2.5">
           <h4 class="text-xs font-bold uppercase tracking-wider text-[var(--text-main)]">Platform Engines</h4>
           <ul class="space-y-2 text-xs font-medium text-[var(--text-sub)]">
-            <li><button onclick="switchView('chat')" class="hover:text-[#35627A] dark:hover:text-[#E5AEA9] transition">Text-to-SQL Engine</button></li>
-            <li><button onclick="switchView('documents')" class="hover:text-[#35627A] dark:hover:text-[#E5AEA9] transition">Hybrid BM25 + Vector RAG</button></li>
-            <li><button onclick="switchView('traces')" class="hover:text-[#35627A] dark:hover:text-[#E5AEA9] transition">BGE Cross-Encoder Reranker</button></li>
-            <li><button onclick="switchView('evals')" class="hover:text-[#35627A] dark:hover:text-[#E5AEA9] transition">Post-Generation Verifier</button></li>
-            <li><button onclick="switchView('summary')" class="hover:text-[#35627A] dark:hover:text-[#E5AEA9] transition">PostgreSQL Relational Ledger</button></li>
+            <li><button onclick="switchView('chat')" class="hover:text-violet-600 dark:hover:text-violet-300 transition">Text-to-SQL Engine</button></li>
+            <li><button onclick="switchView('documents')" class="hover:text-violet-600 dark:hover:text-violet-300 transition">Hybrid BM25 + Vector RAG</button></li>
+            <li><button onclick="switchView('summary')" class="hover:text-violet-600 dark:hover:text-violet-300 transition">Financial Summary Dashboard</button></li>
+            <li><button onclick="switchView('hero')" class="hover:text-violet-600 dark:hover:text-violet-300 transition">Interactive Architecture Overview</button></li>
           </ul>
         </div>
 
-        <!-- Col 3: Observability & Benchmarks -->
+        <!-- Col 3: Developer & Auditor Mode -->
         <div class="space-y-2.5">
-          <h4 class="text-xs font-bold uppercase tracking-wider text-[var(--text-main)]">Evals & Governance</h4>
+          <h4 class="text-xs font-bold uppercase tracking-wider text-[var(--text-main)]">Auditor & Dev Tools</h4>
+          <p class="text-[11px] text-[var(--text-muted)] font-medium leading-relaxed">
+            Low-level evaluation suites and execution traces for technical verification:
+          </p>
           <ul class="space-y-2 text-xs font-medium text-[var(--text-sub)]">
-            <li><button onclick="switchView('evals')" class="hover:text-[#35627A] dark:hover:text-[#E5AEA9] transition">Hit Rate@K & MRR Suites</button></li>
-            <li><button onclick="switchView('traces')" class="hover:text-[#35627A] dark:hover:text-[#E5AEA9] transition">Execution Trace Inspector</button></li>
-            <li><button onclick="switchView('evals')" class="hover:text-[#35627A] dark:hover:text-[#E5AEA9] transition">Golden Dataset Benchmarks</button></li>
-            <li><button onclick="switchView('documents')" class="hover:text-[#35627A] dark:hover:text-[#E5AEA9] transition">Contract Chunk Vault</button></li>
-            <li><button onclick="switchView('summary')" class="hover:text-[#35627A] dark:hover:text-[#E5AEA9] transition">Automated Yield Evals</button></li>
+            <li><button onclick="switchView('traces')" class="hover:text-violet-600 dark:hover:text-violet-300 transition flex items-center gap-1.5"><i class="fa-solid fa-terminal text-[10px] text-violet-500"></i> Execution Trace Inspector</button></li>
+            <li><button onclick="switchView('evals')" class="hover:text-violet-600 dark:hover:text-violet-300 transition flex items-center gap-1.5"><i class="fa-solid fa-trophy text-[10px] text-amber-500"></i> Benchmark Eval Suites</button></li>
           </ul>
         </div>
 
@@ -598,7 +604,7 @@
               <span>SSL 256-Bit Encrypted Database Pool</span>
             </div>
             <div class="flex items-center gap-2">
-              <i class="fa-solid fa-server text-[#35627A]"></i>
+              <i class="fa-solid fa-server text-violet-500"></i>
               <span>Containerized Cloud Deployment on Render</span>
             </div>
           </div>
@@ -607,16 +613,16 @@
       </div>
 
       <!-- Bottom Sub-Footer Bar -->
-      <div class="pt-8 mt-8 border-t border-[#A6A9D0]/15 flex flex-col sm:flex-row items-center justify-between text-xs text-[var(--text-muted)] gap-4">
+      <div class="pt-8 mt-8 border-t border-slate-200/80 dark:border-white/10 flex flex-col sm:flex-row items-center justify-between text-xs text-[var(--text-muted)] gap-4">
         <!-- Social Icons -->
         <div class="flex items-center space-x-3">
-          <a href="https://github.com/Rohit-pal01/fintrix" target="_blank" class="w-8 h-8 rounded-full glass-subcard flex items-center justify-center text-[var(--text-main)] hover:text-[#35627A] dark:hover:text-[#E5AEA9] transition shadow-sm" title="GitHub Repository">
+          <a href="https://github.com/Rohit-pal01/fintrix" target="_blank" class="w-8 h-8 rounded-full glass-subcard flex items-center justify-center text-[var(--text-main)] hover:text-violet-600 dark:hover:text-violet-300 transition shadow-sm" title="GitHub Repository">
             <i class="fa-brands fa-github text-sm"></i>
           </a>
-          <a href="https://linkedin.com" target="_blank" class="w-8 h-8 rounded-full glass-subcard flex items-center justify-center text-[var(--text-main)] hover:text-[#35627A] dark:hover:text-[#E5AEA9] transition shadow-sm" title="LinkedIn">
+          <a href="https://linkedin.com" target="_blank" class="w-8 h-8 rounded-full glass-subcard flex items-center justify-center text-[var(--text-main)] hover:text-violet-600 dark:hover:text-violet-300 transition shadow-sm" title="LinkedIn">
             <i class="fa-brands fa-linkedin-in text-sm"></i>
           </a>
-          <a href="mailto:contact@fintrix.local" class="w-8 h-8 rounded-full glass-subcard flex items-center justify-center text-[var(--text-main)] hover:text-[#35627A] dark:hover:text-[#E5AEA9] transition shadow-sm" title="Email Contact">
+          <a href="mailto:contact@fintrix.local" class="w-8 h-8 rounded-full glass-subcard flex items-center justify-center text-[var(--text-main)] hover:text-violet-600 dark:hover:text-violet-300 transition shadow-sm" title="Email Contact">
             <i class="fa-regular fa-envelope text-sm"></i>
           </a>
         </div>
@@ -626,6 +632,8 @@
           &copy; 2026 Fintrix Intelligence &bull; Developed by <span class="font-bold text-[var(--text-main)]">Rohit Pal</span>.
         </div>
       </div>
+    </div>
+  </footer>
     </div>
   </footer>
 
@@ -726,7 +734,7 @@
       const div = document.createElement('div');
       div.className = "flex items-start justify-end space-x-3";
       div.innerHTML = `
-        <div class="bg-[#35627A] text-white font-bold rounded-2xl rounded-tr-sm px-4 py-2.5 text-xs max-w-xl shadow">
+        <div class="bg-violet-600 text-white font-bold rounded-2xl rounded-tr-sm px-4 py-2.5 text-xs max-w-xl shadow">
           ${text}
         </div>
       `;
@@ -748,31 +756,38 @@
       let citationsHtml = '';
       if (citations.length > 0) {
         citationsHtml = `
-          <div class="pt-2 border-t border-[#A6A9D0]/20 space-y-2">
+          <div class="pt-2 border-t border-violet-500/20 space-y-2">
             <div class="text-[10px] font-bold uppercase tracking-wider flex items-center text-[var(--text-main)]">
-              <i class="fa-solid fa-link mr-1 text-[#35627A]"></i> Grounded Citations (${citations.length})
+              <i class="fa-solid fa-link mr-1 text-violet-500"></i> Grounded Citations (${citations.length})
             </div>
-            <div class="space-y-1.5">
+            <div class="space-y-2">
               ${citations.map((c, idx) => {
                 if (c.type === 'sql') {
                   return `
-                    <details class="glass-subcard rounded-xl p-2.5 text-xs">
-                      <summary class="cursor-pointer font-bold text-[#35627A] dark:text-[#A6A9D0] flex items-center justify-between">
-                        <span><i class="fa-solid fa-database mr-1.5"></i> SQL Query (${c.tables.join(', ')}) &bull; ${c.rows} row(s)</span>
-                        <span class="text-[10px] font-semibold opacity-70">View Query</span>
-                      </summary>
-                      <pre class="mt-2 p-2 bg-black/10 dark:bg-black/40 rounded text-[var(--text-sub)] overflow-x-auto text-[11px] font-mono font-medium">${c.query}</pre>
-                    </details>
+                    <div class="glass-subcard rounded-xl p-3 text-xs border border-violet-500/20">
+                      <div class="flex items-center justify-between text-xs font-bold text-[var(--text-main)]">
+                        <span class="flex items-center gap-1.5"><i class="fa-solid fa-calculator text-violet-500 dark:text-violet-400"></i> Verified Numerical Computation</span>
+                        <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 font-mono font-bold">${c.rows} ledger row(s)</span>
+                      </div>
+                      <p class="text-[11px] text-[var(--text-sub)] mt-1 font-medium">Computed mathematically across relational tables: <span class="font-mono font-bold text-violet-600 dark:text-violet-300">${c.tables.join(', ')}</span> with zero arithmetic hallucination.</p>
+                      <details class="mt-2 text-xs">
+                        <summary class="cursor-pointer font-bold text-violet-600 dark:text-violet-400 hover:underline flex items-center justify-between">
+                          <span class="text-[10px] font-mono"><i class="fa-solid fa-code text-[9px] mr-1"></i> Technical SQL Query (Auditor Proof)</span>
+                          <span class="text-[9px] opacity-70">Expand Query</span>
+                        </summary>
+                        <pre class="mt-2 p-2.5 bg-black/5 dark:bg-black/50 rounded-lg text-[var(--text-sub)] overflow-x-auto text-[11px] font-mono border border-violet-500/20">${c.query}</pre>
+                      </details>
+                    </div>
                   `;
                 } else {
                   return `
-                    <details class="glass-subcard rounded-xl p-2.5 text-xs">
-                      <summary class="cursor-pointer font-bold text-[#35627A] dark:text-[#A6A9D0] flex items-center justify-between">
-                        <span><i class="fa-solid fa-file-lines mr-1.5"></i> ${c.doc} (Page ${c.page}) &bull; ${c.section}</span>
-                        <span class="text-[10px] font-semibold opacity-70">View Snippet</span>
-                      </summary>
-                      <p class="mt-2 p-2 bg-black/10 dark:bg-black/40 rounded italic text-[11px] leading-relaxed font-medium text-[var(--text-sub)]">"${c.snippet}"</p>
-                    </details>
+                    <div class="glass-subcard rounded-xl p-3 text-xs border border-cyan-500/20">
+                      <div class="flex items-center justify-between text-xs font-bold text-[var(--text-main)]">
+                        <span class="flex items-center gap-1.5"><i class="fa-solid fa-file-lines text-cyan-500 dark:text-cyan-400"></i> ${c.doc} &bull; Page ${c.page}</span>
+                        <span class="text-[10px] px-2 py-0.5 rounded bg-cyan-500/15 text-cyan-600 dark:text-cyan-400 font-mono font-bold">${c.section}</span>
+                      </div>
+                      <p class="mt-1.5 p-2 bg-black/5 dark:bg-black/40 rounded-lg italic text-[11px] leading-relaxed font-medium text-[var(--text-sub)] border border-cyan-500/15">"${c.snippet}"</p>
+                    </div>
                   `;
                 }
               }).join('')}
@@ -786,7 +801,7 @@
         badgesHtml = `
           <div class="flex flex-wrap gap-1.5 pt-1">
             ${numbers.map(n => `
-              <span class="bg-[#35627A]/15 border border-[#35627A]/40 text-[#35627A] dark:text-[#E5AEA9] text-[10px] px-2 py-0.5 rounded-md font-mono font-bold">
+              <span class="bg-violet-500/15 border border-violet-500/30 text-violet-700 dark:text-violet-300 text-[10px] px-2 py-0.5 rounded-md font-mono font-bold">
                 ${n.label}: ₹${Number(n.value).toLocaleString('en-IN')}
               </span>
             `).join('')}
@@ -795,12 +810,12 @@
       }
 
       div.innerHTML = `
-        <div class="w-8 h-8 rounded-xl bg-[#35627A] text-white flex items-center justify-center flex-shrink-0 text-sm shadow">
+        <div class="w-8 h-8 rounded-xl bg-violet-600 text-white flex items-center justify-center flex-shrink-0 text-sm shadow">
           <i class="fa-solid fa-shield-halved"></i>
         </div>
         <div class="glass-card rounded-2xl rounded-tl-sm p-4 text-xs space-y-3">
-          <div class="flex items-center justify-between text-[10px] pb-1 border-b border-[#A6A9D0]/20 font-bold text-[var(--text-muted)]">
-            <span>Route: <strong class="text-[#35627A] dark:text-[#A6A9D0] uppercase">${data.route}</strong></span>
+          <div class="flex items-center justify-between text-[10px] pb-1 border-b border-violet-500/20 font-bold text-[var(--text-muted)]">
+            <span>Route: <strong class="text-violet-600 dark:text-violet-300 uppercase">${data.route}</strong></span>
             <span class="font-mono">Latency: ${data.latency_ms}ms</span>
           </div>
 
@@ -808,7 +823,7 @@
           ${badgesHtml}
           ${citationsHtml}
 
-          <div class="flex items-center justify-between pt-1 border-t border-[#A6A9D0]/20 text-[10px] font-medium text-[var(--text-sub)]">
+          <div class="flex items-center justify-between pt-1 border-t border-violet-500/20 text-[10px] font-medium text-[var(--text-sub)]">
             <span class="italic">${ans.disclaimer || "Not financial advice."}</span>
             <div class="flex items-center space-x-2">
               <span>Helpful?</span>
@@ -857,14 +872,14 @@
         bContainer.innerHTML = '';
         data.budgets.forEach(b => {
           const pct = Math.min(100, Math.round((b.spent / b.limit) * 100));
-          const colorClass = pct > 90 ? 'bg-rose-500' : (pct > 75 ? 'bg-[#E5AEA9]' : 'bg-[#35627A]');
+          const colorClass = pct > 90 ? 'bg-rose-500' : (pct > 75 ? 'bg-amber-500' : 'bg-violet-600');
           bContainer.innerHTML += `
             <div>
               <div class="flex justify-between text-xs font-bold mb-1 text-[var(--text-main)]">
                 <span class="capitalize">${b.category}</span>
                 <span class="font-mono text-[var(--text-sub)]">₹${b.spent.toLocaleString()} / ₹${b.limit.toLocaleString()} (${pct}%)</span>
               </div>
-              <div class="w-full bg-black/10 dark:bg-black/30 rounded-full h-2 overflow-hidden border border-[#A6A9D0]/20">
+              <div class="w-full bg-black/10 dark:bg-black/30 rounded-full h-2 overflow-hidden border border-violet-500/20">
                 <div class="${colorClass} h-2 rounded-full" style="width: ${pct}%"></div>
               </div>
             </div>
@@ -915,18 +930,24 @@
         const tbody = document.getElementById('documents-table-body');
         tbody.innerHTML = '';
         data.documents.forEach(doc => {
+          const isSystem = doc.is_system;
           tbody.innerHTML += `
             <tr class="hover:bg-black/5 dark:hover:bg-white/5 transition font-semibold">
-              <td class="py-3 px-5 text-[var(--text-main)] flex items-center">
-                <i class="fa-regular fa-file-pdf text-[#E5AEA9] mr-2 text-sm"></i> ${doc.filename}
+              <td class="py-3.5 px-5 text-[var(--text-main)] flex items-center">
+                <i class="fa-regular fa-file-pdf text-violet-500 dark:text-violet-400 mr-2 text-sm"></i>
+                <span class="truncate max-w-xs sm:max-w-md">${doc.filename}</span>
+                ${isSystem 
+                  ? '<span class="ml-2.5 inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-bold bg-slate-500/10 text-slate-500 dark:text-slate-400 border border-slate-500/20"><i class="fa-solid fa-lock text-[8px]"></i> Baseline Demo</span>' 
+                  : '<span class="ml-2.5 inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-bold bg-violet-500/15 text-violet-600 dark:text-violet-300 border border-violet-500/30">User Upload</span>'}
               </td>
-              <td class="py-3 px-5 capitalize text-[var(--text-sub)]">${doc.doc_type}</td>
-              <td class="py-3 px-5 font-mono text-[#35627A] dark:text-[#E5AEA9]">${doc.chunk_count} chunks</td>
-              <td class="py-3 px-5 text-[var(--text-muted)] text-[11px]">${doc.uploaded_at ? doc.uploaded_at.split('T')[0] : 'N/A'}</td>
-              <td class="py-3 px-5 text-right">
-                <button onclick="deleteDoc(${doc.doc_id})" class="text-[var(--text-muted)] hover:text-rose-500 text-xs transition">
-                  <i class="fa-solid fa-trash"></i>
-                </button>
+              <td class="py-3.5 px-5 capitalize text-[var(--text-sub)]">${doc.doc_type}</td>
+              <td class="py-3.5 px-5 font-mono text-violet-600 dark:text-violet-300 font-bold">${doc.chunk_count} chunks</td>
+              <td class="py-3.5 px-5 text-[var(--text-muted)] text-[11px]">${doc.uploaded_at ? doc.uploaded_at.split('T')[0] : 'N/A'}</td>
+              <td class="py-3.5 px-5 text-right">
+                ${isSystem 
+                  ? '<span class="text-[10px] font-semibold text-[var(--text-muted)] opacity-60 inline-flex items-center gap-1"><i class="fa-solid fa-shield text-[9px]"></i> Protected</span>'
+                  : `<button onclick="deleteDoc(${doc.doc_id})" class="text-rose-500 hover:text-rose-700 text-xs transition p-1 hover:bg-rose-500/10 rounded" title="Delete document"><i class="fa-solid fa-trash"></i></button>`
+                }
               </td>
             </tr>
           `;
@@ -971,14 +992,14 @@
     function renderTraceInspector(data) {
       const c = document.getElementById('latest-trace-container');
       c.innerHTML = `
-        <div class="flex justify-between items-center pb-2 border-b border-[#A6A9D0]/20 font-bold">
+        <div class="flex justify-between items-center pb-2 border-b border-violet-500/20 font-bold">
           <div>
             <span class="text-xs font-mono text-[var(--text-muted)]">Trace ID: ${data.trace_id}</span>
-            <span class="ml-3 px-2 py-0.5 rounded text-[10px] uppercase font-bold bg-[#35627A]/20 text-[#35627A] dark:text-[#A6A9D0] border border-[#35627A]/30">${data.route}</span>
+            <span class="ml-3 px-2 py-0.5 rounded text-[10px] uppercase font-bold bg-violet-500/15 text-violet-600 dark:text-violet-300 border border-violet-500/30">${data.route}</span>
           </div>
           <span class="text-xs font-mono text-[var(--text-muted)]">${data.latency_ms} ms</span>
         </div>
-        <pre class="bg-slate-900 text-slate-100 dark:bg-black/60 dark:text-cyan-200 p-4 rounded-2xl text-xs font-mono overflow-x-auto max-h-96 border border-[#A6A9D0]/20 shadow-inner">${JSON.stringify(data, null, 2)}</pre>
+        <pre class="bg-slate-900 text-slate-100 dark:bg-black/60 dark:text-cyan-200 p-4 rounded-2xl text-xs font-mono overflow-x-auto max-h-96 border border-violet-500/20 shadow-inner">${JSON.stringify(data, null, 2)}</pre>
       `;
     }
 
