@@ -240,17 +240,19 @@ def verify_answer_node(state: AgentState) -> AgentState:
     # Collect numbers from Document chunks
     for chunk in doc_results:
         chunk_text = chunk.get("text", "")
-        for n in re.findall(r'(?<![A-Za-z0-9_])(?:\$|₹)?(\d+(?:,\d{3})*(?:\.\d+)?)(?![A-Za-z0-9_])', chunk_text):
+        for n in re.findall(r'(?<![A-Za-z0-9_])(?:\$|₹)?(\d[\d,]*(?:\.\d+)?)(?![A-Za-z0-9_])', chunk_text):
             try:
                 valid_numbers.add(float(n.replace(',', '')))
             except ValueError:
                 pass
 
-    # Extract numbers from answer text
-    numbers_in_text = [
-        float(n.replace(',', '')) 
-        for n in re.findall(r'(?<![A-Za-z0-9_])(?:\$|₹)?(\d+(?:,\d{3})*(?:\.\d+)?)(?![A-Za-z0-9_])', answer_text)
-    ]
+    # Extract numbers from answer text (supports both US and Indian comma notation e.g. 1,10,209.78)
+    numbers_in_text = []
+    for n in re.findall(r'(?<![A-Za-z0-9_])(?:\$|₹)?(\d[\d,]*(?:\.\d+)?)(?![A-Za-z0-9_])', answer_text):
+        try:
+            numbers_in_text.append(float(n.replace(',', '')))
+        except ValueError:
+            pass
 
     unmatched = []
     for num in numbers_in_text:
