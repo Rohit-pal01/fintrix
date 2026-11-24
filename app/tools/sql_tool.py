@@ -126,8 +126,8 @@ def deterministic_text_to_sql(question: str, user_id: int) -> str:
     has_asset = any(w in q for w in assets)
 
     if balance_inquiry or has_feasibility or (has_intent and (has_action or has_asset)) or (has_action and has_asset):
-        return (f"SELECT COALESCE(SUM(CASE WHEN direction = 'credit' THEN amount ELSE -amount END), 0) AS available_balance "
-                f"FROM transactions WHERE user_id = {user_id};")
+        return (f"SELECT (COALESCE((SELECT opening_balance FROM accounts WHERE user_id = {user_id} LIMIT 1), 0) + "
+                f"COALESCE((SELECT SUM(CASE WHEN direction = 'credit' THEN amount ELSE -amount END) FROM transactions WHERE user_id = {user_id}), 0)) AS available_balance;")
 
     # Credit / deposit / credited in month (e.g. "total amount credited in may month", "how many time amount credited in may")
     if any(k in q for k in ["credit", "deposit", "credited", "deposited", "received"]):

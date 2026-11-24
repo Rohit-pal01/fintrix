@@ -89,16 +89,22 @@ def ingest_transactions_csv(
     }
 
 def parse_date_str(d_str: str) -> Optional[date]:
-    """Parses date string supporting common banking statement formats with multiline support."""
-    d_clean = re.sub(r'[\n\r\s]+', ' ', d_str).strip()
+    """Parses date string supporting common banking statement formats with multiline, split year, and attached text support."""
+    d = re.sub(r'[\n\r\s]+', ' ', d_str).strip()
+    # Normalize split 4-digit years e.g. '2 018' -> '2018'
+    d = re.sub(r'\b(2\s*0\s*[0-9]\s*[0-9])\b', lambda m: re.sub(r'\s+', '', m.group(1)), d)
+    # Split attached day and month e.g. '10May' -> '10 May'
+    d = re.sub(r'(\d{1,2})([A-Za-z]+)', r'\1 \2', d)
+    # Split attached month and year e.g. 'May2018' -> 'May 2018'
+    d = re.sub(r'([A-Za-z]+)(\d{4})', r'\1 \2', d)
+    
     formats = [
-        "%Y-%m-%d", "%d-%m-%Y", "%d/%m/%Y", "%d.%m.%Y",
-        "%Y/%m/%d", "%d-%b-%Y", "%d %b %Y", "%b %d, %Y",
-        "%d %B %Y", "%d-%B-%Y"
+        "%d %b %Y", "%d %B %Y", "%Y-%m-%d", "%d-%m-%Y", "%d/%m/%Y", "%d.%m.%Y",
+        "%Y/%m/%d", "%d-%b-%Y", "%b %d, %Y", "%d-%B-%Y"
     ]
     for fmt in formats:
         try:
-            return datetime.strptime(d_clean, fmt).date()
+            return datetime.strptime(d, fmt).date()
         except ValueError:
             pass
     return None
@@ -145,16 +151,85 @@ def extract_and_ingest_pdf_transactions(
     account = db.query(Account).filter_by(user_id=user_id).first()
     acc_id = account.account_id if account else 1
 
+    # Detect opening balance from document text header (e.g. "Balance as on 16 Apr 2018 : 75,222.71")
+    first_page_text = doc[0].get_text() if len(doc) > 0 else ""
+    op_match = re.search(r'Balance as on [^:]+:\s*([0-9,]+\.\d{2})', first_page_text)
+    opening_balance = 0.0
+    if op_match:
+        try:
+            opening_balance = float(op_match.group(1).replace(',', ''))
+            if not account:
+                account = Account(
+                    user_id=user_id,
+                    account_type="savings",
+                    bank_name="SBI",
+                    opening_balance=opening_balance
+                )
+                db.add(account)
+                db.flush()
+                acc_id = account.account_id
+            else:
+                account.opening_balance = opening_balance
+                db.commit()
+        except Exception:
+            pass
+
     seen_hashes = set()
     txns_to_add = []
 
+    # 1. Text-based Running Balance Regex Scanner (Highest Precision for SBI and Standard Banking statements)
+    prev_bal = opening_balance
     for page in doc:
-        # 1. Structured Table Detection
-        tabs = page.find_tables()
-        if tabs.tables:
-            for tab in tabs.tables:
-                if tab.row_count < 2 or tab.col_count < 2:
-                    continue
+        text = page.get_text("text")
+        pattern = r'(\d{1,2}\s+[A-Za-z]{3}\s*[\n\r\s]*2\s*0\s*[0-9]\s*[0-9])\s+(\d{1,2}\s+[A-Za-z]{3}\s*[\n\r\s]*2\s*0\s*[0-9]\s*[0-9])\s+(.+?)\s+([0-9,]+\.\d{2})\s+([0-9,]+\.\d{2})'
+        for m in re.finditer(pattern, text, re.DOTALL):
+            txn_d_raw, val_d_raw, desc_raw, amt_str, bal_str = m.groups()
+            parsed_d = parse_date_str(txn_d_raw)
+            if not parsed_d:
+                continue
+            bal = float(bal_str.replace(',', ''))
+            amt = float(amt_str.replace(',', ''))
+            diff = round(bal - prev_bal, 2)
+            if diff > 0:
+                direction = "credit"
+                act_amt = diff
+            else:
+                direction = "debit"
+                act_amt = abs(diff) if abs(diff) > 0 else amt
+            prev_bal = bal
+            desc = desc_raw.replace('\n', ' ').strip()
+            merchant = desc.split('/')[0][:50].strip() if '/' in desc else desc[:50].strip()
+            d_str = parsed_d.isoformat()
+            h = generate_txn_hash(user_id, d_str, act_amt, merchant, desc)
+            if h not in seen_hashes:
+                seen_hashes.add(h)
+                exists = db.query(Transaction.txn_id).filter_by(source_hash=h).first()
+                if not exists:
+                    cat_id = auto_categorize_description(desc, cats)
+                    txns_to_add.append(Transaction(
+                        user_id=user_id,
+                        account_id=acc_id,
+                        txn_date=parsed_d,
+                        amount=act_amt,
+                        direction=direction,
+                        category_id=cat_id,
+                        merchant=merchant,
+                        description=desc,
+                        source_hash=h
+                    ))
+                    inserted += 1
+                else:
+                    duplicates += 1
+                processed += 1
+
+    # 2. Structured Table Detection Fallback
+    if not txns_to_add:
+        for page in doc:
+            tabs = page.find_tables()
+            if tabs.tables:
+                for tab in tabs.tables:
+                    if tab.row_count < 2 or tab.col_count < 2:
+                        continue
 
                 # Extract all cells cleanly using page text clip
                 cols_data = []
