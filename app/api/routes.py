@@ -129,12 +129,24 @@ async def upload_document(
         db.add(chunk_obj)
 
     db.commit()
+
+    # If the uploaded document is a PDF, also automatically extract any transaction tables directly into SQL
+    sql_txns_inserted = 0
+    if file.filename.lower().endswith(".pdf"):
+        from app.ingestion.transactions import extract_and_ingest_pdf_transactions
+        try:
+            res_txns = extract_and_ingest_pdf_transactions(db, pdf_path, user_id=user_id)
+            sql_txns_inserted = res_txns.get("transactions_inserted_to_sql", 0)
+        except Exception as e:
+            print(f"Warning: PDF transaction table scan error: {e}")
+
     sync_retriever()
 
     return {
         "message": "Document processed successfully.",
         "doc_id": doc.doc_id,
-        "chunks_indexed": len(chunks)
+        "chunks_indexed": len(chunks),
+        "transactions_extracted_to_sql": sql_txns_inserted
     }
 
 @router.get("/documents")
