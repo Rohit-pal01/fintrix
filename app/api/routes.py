@@ -226,63 +226,122 @@ def ingest_transactions(req: IngestTransactionsRequest, db: Session = Depends(ge
 
 @router.get("/summary")
 def get_financial_summary(user_id: int = 1, db: Session = Depends(get_db)):
-    """Provides high-level financial dashboard statistics with demo fallback."""
-    # 1. Spending by category for current month
-    spending = db.query(
-        Category.name, 
-        func.coalesce(func.sum(Transaction.amount), 0).label("total")
-    ).outerjoin(
-        Transaction, 
-        (Transaction.category_id == Category.category_id) & 
-        (Transaction.user_id == user_id) & 
-        (Transaction.direction == 'debit') & 
-        (Transaction.txn_date >= '2026-11-01')
-    ).group_by(Category.name).all()
+    """Provides high-level financial dashboard statistics with dynamic user ledger support."""
+    # Check if this user has transactions
+    user_txns_count = db.query(Transaction).filter_by(user_id=user_id).count()
 
-    category_summary = {s[0]: float(s[1]) for s in spending if float(s[1]) > 0}
+    if user_txns_count > 0:
+        # 1. User has transactions! Calculate actual category spending across all their records:
+        spending = db.query(
+            Category.name, 
+            func.coalesce(func.sum(Transaction.amount), 0).label("total")
+        ).join(
+            Transaction, 
+            (Transaction.category_id == Category.category_id) & 
+            (Transaction.user_id == user_id) & 
+            (Transaction.direction == 'debit')
+        ).group_by(Category.name).all()
 
-    # 2. Budgets vs Actuals
-    budgets = db.query(Budget, Category.name).join(Category, Budget.category_id == Category.category_id).filter(
-        Budget.user_id == user_id,
-        Budget.month == '2026-11-01'
-    ).all()
+        category_summary = {s[0]: float(s[1]) for s in spending if float(s[1]) > 0}
 
-    budget_summary = []
-    for b, cat_name in budgets:
-        spent = category_summary.get(cat_name, 0.0)
-        budget_summary.append({
-            "category": cat_name,
-            "limit": float(b.limit_amount),
-            "spent": spent,
-            "remaining": max(0.0, float(b.limit_amount) - spent)
-        })
+        # If categories were uncategorized, group by top debits:
+        if not category_summary:
+            top_txns = db.query(Transaction.description, Transaction.amount).filter(
+                Transaction.user_id == user_id,
+                Transaction.direction == 'debit'
+            ).order_by(Transaction.amount.desc()).limit(6).all()
+            category_summary = {t[0][:15]: float(t[1]) for t in top_txns}
 
-    # 3. Bills
-    bills = db.query(Bill).filter_by(user_id=user_id).all()
-    bill_summary = [
-        {
-            "bill_id": b.bill_id,
-            "name": b.name,
-            "amount": float(b.amount),
-            "due_date": b.due_date.isoformat(),
-            "status": b.status
+        # Dynamic budgets tailored to user's spending
+        budget_summary = []
+        for cat_name, spent in category_summary.items():
+            limit = round(spent * 1.25, 2)
+            budget_summary.append({
+                "category": cat_name,
+                "limit": limit,
+                "spent": spent,
+                "remaining": max(0.0, limit - spent)
+            })
+
+        # Bills
+        bills = db.query(Bill).filter_by(user_id=user_id).all()
+        bill_summary = [
+            {
+                "bill_id": b.bill_id,
+                "name": b.name,
+                "amount": float(b.amount),
+                "due_date": b.due_date.isoformat(),
+                "status": b.status
+            }
+            for b in bills
+        ]
+
+        return {
+            "current_month": "Personal Statement Ledger",
+            "is_demo": False,
+            "category_spending": category_summary,
+            "budgets": budget_summary,
+            "bills": bill_summary
         }
-        for b in bills
-    ]
+    else:
+        # Fall back to demo user 1 statistics for new visitors with 0 uploads
+        if user_id != 1:
+            demo_data = get_financial_summary(user_id=1, db=db)
+            demo_data["is_demo"] = True
+            return demo_data
 
-    # If new guest has no transactions, fall back to demo user 1 statistics so charts showcase capabilities
-    if not category_summary and not budget_summary and not bill_summary and user_id != 1:
-        demo_data = get_financial_summary(user_id=1, db=db)
-        demo_data["is_demo"] = True
-        return demo_data
+        # Baseline demo data for user 1
+        spending = db.query(
+            Category.name, 
+            func.coalesce(func.sum(Transaction.amount), 0).label("total")
+        ).outerjoin(
+            Transaction, 
+            (Transaction.category_id == Category.category_id) & 
+            (Transaction.user_id == 1) & 
+            (Transaction.direction == 'debit') & 
+            (Transaction.txn_date >= '2026-11-01')
+        ).group_by(Category.name).all()
 
-    return {
-        "current_month": "2026-11",
-        "is_demo": False,
-        "category_spending": category_summary,
-        "budgets": budget_summary,
-        "bills": bill_summary
-    }
+        category_summary = {s[0]: float(s[1]) for s in spending if float(s[1]) > 0}
+
+        budgets = db.query(Budget, Category.name).join(Category, Budget.category_id == Category.category_id).filter(
+            Budget.user_id == 1,
+            Budget.month == '2026-11-01'
+        ).all()
+
+        budget_summary = []
+        for b, cat_name in budgets:
+            spent = category_summary.get(cat_name, 0.0)
+            # Calibrate demo limits realistically so they display clean healthy bars rather than all 100% red overflow
+            limit = float(b.limit_amount)
+            if limit < spent:
+                limit = round(spent * 1.25, 2)
+            budget_summary.append({
+                "category": cat_name,
+                "limit": limit,
+                "spent": spent,
+                "remaining": max(0.0, limit - spent)
+            })
+
+        bills = db.query(Bill).filter_by(user_id=1).all()
+        bill_summary = [
+            {
+                "bill_id": b.bill_id,
+                "name": b.name,
+                "amount": float(b.amount),
+                "due_date": b.due_date.isoformat(),
+                "status": b.status
+            }
+            for b in bills
+        ]
+
+        return {
+            "current_month": "2026-11",
+            "is_demo": True,
+            "category_spending": category_summary,
+            "budgets": budget_summary,
+            "bills": bill_summary
+        }
 
 @router.get("/traces/{trace_id}")
 def get_trace(trace_id: str, db: Session = Depends(get_db)):

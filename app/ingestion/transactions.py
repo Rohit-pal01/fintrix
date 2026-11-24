@@ -89,11 +89,12 @@ def ingest_transactions_csv(
     }
 
 def parse_date_str(d_str: str) -> Optional[date]:
-    """Parses date string supporting common banking statement formats."""
-    d_clean = re.sub(r'[\n\r]', '', d_str).strip()
+    """Parses date string supporting common banking statement formats with multiline support."""
+    d_clean = re.sub(r'[\n\r\s]+', ' ', d_str).strip()
     formats = [
         "%Y-%m-%d", "%d-%m-%Y", "%d/%m/%Y", "%d.%m.%Y",
-        "%Y/%m/%d", "%d-%b-%Y", "%d %b %Y", "%b %d, %Y"
+        "%Y/%m/%d", "%d-%b-%Y", "%d %b %Y", "%b %d, %Y",
+        "%d %B %Y", "%d-%B-%Y"
     ]
     for fmt in formats:
         try:

@@ -42,12 +42,11 @@ Database Schema (PostgreSQL/SQLite compatible):
 
 CRITICAL RULES:
 1. Always filter by user_id = {user_id}.
-2. Use direction = 'debit' for expenses/spending and direction = 'credit' for income/earnings.
-3. For monthly date filtering, reference CURRENT DATE: 2026-11-24.
-   - Current month: txn_date >= '2026-11-01' AND txn_date <= '2026-11-30'
-   - Last month (October 2026): txn_date >= '2026-10-01' AND txn_date <= '2026-10-31'
-   - Last quarter (Q3 2026: Jul-Sep 2026): txn_date >= '2026-07-01' AND txn_date <= '2026-09-30'
-   - Past 30 days: txn_date >= '2026-10-25' AND txn_date <= '2026-11-24'
+2. Use direction = 'debit' for expenses/spending/withdrawals and direction = 'credit' for income/earnings/deposits/credited amounts.
+3. For monthly date filtering:
+   - When the user asks about a named month (e.g. "in May", "amount credited in may", "in October") WITHOUT specifying a year, filter by month dynamically using EXTRACT(MONTH FROM txn_date) = <month_number> (e.g. EXTRACT(MONTH FROM txn_date) = 5 for May). This ensures queries work for user statements across any year (e.g. 2018, 2024, 2026).
+   - If the user explicitly specifies a year, filter by both: EXTRACT(MONTH FROM txn_date) = 5 AND EXTRACT(YEAR FROM txn_date) = 2018.
+   - For relative phrases without a month name like "this month" or "last month", reference CURRENT DATE: 2026-11-24 (e.g. txn_date >= '2026-11-01' AND txn_date <= '2026-11-30').
 4. Only return valid single SELECT queries. No comments, no writes.
 """
 
@@ -94,6 +93,45 @@ def deterministic_text_to_sql(question: str, user_id: int) -> str:
     Handles aggregations, category breakdowns, bills, budgets, and merchants.
     """
     q = question.lower()
+
+    # Generic Month Name mapping
+    month_names = {
+        "january": 1, "jan": 1, "february": 2, "feb": 2, "march": 3, "mar": 3,
+        "april": 4, "apr": 4, "may": 5, "june": 6, "jun": 6,
+        "july": 7, "jul": 7, "august": 8, "aug": 8, "september": 9, "sep": 9,
+        "october": 10, "oct": 10, "november": 11, "nov": 11, "december": 12, "dec": 12
+    }
+
+    # Credit / deposit / credited in month (e.g. "total amount credited in may month")
+    if any(k in q for k in ["credit", "deposit", "credited", "deposited", "received"]):
+        target_m = None
+        for m_name, m_num in month_names.items():
+            if re.search(r'\b' + m_name + r'\b', q):
+                target_m = m_num
+                break
+        year_match = re.search(r'\b(20\d\d)\b', q)
+        year_clause = f"AND EXTRACT(YEAR FROM txn_date) = {year_match.group(1)} " if year_match else ""
+        if target_m:
+            return (f"SELECT COALESCE(SUM(amount), 0) AS total_credited "
+                    f"FROM transactions WHERE user_id = {user_id} AND direction = 'credit' "
+                    f"AND EXTRACT(MONTH FROM txn_date) = {target_m} {year_clause};")
+        else:
+            return (f"SELECT COALESCE(SUM(amount), 0) AS total_credited "
+                    f"FROM transactions WHERE user_id = {user_id} AND direction = 'credit';")
+
+    # Debit / spend / spent / withdrawal in month (e.g. "total amount spent in may")
+    if any(k in q for k in ["spent", "spend", "debit", "debited", "withdrawal", "withdrawn"]) and not any(k in q for k in ["food", "grocer", "category", "merchant"]):
+        target_m = None
+        for m_name, m_num in month_names.items():
+            if re.search(r'\b' + m_name + r'\b', q):
+                target_m = m_num
+                break
+        year_match = re.search(r'\b(20\d\d)\b', q)
+        year_clause = f"AND EXTRACT(YEAR FROM txn_date) = {year_match.group(1)} " if year_match else ""
+        if target_m:
+            return (f"SELECT COALESCE(SUM(amount), 0) AS total_spent "
+                    f"FROM transactions WHERE user_id = {user_id} AND direction = 'debit' "
+                    f"AND EXTRACT(MONTH FROM txn_date) = {target_m} {year_clause};")
 
     # Food spend last month
     if "food" in q and ("last month" in q or "previous month" in q or "october" in q):
@@ -241,6 +279,13 @@ def execute_sql(db: Session, sql: str, user_id: int) -> RunSQLOutput:
     try:
         # Clean semicolon for wrapper if necessary
         exec_sql = sql.strip().rstrip(';')
+        
+        # Dialect compatibility: If running on SQLite (local/eval), translate ANSI EXTRACT to strftime
+        dialect_name = db.bind.dialect.name if (db and db.bind) else ""
+        if dialect_name == "sqlite":
+            exec_sql = re.sub(r'EXTRACT\s*\(\s*MONTH\s+FROM\s+([a-zA-Z0-9_.]+)\s*\)', r"CAST(strftime('%m', \1) AS INTEGER)", exec_sql, flags=re.IGNORECASE)
+            exec_sql = re.sub(r'EXTRACT\s*\(\s*YEAR\s+FROM\s+([a-zA-Z0-9_.]+)\s*\)', r"CAST(strftime('%Y', \1) AS INTEGER)", exec_sql, flags=re.IGNORECASE)
+
         # Wrap query to enforce hard limit
         limited_sql = f"SELECT * FROM ({exec_sql}) AS q_sub LIMIT {settings.MAX_QUERY_ROWS};"
         

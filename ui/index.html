@@ -880,11 +880,18 @@
     async function handleChatSubmit(e) {
       e.preventDefault();
       const input = document.getElementById('chat-input');
+      const submitBtn = document.querySelector('#chat-form button[type="submit"]');
       const q = input.value.trim();
       if (!q) return;
 
       input.value = '';
+      input.disabled = true;
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i>';
+      }
       appendUserMessage(q);
+      const loadingBubble = appendLoadingBubble();
 
       try {
         const uid = await getOrInitUserId();
@@ -895,10 +902,54 @@
         });
         const data = await res.json();
         activeTrace = data;
+        removeLoadingBubble(loadingBubble);
         appendBotMessage(data);
         renderTraceInspector(data);
       } catch (err) {
+        removeLoadingBubble(loadingBubble);
         appendErrorMessage("Failed to receive response from backend copilot.");
+      } finally {
+        input.disabled = false;
+        input.focus();
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = '<span>Ask</span><i class="fa-solid fa-arrow-right text-[10px]"></i>';
+        }
+      }
+    }
+
+    function appendLoadingBubble() {
+      const box = document.getElementById('chat-messages');
+      const div = document.createElement('div');
+      div.id = "ai-thinking-indicator";
+      div.className = "flex items-start space-x-3 max-w-2xl";
+      div.innerHTML = `
+        <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-cyan-500 to-blue-600 text-white flex items-center justify-center flex-shrink-0 text-sm shadow">
+          <i class="fa-solid fa-brain animate-pulse text-xs"></i>
+        </div>
+        <div class="glass-card rounded-2xl rounded-tl-sm p-4 text-xs space-y-2 border border-cyan-500/30 shadow-sm">
+          <div class="flex items-center space-x-2">
+            <span class="w-2 h-2 rounded-full bg-cyan-500 animate-ping"></span>
+            <span class="font-bold text-[var(--text-main)]">Synthesizing SQL & Verifying Document Proofs...</span>
+          </div>
+          <div class="flex items-center space-x-2 pt-1">
+            <div class="flex space-x-1">
+              <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-bounce" style="animation-delay: 0ms"></span>
+              <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-bounce" style="animation-delay: 150ms"></span>
+              <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-bounce" style="animation-delay: 300ms"></span>
+            </div>
+            <span class="text-[10px] text-[var(--text-muted)] font-mono">Compiling PostgreSQL routines & RAG cross-encoder</span>
+          </div>
+        </div>
+      `;
+      box.appendChild(div);
+      box.scrollTop = box.scrollHeight;
+      return div;
+    }
+
+    function removeLoadingBubble(el) {
+      if (el && el.parentNode) {
+        el.parentNode.removeChild(el);
       }
     }
 
@@ -1076,7 +1127,11 @@
         data.bills.forEach(bill => {
           const isOverdue = bill.status === 'overdue';
           const isPaid = bill.status === 'paid';
-          const statusBg = isOverdue ? 'bg-rose-500/15 text-rose-600 dark:text-rose-300 border border-rose-500/30' : (isPaid ? 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-300 border border-emerald-500/30' : 'bg-amber-500/15 text-amber-600 dark:text-amber-300 border border-amber-500/30');
+          const statusBg = isOverdue 
+            ? 'bg-rose-100 text-rose-900 border border-rose-300 dark:bg-rose-950/50 dark:text-rose-300 dark:border-rose-700/50 font-black' 
+            : (isPaid 
+                ? 'bg-emerald-100 text-emerald-900 border border-emerald-300 dark:bg-emerald-950/50 dark:text-emerald-300 dark:border-emerald-700/50 font-black' 
+                : 'bg-amber-100 text-amber-950 border border-amber-300 dark:bg-amber-950/50 dark:text-amber-300 dark:border-amber-700/50 font-black');
           billsContainer.innerHTML += `
             <div class="flex items-center justify-between p-3 glass-subcard rounded-xl text-xs font-semibold">
               <div>
@@ -1085,7 +1140,7 @@
               </div>
               <div class="text-right">
                 <div class="font-black font-mono text-[var(--text-main)]">₹${bill.amount.toLocaleString()}</div>
-                <span class="text-[9px] uppercase px-1.5 py-0.5 rounded font-bold ${statusBg}">${bill.status}</span>
+                <span class="text-[9px] uppercase px-2 py-0.5 rounded font-black tracking-wider ${statusBg}">${bill.status}</span>
               </div>
             </div>
           `;

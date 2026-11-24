@@ -38,6 +38,12 @@ def extract_tables(sql: str) -> Set[str]:
     clean_sql = re.sub(r'/\*.*?\*/', '', sql, flags=re.DOTALL)
     clean_sql = re.sub(r'--.*$', '', clean_sql, flags=re.MULTILINE)
     
+    # Strip function calls that use standard SQL 'FROM' clauses inside function bodies
+    # such as EXTRACT(MONTH FROM txn_date), TRIM(both ' ' FROM str), SUBSTRING(str FROM 1 FOR 5)
+    clean_sql = re.sub(r'\bextract\s*\([^)]+\)', '', clean_sql, flags=re.IGNORECASE)
+    clean_sql = re.sub(r'\btrim\s*\([^)]+\)', '', clean_sql, flags=re.IGNORECASE)
+    clean_sql = re.sub(r'\bsubstring\s*\([^)]+\)', '', clean_sql, flags=re.IGNORECASE)
+
     # Match patterns like FROM table_name or JOIN table_name
     matches = re.findall(r'\b(?:from|join)\s+([a-zA-Z_][a-zA-Z0-9_]*)', clean_sql, re.IGNORECASE)
     for m in matches:
