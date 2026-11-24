@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en" class="dark scroll-smooth">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -10,59 +10,90 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            sapphire: {
+              DEFAULT: '#35627A',
+              dark: '#1c3644',
+              light: '#4d83a3',
+            },
+            roseash: {
+              DEFAULT: '#E5AEA9',
+              dark: '#c48984',
+            },
+            terracotta: '#B46258',
+            lavender: '#A6A9D0',
+            ashgray: '#8E9A98',
+            purewhite: '#F5F5F5',
+          }
+        }
+      }
+    }
+  </script>
 
   <style>
-    /*
-      Palette: Sapphire Ash Morning
-      - Deep Sapphire: #1a2936 (Derived dark base) / #35627A (Primary Sapphire Slate)
-      - Soft Rose Ash: #E5AEA9
-      - Terracotta Rust: #B46258
-      - Lavender Muted Mist: #A6A9D0
-      - Ash Morning Gray: #8E9A98
-      - Clean Morning White: #F5F5F5
-    */
+    /* Professional Tone Tokens */
     :root {
-      --bg-dark: #0f1720;
-      --sapphire: #35627A;
-      --sapphire-light: #487c9b;
-      --rose-ash: #E5AEA9;
-      --terracotta: #B46258;
-      --lavender: #A6A9D0;
-      --ash-gray: #8E9A98;
-      --white-pure: #F5F5F5;
-      --glass-line: rgba(166, 169, 208, 0.14);
+      --bg: #090e14;
+      --card-bg: rgba(22, 33, 44, 0.75);
+      --card-border: rgba(166, 169, 208, 0.18);
+      --text-primary: #F5F5F5;
+      --text-secondary: #9aa8a6;
+      --accent-sapphire: #35627A;
+      --accent-rose: #E5AEA9;
+      --accent-terracotta: #B46258;
+      --glass-nav: rgba(9, 14, 20, 0.88);
+      --video-opacity: 0.52;
+    }
+
+    html.light {
+      --bg: #f8fafc;
+      --card-bg: rgba(255, 255, 255, 0.85);
+      --card-border: rgba(53, 98, 122, 0.18);
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --accent-sapphire: #2d5469;
+      --accent-rose: #9c5c56;
+      --accent-terracotta: #8a3f36;
+      --glass-nav: rgba(248, 250, 252, 0.90);
+      --video-opacity: 0.14;
     }
 
     * { box-sizing: border-box; }
     body {
-      background: var(--bg-dark);
-      color: var(--white-pure);
+      background: var(--bg);
+      color: var(--text-primary);
       font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
       overflow-x: hidden;
+      transition: background-color 0.3s ease, color 0.3s ease;
       -webkit-font-smoothing: antialiased;
     }
     code, pre { font-family: 'JetBrains Mono', monospace; }
 
-    /* Custom Glassmorphism with Sapphire Ash Morning Palette */
+    /* Glass Elements */
     .glass-nav {
-      background: rgba(15, 23, 32, 0.78);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-bottom: 1px solid var(--glass-line);
+      background: var(--glass-nav);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-bottom: 1px solid var(--card-border);
     }
     .glass-card {
-      background: rgba(26, 41, 54, 0.55);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid rgba(166, 169, 208, 0.12);
+      background: var(--card-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--card-border);
     }
     .glass-pill {
-      background: rgba(166, 169, 208, 0.08);
+      background: rgba(166, 169, 208, 0.10);
       backdrop-filter: blur(12px);
-      border: 1px solid rgba(166, 169, 208, 0.14);
+      border: 1px solid var(--card-border);
     }
 
-    /* Fixed Video Background with Sapphire Ash Morning tone overlay */
+    /* Fixed Video Background */
     .bg-video-container {
       position: fixed;
       inset: 0;
@@ -83,17 +114,22 @@
       height: auto;
       object-fit: cover;
       object-position: 50% 12%;
-      opacity: 0.35;
-      filter: brightness(0.7) contrast(1.1);
+      opacity: var(--video-opacity);
+      filter: contrast(1.18) saturate(1.15);
+      transition: opacity 0.3s ease;
     }
     .bg-gradient-overlay {
       position: fixed;
       inset: 0;
-      background: radial-gradient(circle at 50% 18%, rgba(53, 98, 122, 0.22), transparent 70%),
-                  radial-gradient(circle at 80% 80%, rgba(229, 174, 169, 0.08), transparent 50%),
-                  linear-gradient(180deg, rgba(15, 23, 32, 0.35) 0%, rgba(15, 23, 32, 0.92) 65%, #0f1720 100%);
+      background: radial-gradient(circle at 50% 18%, rgba(53, 98, 122, 0.35), transparent 65%),
+                  radial-gradient(circle at 80% 80%, rgba(229, 174, 169, 0.12), transparent 50%),
+                  linear-gradient(180deg, rgba(9, 14, 20, 0.25) 0%, rgba(9, 14, 20, 0.94) 75%, #090e14 100%);
       z-index: 1;
       pointer-events: none;
+    }
+    html.light .bg-gradient-overlay {
+      background: radial-gradient(circle at 50% 18%, rgba(53, 98, 122, 0.15), transparent 65%),
+                  linear-gradient(180deg, rgba(248, 250, 252, 0.4) 0%, rgba(248, 250, 252, 0.92) 80%, #f8fafc 100%);
     }
 
     .app-content {
@@ -103,31 +139,41 @@
 
     /* Pill Navigation Button */
     .tab-btn {
-      color: var(--ash-gray);
-      transition: all 0.2s ease;
+      color: var(--text-secondary);
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .tab-btn:hover {
-      color: var(--white-pure);
-      background: rgba(166, 169, 208, 0.12);
+      color: var(--text-primary);
+      background: rgba(166, 169, 208, 0.16);
     }
     .tab-btn.active {
-      background: rgba(53, 98, 122, 0.45);
-      color: var(--white-pure);
-      border: 1px solid rgba(166, 169, 208, 0.3);
-      box-shadow: 0 0 16px rgba(53, 98, 122, 0.4);
+      background: var(--accent-sapphire);
+      color: #ffffff !important;
+      border: 1px solid rgba(229, 174, 169, 0.4);
+      box-shadow: 0 0 20px rgba(53, 98, 122, 0.6);
     }
 
-    /* Sapphire Ash Morning Gradients */
-    .grad-sapphire-rose {
-      background: linear-gradient(135deg, #A6A9D0 0%, #E5AEA9 50%, #B46258 100%);
+    /* Rich Hero Headline Gradient */
+    .hero-title-gradient {
+      background: linear-gradient(135deg, #ffffff 0%, #E5AEA9 55%, #B46258 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+    }
+    html.light .hero-title-gradient {
+      background: linear-gradient(135deg, #0f172a 0%, #35627A 50%, #B46258 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* Terminal Console Glow */
+    .console-box {
+      box-shadow: 0 20px 60px -15px rgba(0, 0, 0, 0.7), 0 0 40px -10px rgba(53, 98, 122, 0.35);
     }
   </style>
 </head>
 <body class="min-h-screen flex flex-col">
 
-  <!-- 1. Looping Video Stage -->
+  <!-- 1. Looping Video Background -->
   <div class="bg-video-container">
     <video class="bg-video" autoplay muted loop playsinline preload="auto" poster="https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/82e7eb75-c65f-490a-99b5-f3d1cad54200.webp">
       <source src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260912_104036_bd6924f6-3c8e-417e-8465-6d03c8c2e9e6.mp4" type="video/mp4">
@@ -135,18 +181,19 @@
     <div class="bg-gradient-overlay"></div>
   </div>
 
-  <!-- 2. Sticky Glass Header (Cleaned up: No top-right buttons, centered clean layout) -->
+  <!-- 2. Header: Centered Pill Island + Theme Toggle on Right -->
   <header class="app-content sticky top-0 z-50 glass-nav px-6 py-3.5 flex items-center justify-between">
-    <div class="flex items-center space-x-3 cursor-pointer" onclick="scrollToTop()">
-      <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#35627A] to-[#E5AEA9] flex items-center justify-center font-bold text-slate-950 text-base shadow-lg shadow-[#35627A]/30">
+    <!-- Brand -->
+    <div class="flex items-center space-x-3 cursor-pointer" onclick="switchView('hero')">
+      <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#35627A] to-[#E5AEA9] flex items-center justify-center font-bold text-slate-950 text-base shadow-lg shadow-[#35627A]/40">
         <i class="fa-solid fa-shield-halved text-white text-sm"></i>
       </div>
       <div>
-        <div class="text-sm font-bold tracking-tight text-[#F5F5F5] flex items-center gap-2">
+        <div class="text-sm font-extrabold tracking-tight flex items-center gap-2">
           <span>Fintrix</span>
-          <span class="text-[9px] uppercase px-1.5 py-0.5 rounded-full bg-[#A6A9D0]/15 text-[#A6A9D0] border border-[#A6A9D0]/25 font-mono font-bold">Verifiable v2.4</span>
+          <span class="text-[9px] uppercase px-1.5 py-0.5 rounded-full bg-[#E5AEA9]/20 text-[#E5AEA9] border border-[#E5AEA9]/30 font-mono font-bold">Verifiable v2.4</span>
         </div>
-        <p class="text-[11px] text-[#8E9A98]">Autonomous Financial Intelligence</p>
+        <p class="text-[11px] opacity-70">Autonomous Financial Intelligence</p>
       </div>
     </div>
 
@@ -172,99 +219,134 @@
       </button>
     </nav>
 
-    <!-- Balanced Right Side (Keeps Header Symmetrical) -->
-    <div class="w-32 hidden md:block"></div>
+    <!-- Right Side: Dark / Light Mode Toggle -->
+    <div class="flex items-center space-x-2">
+      <button onclick="toggleTheme()" id="theme-toggle-btn" class="glass-pill px-3 py-1.5 rounded-full text-xs font-medium flex items-center gap-1.5 hover:scale-105 active:scale-95 transition" title="Toggle Light / Dark Mode">
+        <i id="theme-icon" class="fa-solid fa-moon text-[#E5AEA9]"></i>
+        <span id="theme-text" class="text-[11px] font-mono hidden sm:inline">Dark</span>
+      </button>
+    </div>
   </header>
 
   <!-- 3. MAIN APPLICATION CONTAINER -->
   <main class="app-content flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 flex flex-col">
 
-    <!-- VIEW 1: HERO VIEW -->
-    <section id="view-hero" class="flex flex-col items-center justify-center text-center py-12 md:py-20 space-y-8">
+    <!-- VIEW 1: HERO VIEW (AI Architecture & Live Dual-Engine Interactive Playground) -->
+    <section id="view-hero" class="flex flex-col items-center justify-center text-center py-10 md:py-16 space-y-8">
       
       <!-- Pill Badge -->
-      <div class="inline-flex items-center gap-2 glass-pill px-4 py-1.5 rounded-full text-xs text-[#E5AEA9] border border-[#E5AEA9]/30 shadow-sm">
-        <span class="w-2 h-2 rounded-full bg-[#E5AEA9] animate-ping"></span>
-        <span class="font-medium">Deterministic Text-to-SQL + Grounded Hybrid RAG</span>
+      <div class="inline-flex items-center gap-2 glass-pill px-4 py-1.5 rounded-full text-xs border border-[#E5AEA9]/40 shadow-sm">
+        <span class="w-2 h-2 rounded-full bg-[#E5AEA9] animate-pulse"></span>
+        <span class="font-semibold tracking-wide uppercase text-[10px]">Dual-Engine Verifiable Architecture</span>
       </div>
 
-      <!-- Main Catchphrase with Sapphire Ash Morning styling -->
+      <!-- Main Catchphrase -->
       <div class="space-y-4 max-w-4xl">
-        <h1 class="text-5xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-[#F5F5F5] leading-[1.08]">
+        <h1 class="text-5xl sm:text-6xl md:text-7xl font-black tracking-tight leading-[1.08]">
           Verifiable <br class="hidden sm:block">
-          <span class="grad-sapphire-rose">Financial Intelligence</span>
+          <span class="hero-title-gradient">Financial Intelligence</span>
         </h1>
-        <p class="text-base sm:text-lg text-[#8E9A98] max-w-2xl mx-auto font-light leading-relaxed">
-          Every numerical calculation is executed strictly via verified SQL, every contract claim is cited directly to your PDF documents, with zero hallucinations.
+        <p class="text-base sm:text-lg max-w-2xl mx-auto font-normal opacity-85 leading-relaxed">
+          Zero hallucination finance. Computations run through mathematical PostgreSQL routines, and contractual clauses cite your indexed PDF documents with verifiable runtime proofs.
         </p>
       </div>
 
-      <!-- Primary Action Buttons in Sapphire Ash palette -->
-      <div class="flex flex-wrap items-center justify-center gap-4 pt-2">
-        <button onclick="switchView('chat')" class="bg-[#F5F5F5] hover:bg-white text-[#1a2936] font-semibold px-7 py-3 rounded-full text-sm transition flex items-center gap-2 shadow-xl hover:scale-105 active:scale-95 duration-200">
-          <span>Start Financial Analysis</span>
-          <i class="fa-solid fa-arrow-right text-xs text-[#B46258]"></i>
+      <!-- Primary Action Buttons -->
+      <div class="flex flex-wrap items-center justify-center gap-4 pt-1">
+        <button onclick="switchView('chat')" class="bg-gradient-to-r from-[#35627A] to-[#B46258] hover:opacity-90 text-white font-bold px-8 py-3.5 rounded-full text-sm transition flex items-center gap-2 shadow-xl hover:scale-105 active:scale-95 duration-200">
+          <span>Launch Financial AI</span>
+          <i class="fa-solid fa-arrow-right text-xs"></i>
         </button>
-        <button onclick="switchView('documents')" class="glass-pill hover:bg-[#35627A]/30 text-[#F5F5F5] font-medium px-6 py-3 rounded-full text-sm transition flex items-center gap-2 border border-[#A6A9D0]/25">
+        <button onclick="switchView('documents')" class="glass-pill hover:bg-slate-800/40 font-semibold px-6 py-3.5 rounded-full text-sm transition flex items-center gap-2 border border-[#A6A9D0]/30">
           <i class="fa-solid fa-file-pdf text-[#E5AEA9]"></i>
-          <span>Upload Documents</span>
+          <span>Document Vault</span>
         </button>
       </div>
 
-      <!-- Live Metric Badges (Sapphire Ash Morning Accent) -->
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 w-full max-w-4xl pt-10">
-        <div class="glass-card p-5 rounded-2xl text-center space-y-1 hover:border-[#35627A] transition">
-          <div class="text-xs text-[#8E9A98] font-mono"><i class="fa-solid fa-bolt text-[#E5AEA9] mr-1"></i> Latency</div>
-          <div class="text-3xl font-extrabold text-[#F5F5F5]">~380ms</div>
-          <div class="text-[11px] text-[#A6A9D0]">Real-time Hybrid Rerank</div>
-        </div>
-        <div class="glass-card p-5 rounded-2xl text-center space-y-1 hover:border-[#35627A] transition">
-          <div class="text-xs text-[#8E9A98] font-mono"><i class="fa-solid fa-check-double text-[#A6A9D0] mr-1"></i> Accuracy</div>
-          <div class="text-3xl font-extrabold text-[#F5F5F5]">100%</div>
-          <div class="text-[11px] text-[#A6A9D0]">SQL Grounded Execution</div>
-        </div>
-        <div class="glass-card p-5 rounded-2xl text-center space-y-1 hover:border-[#35627A] transition">
-          <div class="text-xs text-[#8E9A98] font-mono"><i class="fa-solid fa-shield-virus text-[#B46258] mr-1"></i> Hallucination</div>
-          <div class="text-3xl font-extrabold text-[#F5F5F5]">0.0%</div>
-          <div class="text-[11px] text-[#A6A9D0]">Automated Number Verifier</div>
-        </div>
-        <div class="glass-card p-5 rounded-2xl text-center space-y-1 hover:border-[#35627A] transition">
-          <div class="text-xs text-[#8E9A98] font-mono"><i class="fa-solid fa-coins text-[#E5AEA9] mr-1"></i> Transactions</div>
-          <div class="text-3xl font-extrabold text-[#F5F5F5]">23,549</div>
-          <div class="text-[11px] text-[#A6A9D0]">Neon Postgres Live Corpus</div>
-        </div>
-      </div>
-
-      <!-- Feature Highlight Cards -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-5xl pt-8 text-left">
-        <div class="glass-card p-6 rounded-3xl space-y-3 hover:border-[#E5AEA9]/50 transition duration-300">
-          <div class="w-10 h-10 rounded-xl bg-[#35627A]/30 text-[#E5AEA9] flex items-center justify-center text-lg border border-[#A6A9D0]/20">
-            <i class="fa-solid fa-database"></i>
+      <!-- Professional Interactive Architecture Showcase (Replaces static scroll metrics) -->
+      <div class="w-full max-w-5xl pt-8">
+        <div class="glass-card rounded-3xl p-6 md:p-8 console-box text-left border border-[#A6A9D0]/20">
+          
+          <div class="flex flex-wrap items-center justify-between pb-6 border-b border-[#A6A9D0]/15 gap-4">
+            <div>
+              <div class="text-xs uppercase tracking-widest text-[#E5AEA9] font-mono font-bold">Interactive System Runtime</div>
+              <h2 class="text-xl font-bold mt-0.5">Execution & Retrieval Pipeline</h2>
+            </div>
+            <!-- Live Status Indicators -->
+            <div class="flex items-center gap-4 text-xs font-mono">
+              <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-400"></span> Neon DB: Active</span>
+              <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-400"></span> Gemini/Groq: Ready</span>
+              <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-400"></span> Hybrid BM25: Synced</span>
+            </div>
           </div>
-          <h3 class="text-lg font-bold text-[#F5F5F5]">Text-to-SQL Engine</h3>
-          <p class="text-xs text-[#8E9A98] leading-relaxed">
-            Translates natural language questions directly into executable PostgreSQL queries across 13 seeded relational tables with auto-repair loops.
-          </p>
-        </div>
 
-        <div class="glass-card p-6 rounded-3xl space-y-3 hover:border-[#E5AEA9]/50 transition duration-300">
-          <div class="w-10 h-10 rounded-xl bg-[#35627A]/30 text-[#A6A9D0] flex items-center justify-center text-lg border border-[#A6A9D0]/20">
-            <i class="fa-solid fa-file-invoice-dollar"></i>
-          </div>
-          <h3 class="text-lg font-bold text-[#F5F5F5]">Hybrid Cross-Encoder RAG</h3>
-          <p class="text-xs text-[#8E9A98] leading-relaxed">
-            BM25 exact token matching blended with dense neural embeddings via Reciprocal Rank Fusion (RRF) and BGE Cross-Encoder reranking.
-          </p>
-        </div>
+          <!-- Architecture Flow Steps (Professional AI Design) -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-6">
+            
+            <!-- Step 1: Text-to-SQL Engine -->
+            <div class="p-5 rounded-2xl bg-black/20 border border-[#A6A9D0]/15 space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-[#35627A]/30 text-[#A6A9D0] uppercase font-bold">Engine 01</span>
+                <span class="text-xs font-bold text-emerald-400">100% Accuracy</span>
+              </div>
+              <h3 class="text-base font-bold flex items-center gap-2">
+                <i class="fa-solid fa-database text-[#35627A]"></i>
+                <span>Deterministic SQL</span>
+              </h3>
+              <p class="text-xs opacity-75 leading-relaxed">
+                Aggregates 23,500+ transactions, balances, and budgets with mathematical precision. Never invents financial figures.
+              </p>
+              <div class="pt-2">
+                <button onclick="sendQuickPrompt('How much did I spend on food last month?')" class="text-[11px] font-medium text-[#E5AEA9] hover:underline flex items-center gap-1">
+                  <span>Run SQL Query Demo</span>
+                  <i class="fa-solid fa-chevron-right text-[9px]"></i>
+                </button>
+              </div>
+            </div>
 
-        <div class="glass-card p-6 rounded-3xl space-y-3 hover:border-[#E5AEA9]/50 transition duration-300">
-          <div class="w-10 h-10 rounded-xl bg-[#35627A]/30 text-[#B46258] flex items-center justify-center text-lg border border-[#A6A9D0]/20">
-            <i class="fa-solid fa-chart-line"></i>
+            <!-- Step 2: Cross-Encoder RAG -->
+            <div class="p-5 rounded-2xl bg-black/20 border border-[#A6A9D0]/15 space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-[#E5AEA9]/20 text-[#E5AEA9] uppercase font-bold">Engine 02</span>
+                <span class="text-xs font-bold text-[#E5AEA9]">98% Hit Rate@5</span>
+              </div>
+              <h3 class="text-base font-bold flex items-center gap-2">
+                <i class="fa-solid fa-file-invoice-dollar text-[#E5AEA9]"></i>
+                <span>Hybrid Grounded RAG</span>
+              </h3>
+              <p class="text-xs opacity-75 leading-relaxed">
+                Fuses exact BM25 keyword matching with dense embeddings and cross-encoder reranking to cite PDF clauses directly.
+              </p>
+              <div class="pt-2">
+                <button onclick="sendQuickPrompt('What is the prepayment penalty on my floating rate home loan?')" class="text-[11px] font-medium text-[#E5AEA9] hover:underline flex items-center gap-1">
+                  <span>Test Policy RAG Demo</span>
+                  <i class="fa-solid fa-chevron-right text-[9px]"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Step 3: Runtime Verifier -->
+            <div class="p-5 rounded-2xl bg-black/20 border border-[#A6A9D0]/15 space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-[#B46258]/20 text-[#B46258] uppercase font-bold">Guardrail 03</span>
+                <span class="text-xs font-bold text-[#B46258]">0.0% Hallucination</span>
+              </div>
+              <h3 class="text-base font-bold flex items-center gap-2">
+                <i class="fa-solid fa-shield-virus text-[#B46258]"></i>
+                <span>Runtime Number Verifier</span>
+              </h3>
+              <p class="text-xs opacity-75 leading-relaxed">
+                Every numerical output is cross-checked against executed database rows and extracted snippets before delivery to user.
+              </p>
+              <div class="pt-2">
+                <button onclick="switchView('evals')" class="text-[11px] font-medium text-[#E5AEA9] hover:underline flex items-center gap-1">
+                  <span>View Benchmark Suite</span>
+                  <i class="fa-solid fa-chevron-right text-[9px]"></i>
+                </button>
+              </div>
+            </div>
+
           </div>
-          <h3 class="text-lg font-bold text-[#F5F5F5]">Automated Evals Framework</h3>
-          <p class="text-xs text-[#8E9A98] leading-relaxed">
-            Continuous regression testing measuring Hit Rate@1, Hit Rate@5, MRR, SQL execution correctness, and routing yield across 140+ test cases.
-          </p>
         </div>
       </div>
     </section>
@@ -273,27 +355,28 @@
     <section id="view-chat" class="hidden flex-1 flex flex-col space-y-4">
       <div class="flex items-center justify-between pb-2 border-b border-[#A6A9D0]/15">
         <div>
-          <h2 class="text-lg font-bold text-[#F5F5F5]">Financial Assistant</h2>
-          <p class="text-xs text-[#8E9A98]">Ask questions about spending, account balances, policies, or uploaded documents.</p>
+          <h2 class="text-lg font-bold">Financial Assistant</h2>
+          <p class="text-xs opacity-70">Ask questions about spending, account balances, policies, or uploaded documents.</p>
         </div>
-        <button onclick="switchView('hero')" class="text-xs text-[#A6A9D0] hover:text-[#F5F5F5] glass-pill px-3 py-1.5 rounded-full transition">
-          <i class="fa-solid fa-arrow-left mr-1"></i> Back to Home
+        <button onclick="switchView('hero')" class="text-xs glass-pill px-3 py-1.5 rounded-full transition flex items-center gap-1">
+          <i class="fa-solid fa-arrow-left"></i>
+          <span>Back to Home</span>
         </button>
       </div>
 
-      <!-- Quick Prompt Pills in Sapphire Ash palette -->
+      <!-- Quick Prompt Pills -->
       <div class="flex items-center space-x-2 overflow-x-auto pb-2 text-xs">
-        <span class="text-[#8E9A98] uppercase font-semibold text-[10px] tracking-wider">Try:</span>
-        <button onclick="sendQuickPrompt('How much did I spend on food last month?')" class="glass-pill hover:bg-[#35627A]/30 text-[#F5F5F5] px-3.5 py-1.5 rounded-full transition whitespace-nowrap">
+        <span class="opacity-70 uppercase font-semibold text-[10px] tracking-wider">Try:</span>
+        <button onclick="sendQuickPrompt('How much did I spend on food last month?')" class="glass-pill hover:opacity-80 px-3.5 py-1.5 rounded-full transition whitespace-nowrap">
           📊 Food spend last month (SQL)
         </button>
-        <button onclick="sendQuickPrompt('What is the prepayment penalty on my floating rate home loan?')" class="glass-pill hover:bg-[#35627A]/30 text-[#F5F5F5] px-3.5 py-1.5 rounded-full transition whitespace-nowrap">
+        <button onclick="sendQuickPrompt('What is the prepayment penalty on my floating rate home loan?')" class="glass-pill hover:opacity-80 px-3.5 py-1.5 rounded-full transition whitespace-nowrap">
           📄 Prepayment terms (RAG)
         </button>
-        <button onclick="sendQuickPrompt('What is my total spending by category this month?')" class="glass-pill hover:bg-[#35627A]/30 text-[#F5F5F5] px-3.5 py-1.5 rounded-full transition whitespace-nowrap">
+        <button onclick="sendQuickPrompt('What is my total spending by category this month?')" class="glass-pill hover:opacity-80 px-3.5 py-1.5 rounded-full transition whitespace-nowrap">
           📈 Category breakdown (SQL)
         </button>
-        <button onclick="sendQuickPrompt('What is the room rent limit per day for normal hospitalization?')" class="glass-pill hover:bg-[#35627A]/30 text-[#F5F5F5] px-3.5 py-1.5 rounded-full transition whitespace-nowrap">
+        <button onclick="sendQuickPrompt('What is the room rent limit per day for normal hospitalization?')" class="glass-pill hover:opacity-80 px-3.5 py-1.5 rounded-full transition whitespace-nowrap">
           🏥 Health insurance limits (RAG)
         </button>
       </div>
@@ -305,12 +388,12 @@
           <div class="w-8 h-8 rounded-xl bg-[#35627A]/40 text-[#E5AEA9] flex items-center justify-center flex-shrink-0 text-sm border border-[#A6A9D0]/20">
             <i class="fa-solid fa-shield-halved"></i>
           </div>
-          <div class="bg-[#1a2936]/90 border border-[#A6A9D0]/15 rounded-2xl rounded-tl-sm p-4 text-sm space-y-2">
-            <p class="font-semibold text-[#F5F5F5]">Hello! Welcome to <strong>Fintrix</strong>.</p>
-            <p class="text-[#8E9A98] leading-relaxed text-xs">
+          <div class="glass-card rounded-2xl rounded-tl-sm p-4 text-sm space-y-2">
+            <p class="font-bold">Hello! Welcome to <strong>Fintrix</strong>.</p>
+            <p class="opacity-80 leading-relaxed text-xs">
               Every numerical claim is backed by verified SQL queries, and every policy claim cites your uploaded documents directly. Ask anything about your finances or documents.
             </p>
-            <div class="text-[10px] text-[#A6A9D0] italic pt-1 border-t border-[#A6A9D0]/15">
+            <div class="text-[10px] opacity-60 italic pt-1 border-t border-[#A6A9D0]/15">
               Disclaimer: This is informational and not financial advice.
             </div>
           </div>
@@ -323,12 +406,12 @@
           id="chat-input" 
           type="text" 
           placeholder="Ask a question about your finances, loans, or uploaded documents..." 
-          class="w-full glass-card border border-[#A6A9D0]/25 rounded-2xl pl-5 pr-28 py-4 text-sm text-[#F5F5F5] placeholder-[#8E9A98] focus:outline-none focus:ring-2 focus:ring-[#35627A] transition shadow-inner"
+          class="w-full glass-card rounded-2xl pl-5 pr-28 py-4 text-sm placeholder:opacity-50 focus:outline-none focus:ring-2 focus:ring-[#35627A] transition shadow-inner"
         />
         <button 
           type="submit" 
           id="send-btn"
-          class="absolute right-2.5 bg-gradient-to-r from-[#35627A] to-[#B46258] hover:from-[#487c9b] hover:to-[#c26d63] text-[#F5F5F5] font-bold px-4 py-2 rounded-xl text-xs flex items-center space-x-1.5 shadow transition"
+          class="absolute right-2.5 bg-gradient-to-r from-[#35627A] to-[#B46258] text-white font-bold px-5 py-2 rounded-xl text-xs flex items-center space-x-1.5 shadow transition"
         >
           <span>Ask</span>
           <i class="fa-solid fa-arrow-right text-[10px]"></i>
@@ -340,10 +423,10 @@
     <section id="view-summary" class="hidden space-y-6">
       <div class="flex items-center justify-between pb-2 border-b border-[#A6A9D0]/15">
         <div>
-          <h2 class="text-lg font-bold text-[#F5F5F5]">Monthly Financial Overview</h2>
-          <p class="text-xs text-[#8E9A98]">Real-time metrics calculated directly from PostgreSQL transactions.</p>
+          <h2 class="text-lg font-bold">Monthly Financial Overview</h2>
+          <p class="text-xs opacity-70">Real-time metrics calculated directly from PostgreSQL transactions.</p>
         </div>
-        <button onclick="loadFinancialSummary()" class="text-xs glass-pill hover:bg-[#35627A]/30 px-3 py-1.5 rounded-full transition text-[#A6A9D0]">
+        <button onclick="loadFinancialSummary()" class="text-xs glass-pill px-3 py-1.5 rounded-full transition">
           <i class="fa-solid fa-rotate-right mr-1"></i> Refresh Data
         </button>
       </div>
@@ -351,33 +434,27 @@
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         <!-- Budgets Progress -->
         <div class="md:col-span-2 glass-card rounded-3xl p-6 space-y-4">
-          <h3 class="text-sm font-semibold text-[#F5F5F5] flex items-center">
+          <h3 class="text-sm font-semibold flex items-center">
             <i class="fa-solid fa-bullseye text-[#E5AEA9] mr-2"></i> Budget vs Actual Spending
           </h3>
-          <div id="budget-bars" class="space-y-4 pt-2">
-            <!-- Dynamic Budget Progress Bars -->
-          </div>
+          <div id="budget-bars" class="space-y-4 pt-2"></div>
         </div>
 
         <!-- Upcoming Bills -->
         <div class="glass-card rounded-3xl p-6 space-y-4">
-          <h3 class="text-sm font-semibold text-[#F5F5F5] flex items-center">
+          <h3 class="text-sm font-semibold flex items-center">
             <i class="fa-solid fa-receipt text-[#A6A9D0] mr-2"></i> Upcoming & Overdue Bills
           </h3>
-          <div id="bills-list" class="space-y-2.5">
-            <!-- Dynamic Bills List -->
-          </div>
+          <div id="bills-list" class="space-y-2.5"></div>
         </div>
       </div>
 
       <!-- Category Chips -->
       <div class="glass-card rounded-3xl p-6 space-y-4">
-        <h3 class="text-sm font-semibold text-[#F5F5F5] flex items-center">
+        <h3 class="text-sm font-semibold flex items-center">
           <i class="fa-solid fa-layer-group text-[#B46258] mr-2"></i> Spending by Category
         </h3>
-        <div id="category-chips" class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <!-- Dynamic Category Chips -->
-        </div>
+        <div id="category-chips" class="grid grid-cols-2 sm:grid-cols-4 gap-3"></div>
       </div>
     </section>
 
@@ -385,10 +462,10 @@
     <section id="view-documents" class="hidden space-y-6">
       <div class="flex items-center justify-between pb-2 border-b border-[#A6A9D0]/15">
         <div>
-          <h2 class="text-lg font-bold text-[#F5F5F5]">Document Vault (RAG Corpus)</h2>
-          <p class="text-xs text-[#8E9A98]">Uploaded financial policies, statements, and resumes indexed into hybrid vector chunks.</p>
+          <h2 class="text-lg font-bold">Document Vault (RAG Corpus)</h2>
+          <p class="text-xs opacity-70">Uploaded financial policies, statements, and resumes indexed into hybrid vector chunks.</p>
         </div>
-        <label class="cursor-pointer bg-[#35627A] hover:bg-[#487c9b] text-[#F5F5F5] font-semibold px-4 py-2 rounded-full text-xs flex items-center space-x-2 transition shadow">
+        <label class="cursor-pointer bg-[#35627A] hover:opacity-90 text-white font-semibold px-4 py-2 rounded-full text-xs flex items-center space-x-2 transition shadow">
           <i class="fa-solid fa-cloud-arrow-up text-[#E5AEA9]"></i>
           <span>Upload Document (PDF, Word, TXT)</span>
           <input type="file" id="pdf-upload-input" accept=".pdf,.docx,.doc,.md,.txt" class="hidden" onchange="handleFileUpload(event)">
@@ -397,7 +474,7 @@
 
       <div class="glass-card rounded-3xl overflow-hidden border border-[#A6A9D0]/15">
         <table class="w-full text-left text-xs">
-          <thead class="bg-[#1a2936]/80 text-[#8E9A98] uppercase text-[10px] tracking-wider border-b border-[#A6A9D0]/15">
+          <thead class="bg-black/20 opacity-70 uppercase text-[10px] tracking-wider border-b border-[#A6A9D0]/15">
             <tr>
               <th class="py-3.5 px-5">Filename</th>
               <th class="py-3.5 px-5">Category</th>
@@ -406,9 +483,7 @@
               <th class="py-3.5 px-5 text-right">Actions</th>
             </tr>
           </thead>
-          <tbody id="documents-table-body" class="divide-y divide-[#A6A9D0]/10 text-[#F5F5F5]">
-            <!-- Dynamic Document Rows -->
-          </tbody>
+          <tbody id="documents-table-body" class="divide-y divide-[#A6A9D0]/10"></tbody>
         </table>
       </div>
     </section>
@@ -417,12 +492,12 @@
     <section id="view-traces" class="hidden space-y-6">
       <div class="flex items-center justify-between pb-2 border-b border-[#A6A9D0]/15">
         <div>
-          <h2 class="text-lg font-bold text-[#F5F5F5]">Execution Traces & Latency Inspector</h2>
-          <p class="text-xs text-[#8E9A98]">Full audit trail of routing decisions, SQL repair loops, and retrieved chunks.</p>
+          <h2 class="text-lg font-bold">Execution Traces & Latency Inspector</h2>
+          <p class="text-xs opacity-70">Full audit trail of routing decisions, SQL repair loops, and retrieved chunks.</p>
         </div>
       </div>
       <div id="latest-trace-container" class="glass-card rounded-3xl p-6 space-y-4">
-        <p class="text-xs text-[#8E9A98]">Ask a question in the Financial Assistant tab to generate live execution traces.</p>
+        <p class="text-xs opacity-70">Ask a question in the Financial Assistant tab to generate live execution traces.</p>
       </div>
     </section>
 
@@ -430,10 +505,10 @@
     <section id="view-evals" class="hidden space-y-6">
       <div class="flex items-center justify-between pb-2 border-b border-[#A6A9D0]/15">
         <div>
-          <h2 class="text-lg font-bold text-[#F5F5F5]">Autonomous Evaluation Suites</h2>
-          <p class="text-xs text-[#8E9A98]">Section 10 benchmark suites validating SQL yield, retrieval Hit Rate@K, and routing.</p>
+          <h2 class="text-lg font-bold">Autonomous Evaluation Suites</h2>
+          <p class="text-xs opacity-70">Benchmark suites validating SQL yield, retrieval Hit Rate@K, and routing accuracy.</p>
         </div>
-        <button onclick="runLiveEvaluation()" id="btn-run-eval" class="bg-gradient-to-r from-[#35627A] to-[#B46258] hover:from-[#487c9b] hover:to-[#c26d63] text-[#F5F5F5] font-bold px-4 py-2 rounded-full text-xs flex items-center space-x-2 transition shadow">
+        <button onclick="runLiveEvaluation()" id="btn-run-eval" class="bg-gradient-to-r from-[#35627A] to-[#B46258] text-white font-bold px-4 py-2 rounded-full text-xs flex items-center space-x-2 transition shadow">
           <i class="fa-solid fa-play"></i>
           <span>Run Benchmark Suites</span>
         </button>
@@ -442,33 +517,66 @@
       <!-- Stat Cards in Sapphire Ash Palette -->
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div class="glass-card p-4 rounded-2xl">
-          <div class="text-[10px] text-[#8E9A98] uppercase font-semibold">SQL Execution Accuracy</div>
+          <div class="text-[10px] opacity-70 uppercase font-semibold">SQL Execution Accuracy</div>
           <div class="text-2xl font-bold text-[#E5AEA9] mt-1" id="eval-sql-acc">100.0%</div>
-          <div class="text-[10px] text-[#8E9A98] mt-0.5">Target: &ge; 85% (60 Cases)</div>
+          <div class="text-[10px] opacity-60 mt-0.5">Target: &ge; 85% (60 Cases)</div>
         </div>
         <div class="glass-card p-4 rounded-2xl">
-          <div class="text-[10px] text-[#8E9A98] uppercase font-semibold">Retrieval Hit Rate@5</div>
+          <div class="text-[10px] opacity-70 uppercase font-semibold">Retrieval Hit Rate@5</div>
           <div class="text-2xl font-bold text-[#A6A9D0] mt-1" id="eval-ret-hr5">98.0%</div>
-          <div class="text-[10px] text-[#8E9A98] mt-0.5">Target: &ge; 85% (50 Questions)</div>
+          <div class="text-[10px] opacity-60 mt-0.5">Target: &ge; 85% (50 Questions)</div>
         </div>
         <div class="glass-card p-4 rounded-2xl">
-          <div class="text-[10px] text-[#8E9A98] uppercase font-semibold">Routing Accuracy</div>
+          <div class="text-[10px] opacity-70 uppercase font-semibold">Routing Accuracy</div>
           <div class="text-2xl font-bold text-[#35627A] mt-1" id="eval-routing-acc">100.0%</div>
-          <div class="text-[10px] text-[#8E9A98] mt-0.5">Target: &ge; 90% (30 Cases)</div>
+          <div class="text-[10px] opacity-60 mt-0.5">Target: &ge; 90% (30 Cases)</div>
         </div>
         <div class="glass-card p-4 rounded-2xl">
-          <div class="text-[10px] text-[#8E9A98] uppercase font-semibold">SQL vs RAG Yield Delta</div>
+          <div class="text-[10px] opacity-70 uppercase font-semibold">SQL vs RAG Yield Delta</div>
           <div class="text-2xl font-bold text-[#B46258] mt-1">+100.0%</div>
-          <div class="text-[10px] text-[#8E9A98] mt-0.5">Target: &ge; +30.0%</div>
+          <div class="text-[10px] opacity-60 mt-0.5">Target: &ge; +30.0%</div>
         </div>
       </div>
     </section>
 
   </main>
 
-  <!-- 4. CORE APPLICATION SCRIPT -->
+  <!-- 4. CORE APPLICATION SCRIPT WITH THEME TOGGLING -->
   <script>
     let activeTrace = null;
+
+    // Theme Management: Dark & Light Mode
+    function initTheme() {
+      const saved = localStorage.getItem('fintrix_theme') || 'dark';
+      setTheme(saved);
+    }
+
+    function toggleTheme() {
+      const isDark = document.documentElement.classList.contains('dark');
+      setTheme(isDark ? 'light' : 'dark');
+    }
+
+    function setTheme(mode) {
+      const root = document.documentElement;
+      const icon = document.getElementById('theme-icon');
+      const text = document.getElementById('theme-text');
+      
+      if (mode === 'light') {
+        root.classList.remove('dark');
+        root.classList.add('light');
+        if (icon) icon.className = "fa-solid fa-sun text-amber-500";
+        if (text) text.innerText = "Light";
+        localStorage.setItem('fintrix_theme', 'light');
+      } else {
+        root.classList.remove('light');
+        root.classList.add('dark');
+        if (icon) icon.className = "fa-solid fa-moon text-[#E5AEA9]";
+        if (text) text.innerText = "Dark";
+        localStorage.setItem('fintrix_theme', 'dark');
+      }
+    }
+
+    initTheme();
 
     function scrollToTop() {
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -530,7 +638,7 @@
       const div = document.createElement('div');
       div.className = "flex items-start justify-end space-x-3";
       div.innerHTML = `
-        <div class="bg-gradient-to-r from-[#35627A] to-[#B46258] text-[#F5F5F5] font-medium rounded-2xl rounded-tr-sm px-4 py-2.5 text-xs max-w-xl shadow">
+        <div class="bg-gradient-to-r from-[#35627A] to-[#B46258] text-white font-medium rounded-2xl rounded-tr-sm px-4 py-2.5 text-xs max-w-xl shadow">
           ${text}
         </div>
       `;
@@ -553,29 +661,29 @@
       if (citations.length > 0) {
         citationsHtml = `
           <div class="pt-2 border-t border-[#A6A9D0]/15 space-y-2">
-            <div class="text-[10px] font-semibold text-[#8E9A98] uppercase tracking-wider flex items-center">
+            <div class="text-[10px] font-semibold opacity-70 uppercase tracking-wider flex items-center">
               <i class="fa-solid fa-link mr-1 text-[#E5AEA9]"></i> Grounded Citations (${citations.length})
             </div>
             <div class="space-y-1.5">
               ${citations.map((c, idx) => {
                 if (c.type === 'sql') {
                   return `
-                    <details class="bg-[#0f1720]/80 border border-[#A6A9D0]/15 rounded-xl p-2.5 text-xs">
+                    <details class="bg-black/30 border border-[#A6A9D0]/15 rounded-xl p-2.5 text-xs">
                       <summary class="cursor-pointer font-medium text-[#E5AEA9] flex items-center justify-between">
                         <span><i class="fa-solid fa-database mr-1.5"></i> SQL Query (${c.tables.join(', ')}) &bull; ${c.rows} row(s)</span>
-                        <span class="text-[10px] text-[#8E9A98]">View Query</span>
+                        <span class="text-[10px] opacity-60">View Query</span>
                       </summary>
-                      <pre class="mt-2 p-2 bg-[#0f1720] rounded text-[#A6A9D0] overflow-x-auto text-[11px] font-mono">${c.query}</pre>
+                      <pre class="mt-2 p-2 bg-black/40 rounded text-[#A6A9D0] overflow-x-auto text-[11px] font-mono">${c.query}</pre>
                     </details>
                   `;
                 } else {
                   return `
-                    <details class="bg-[#0f1720]/80 border border-[#A6A9D0]/15 rounded-xl p-2.5 text-xs">
+                    <details class="bg-black/30 border border-[#A6A9D0]/15 rounded-xl p-2.5 text-xs">
                       <summary class="cursor-pointer font-medium text-[#A6A9D0] flex items-center justify-between">
                         <span><i class="fa-solid fa-file-lines mr-1.5"></i> ${c.doc} (Page ${c.page}) &bull; ${c.section}</span>
-                        <span class="text-[10px] text-[#8E9A98]">View Snippet</span>
+                        <span class="text-[10px] opacity-60">View Snippet</span>
                       </summary>
-                      <p class="mt-2 p-2 bg-[#0f1720] rounded text-[#8E9A98] italic text-[11px] leading-relaxed">"${c.snippet}"</p>
+                      <p class="mt-2 p-2 bg-black/40 rounded italic text-[11px] leading-relaxed">"${c.snippet}"</p>
                     </details>
                   `;
                 }
@@ -602,19 +710,19 @@
         <div class="w-8 h-8 rounded-xl bg-[#35627A]/40 text-[#E5AEA9] flex items-center justify-center flex-shrink-0 text-sm border border-[#A6A9D0]/20">
           <i class="fa-solid fa-shield-halved"></i>
         </div>
-        <div class="bg-[#1a2936]/90 border border-[#A6A9D0]/15 rounded-2xl rounded-tl-sm p-4 text-xs space-y-3">
-          <div class="flex items-center justify-between text-[10px] text-[#8E9A98] pb-1 border-b border-[#A6A9D0]/15">
-            <span class="font-medium text-[#A6A9D0]">Route: <strong class="text-[#E5AEA9] uppercase">${data.route}</strong></span>
+        <div class="glass-card rounded-2xl rounded-tl-sm p-4 text-xs space-y-3">
+          <div class="flex items-center justify-between text-[10px] opacity-70 pb-1 border-b border-[#A6A9D0]/15">
+            <span class="font-medium">Route: <strong class="text-[#E5AEA9] uppercase">${data.route}</strong></span>
             <span class="font-mono">Latency: ${data.latency_ms}ms</span>
           </div>
 
-          <p class="text-[#F5F5F5] leading-relaxed text-sm font-normal">${answerText}</p>
+          <p class="leading-relaxed text-sm font-normal">${answerText}</p>
           ${badgesHtml}
           ${citationsHtml}
 
           <div class="flex items-center justify-between pt-1 border-t border-[#A6A9D0]/15 text-[10px]">
-            <span class="text-[#8E9A98] italic">${ans.disclaimer || "Not financial advice."}</span>
-            <div class="flex items-center space-x-2 text-[#8E9A98]">
+            <span class="opacity-60 italic">${ans.disclaimer || "Not financial advice."}</span>
+            <div class="flex items-center space-x-2 opacity-70">
               <span>Helpful?</span>
               <button onclick="submitFeedback('${traceId}', 'up')" class="hover:text-[#E5AEA9] transition"><i class="fa-regular fa-thumbs-up"></i></button>
               <button onclick="submitFeedback('${traceId}', 'down')" class="hover:text-[#B46258] transition"><i class="fa-regular fa-thumbs-down"></i></button>
@@ -665,10 +773,10 @@
           bContainer.innerHTML += `
             <div>
               <div class="flex justify-between text-xs font-medium mb-1">
-                <span class="text-[#F5F5F5] capitalize">${b.category}</span>
-                <span class="text-[#8E9A98] font-mono">₹${b.spent.toLocaleString()} / ₹${b.limit.toLocaleString()} (${pct}%)</span>
+                <span class="capitalize">${b.category}</span>
+                <span class="opacity-70 font-mono">₹${b.spent.toLocaleString()} / ₹${b.limit.toLocaleString()} (${pct}%)</span>
               </div>
-              <div class="w-full bg-[#0f1720] rounded-full h-2 overflow-hidden border border-[#A6A9D0]/15">
+              <div class="w-full bg-black/20 rounded-full h-2 overflow-hidden border border-[#A6A9D0]/15">
                 <div class="${colorClass} h-2 rounded-full" style="width: ${pct}%"></div>
               </div>
             </div>
@@ -683,13 +791,13 @@
           const isPaid = bill.status === 'paid';
           const statusBg = isOverdue ? 'bg-[#B46258]/20 text-[#E5AEA9] border border-[#B46258]/30' : (isPaid ? 'bg-[#35627A]/30 text-[#A6A9D0] border border-[#35627A]/40' : 'bg-[#E5AEA9]/20 text-[#E5AEA9] border border-[#E5AEA9]/30');
           billsContainer.innerHTML += `
-            <div class="flex items-center justify-between p-3 bg-[#1a2936]/60 rounded-xl border border-[#A6A9D0]/15 text-xs">
+            <div class="flex items-center justify-between p-3 glass-card rounded-xl border border-[#A6A9D0]/15 text-xs">
               <div>
-                <div class="font-medium text-[#F5F5F5]">${bill.name}</div>
-                <div class="text-[10px] text-[#8E9A98]">Due: ${bill.due_date}</div>
+                <div class="font-medium">${bill.name}</div>
+                <div class="text-[10px] opacity-60">Due: ${bill.due_date}</div>
               </div>
               <div class="text-right">
-                <div class="font-bold text-[#F5F5F5] font-mono">₹${bill.amount.toLocaleString()}</div>
+                <div class="font-bold font-mono">₹${bill.amount.toLocaleString()}</div>
                 <span class="text-[9px] uppercase px-1.5 py-0.5 rounded font-semibold ${statusBg}">${bill.status}</span>
               </div>
             </div>
@@ -701,9 +809,9 @@
         catContainer.innerHTML = '';
         for (const [cat, amt] of Object.entries(data.category_spending)) {
           catContainer.innerHTML += `
-            <div class="p-3 bg-[#1a2936]/60 rounded-xl border border-[#A6A9D0]/15">
-              <div class="text-[11px] text-[#8E9A98] capitalize">${cat}</div>
-              <div class="text-base font-bold text-[#F5F5F5] mt-1 font-mono">₹${amt.toLocaleString()}</div>
+            <div class="p-3 glass-card rounded-xl border border-[#A6A9D0]/15">
+              <div class="text-[11px] opacity-70 capitalize">${cat}</div>
+              <div class="text-base font-bold mt-1 font-mono">₹${amt.toLocaleString()}</div>
             </div>
           `;
         }
@@ -720,15 +828,15 @@
         tbody.innerHTML = '';
         data.documents.forEach(doc => {
           tbody.innerHTML += `
-            <tr class="hover:bg-[#35627A]/20 transition">
-              <td class="py-3 px-5 font-medium text-[#F5F5F5] flex items-center">
+            <tr class="hover:bg-white/5 transition">
+              <td class="py-3 px-5 font-medium flex items-center">
                 <i class="fa-regular fa-file-pdf text-[#E5AEA9] mr-2 text-sm"></i> ${doc.filename}
               </td>
-              <td class="py-3 px-5 capitalize text-[#8E9A98]">${doc.doc_type}</td>
-              <td class="py-3 px-5 font-mono text-[#A6A9D0]">${doc.chunk_count} chunks</td>
-              <td class="py-3 px-5 text-[#8E9A98] text-[11px]">${doc.uploaded_at ? doc.uploaded_at.split('T')[0] : 'N/A'}</td>
+              <td class="py-3 px-5 capitalize opacity-70">${doc.doc_type}</td>
+              <td class="py-3 px-5 font-mono text-[#E5AEA9]">${doc.chunk_count} chunks</td>
+              <td class="py-3 px-5 opacity-70 text-[11px]">${doc.uploaded_at ? doc.uploaded_at.split('T')[0] : 'N/A'}</td>
               <td class="py-3 px-5 text-right">
-                <button onclick="deleteDoc(${doc.doc_id})" class="text-[#8E9A98] hover:text-[#B46258] text-xs transition">
+                <button onclick="deleteDoc(${doc.doc_id})" class="opacity-60 hover:text-[#B46258] text-xs transition">
                   <i class="fa-solid fa-trash"></i>
                 </button>
               </td>
@@ -777,12 +885,12 @@
       c.innerHTML = `
         <div class="flex justify-between items-center pb-2 border-b border-[#A6A9D0]/15">
           <div>
-            <span class="text-xs text-[#8E9A98] font-mono">Trace ID: ${data.trace_id}</span>
+            <span class="text-xs opacity-70 font-mono">Trace ID: ${data.trace_id}</span>
             <span class="ml-3 px-2 py-0.5 rounded text-[10px] uppercase font-bold bg-[#35627A]/30 text-[#A6A9D0] border border-[#35627A]/50">${data.route}</span>
           </div>
-          <span class="text-xs text-[#8E9A98] font-mono">${data.latency_ms} ms</span>
+          <span class="text-xs opacity-70 font-mono">${data.latency_ms} ms</span>
         </div>
-        <pre class="bg-[#0f1720] p-4 rounded-2xl text-xs text-[#A6A9D0] font-mono overflow-x-auto max-h-96 border border-[#A6A9D0]/15">${JSON.stringify(data, null, 2)}</pre>
+        <pre class="bg-black/40 p-4 rounded-2xl text-xs text-[#A6A9D0] font-mono overflow-x-auto max-h-96 border border-[#A6A9D0]/15">${JSON.stringify(data, null, 2)}</pre>
       `;
     }
 
