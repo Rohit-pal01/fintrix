@@ -133,9 +133,12 @@
       filter: contrast(1.15) saturate(1.25);
       transition: opacity 0.3s ease;
     }
-    /* Light Mode: Video hidden completely to prevent ugly magenta/purple hue distortion */
+    /* Light Mode: Elegant Pure Royal Purple Textured Earth */
     html.light .bg-video {
-      display: none !important;
+      display: block !important;
+      filter: invert(1) hue-rotate(270deg) contrast(2.2) brightness(0.88) saturate(2.2);
+      mix-blend-mode: multiply;
+      opacity: 0.90;
     }
     .bg-gradient-overlay {
       position: fixed;
@@ -146,8 +149,8 @@
       pointer-events: none;
     }
     html.light .bg-gradient-overlay {
-      background: radial-gradient(circle at 50% 12%, rgba(37, 99, 235, 0.08) 0%, transparent 60%),
-                  linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%) !important;
+      background: radial-gradient(circle at 50% 18%, rgba(147, 51, 234, 0.08) 0%, transparent 65%),
+                  linear-gradient(180deg, rgba(248, 250, 252, 0.0) 0%, rgba(248, 250, 252, 0.40) 45%, rgba(248, 250, 252, 0.92) 80%, #f8fafc 100%) !important;
     }
 
     .app-content {
