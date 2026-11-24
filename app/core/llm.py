@@ -17,9 +17,9 @@ class LLMClient:
         """
         providers = []
         if settings.GEMINI_API_KEY:
-            providers.append(("gemini", settings.GEMINI_API_KEY, settings.LLM_MODEL or "gemini-1.5-flash"))
+            providers.append(("gemini", settings.GEMINI_API_KEY, settings.LLM_MODEL or "gemini-flash-latest"))
         if settings.GROQ_API_KEY:
-            providers.append(("groq", settings.GROQ_API_KEY, settings.LLM_MODEL or "llama-3.3-70b-versatile"))
+            providers.append(("groq", settings.GROQ_API_KEY, settings.LLM_MODEL or "qwen/qwen3.8-27b"))
         return providers
 
     def is_live_ai_enabled(self) -> bool:
