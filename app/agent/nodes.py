@@ -149,7 +149,15 @@ def compose_answer_node(state: AgentState) -> AgentState:
             else:
                 answer_parts.append(f"Retrieved {len(rows)} matching record(s) from your financial database.")
         else:
-            answer_parts.append("No matching transactions were found for the specified period.")
+            q_lower = state.question.lower()
+            if any(k in q_lower for k in ["pdf", "statement", "document", "upload"]):
+                answer_parts.append(
+                    "No matching transactions were found in your SQL database. "
+                    "Note: Uploaded PDF documents are indexed for searching terms, clauses, and specific transaction details. "
+                    "To calculate exact mathematical totals, averages, or spending summaries, please upload your statement as a CSV."
+                )
+            else:
+                answer_parts.append("No matching transactions were found for the specified period.")
             confidence = "medium"
 
     # Document Citation and Grounding
