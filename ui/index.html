@@ -13,43 +13,50 @@
 
   <style>
     /*
-      Deep Cyber Electric Palette:
-      - Violet / Indigo Core: #6366f1 (Indigo 500), #8b5cf6 (Violet 500)
-      - Cyber Cyan: #06b6d4 (Cyan 500), #38bdf8 (Sky 400)
-      - Electric Emerald: #10b981 (Emerald 500)
-      - Deep Obsidian Base: #030712
-      - Pure Contrast White: #f8fafc
+      Exact Sapphire Ash Morning Palette with High-Contrast Dark & Crisp Light Modes:
+      - Deep Sapphire Navy: #15222E (Deep), #35627A (Sapphire Slate)
+      - Soft Rose Ash: #E5AEA9
+      - Terracotta Accent: #B46258
+      - Lavender Muted Mist: #A6A9D0
+      - Ash Morning Gray: #8E9A98
+      - Morning Pure White: #F8FAFC / #FFFFFF
     */
     :root {
-      --bg: #030712;
-      --card-bg: rgba(15, 23, 42, 0.72);
-      --card-border: rgba(99, 102, 241, 0.18);
-      --text-primary: #f8fafc;
-      --text-secondary: #94a3b8;
-      --accent-violet: #8b5cf6;
-      --accent-cyan: #06b6d4;
-      --accent-indigo: #6366f1;
-      --glass-nav: rgba(3, 7, 18, 0.88);
-      --video-opacity: 0.55;
+      --bg: #0b1319;
+      --card-bg: rgba(21, 34, 46, 0.78);
+      --card-border: rgba(166, 169, 208, 0.22);
+      --subcard-bg: rgba(11, 19, 25, 0.65);
+      --text-main: #FFFFFF;
+      --text-sub: #cbd5e1;
+      --text-muted: #8E9A98;
+      --sapphire: #35627A;
+      --lavender: #A6A9D0;
+      --rose-ash: #E5AEA9;
+      --terracotta: #B46258;
+      --glass-nav: rgba(11, 19, 25, 0.88);
+      --video-opacity: 0.52;
     }
 
     html.light {
-      --bg: #f8fafc;
-      --card-bg: rgba(255, 255, 255, 0.90);
-      --card-border: rgba(99, 102, 241, 0.20);
-      --text-primary: #090d16;
-      --text-secondary: #475569;
-      --accent-violet: #7c3aed;
-      --accent-cyan: #0891b2;
-      --accent-indigo: #4f46e5;
-      --glass-nav: rgba(248, 250, 252, 0.92);
+      --bg: #f1f5f9;
+      --card-bg: rgba(255, 255, 255, 0.95);
+      --card-border: rgba(53, 98, 122, 0.22);
+      --subcard-bg: #e2e8f0;
+      --text-main: #0f172a;
+      --text-sub: #1e293b;
+      --text-muted: #475569;
+      --sapphire: #35627A;
+      --lavender: #64748b;
+      --rose-ash: #b4534f;
+      --terracotta: #9a3412;
+      --glass-nav: rgba(255, 255, 255, 0.94);
       --video-opacity: 0.12;
     }
 
     * { box-sizing: border-box; }
     body {
       background: var(--bg);
-      color: var(--text-primary);
+      color: var(--text-main);
       font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
       overflow-x: hidden;
       transition: background-color 0.3s ease, color 0.3s ease;
@@ -57,7 +64,7 @@
     }
     code, pre { font-family: 'JetBrains Mono', monospace; }
 
-    /* Glass Elements */
+    /* Custom Glass Styling */
     .glass-nav {
       background: var(--glass-nav);
       backdrop-filter: blur(24px);
@@ -70,8 +77,12 @@
       -webkit-backdrop-filter: blur(20px);
       border: 1px solid var(--card-border);
     }
+    .glass-subcard {
+      background: var(--subcard-bg);
+      border: 1px solid var(--card-border);
+    }
     .glass-pill {
-      background: rgba(99, 102, 241, 0.08);
+      background: rgba(166, 169, 208, 0.12);
       backdrop-filter: blur(12px);
       border: 1px solid var(--card-border);
     }
@@ -98,21 +109,21 @@
       object-fit: cover;
       object-position: 50% 12%;
       opacity: var(--video-opacity);
-      filter: contrast(1.22) saturate(1.25);
+      filter: contrast(1.18) saturate(1.15);
       transition: opacity 0.3s ease;
     }
     .bg-gradient-overlay {
       position: fixed;
       inset: 0;
-      background: radial-gradient(circle at 50% 18%, rgba(99, 102, 241, 0.30), transparent 65%),
-                  radial-gradient(circle at 80% 80%, rgba(6, 182, 212, 0.15), transparent 50%),
-                  linear-gradient(180deg, rgba(3, 7, 18, 0.20) 0%, rgba(3, 7, 18, 0.94) 75%, #030712 100%);
+      background: radial-gradient(circle at 50% 18%, rgba(53, 98, 122, 0.30), transparent 65%),
+                  radial-gradient(circle at 80% 80%, rgba(229, 174, 169, 0.12), transparent 50%),
+                  linear-gradient(180deg, rgba(11, 19, 25, 0.20) 0%, rgba(11, 19, 25, 0.94) 75%, #0b1319 100%);
       z-index: 1;
       pointer-events: none;
     }
     html.light .bg-gradient-overlay {
-      background: radial-gradient(circle at 50% 18%, rgba(99, 102, 241, 0.12), transparent 65%),
-                  linear-gradient(180deg, rgba(248, 250, 252, 0.4) 0%, rgba(248, 250, 252, 0.92) 80%, #f8fafc 100%);
+      background: radial-gradient(circle at 50% 18%, rgba(53, 98, 122, 0.12), transparent 65%),
+                  linear-gradient(180deg, rgba(241, 245, 249, 0.3) 0%, rgba(241, 245, 249, 0.92) 80%, #f1f5f9 100%);
     }
 
     .app-content {
@@ -122,35 +133,35 @@
 
     /* Pill Navigation Button */
     .tab-btn {
-      color: var(--text-secondary);
+      color: var(--text-muted);
       transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .tab-btn:hover {
-      color: var(--text-primary);
-      background: rgba(99, 102, 241, 0.15);
+      color: var(--text-main);
+      background: rgba(166, 169, 208, 0.18);
     }
     .tab-btn.active {
-      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+      background: var(--sapphire);
       color: #ffffff !important;
-      border: 1px solid rgba(255, 255, 255, 0.35);
-      box-shadow: 0 0 24px rgba(99, 102, 241, 0.65);
+      border: 1px solid rgba(229, 174, 169, 0.45);
+      box-shadow: 0 0 20px rgba(53, 98, 122, 0.55);
     }
 
-    /* Electric Violet & Cyber Cyan Headline */
+    /* High Contrast Text Gradient */
     .hero-title-gradient {
-      background: linear-gradient(135deg, #ffffff 0%, #c4b5fd 40%, #38bdf8 75%, #06b6d4 100%);
+      background: linear-gradient(135deg, #FFFFFF 0%, #A6A9D0 45%, #E5AEA9 80%, #B46258 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
     html.light .hero-title-gradient {
-      background: linear-gradient(135deg, #0f172a 0%, #4f46e5 50%, #0284c7 100%);
+      background: linear-gradient(135deg, #0f172a 0%, #35627A 50%, #9a3412 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
 
-    /* Console Box with Indigo Glow */
+    /* Console Box with Sapphire Glow */
     .console-box {
-      box-shadow: 0 20px 60px -15px rgba(0, 0, 0, 0.8), 0 0 50px -10px rgba(99, 102, 241, 0.35);
+      box-shadow: 0 20px 60px -15px rgba(0, 0, 0, 0.7), 0 0 45px -10px rgba(53, 98, 122, 0.35);
     }
   </style>
 </head>
@@ -168,15 +179,15 @@
   <header class="app-content sticky top-0 z-50 glass-nav px-6 py-3.5 flex items-center justify-between">
     <!-- Brand -->
     <div class="flex items-center space-x-3 cursor-pointer" onclick="switchView('hero')">
-      <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-500 via-purple-500 to-cyan-400 flex items-center justify-center font-bold text-slate-950 text-base shadow-lg shadow-indigo-500/40">
+      <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#35627A] to-[#E5AEA9] flex items-center justify-center font-bold text-slate-950 text-base shadow-lg shadow-[#35627A]/40">
         <i class="fa-solid fa-shield-halved text-white text-sm"></i>
       </div>
       <div>
         <div class="text-sm font-extrabold tracking-tight flex items-center gap-2">
           <span>Fintrix</span>
-          <span class="text-[9px] uppercase px-1.5 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 font-mono font-bold">Verifiable v2.4</span>
+          <span class="text-[9px] uppercase px-1.5 py-0.5 rounded-full bg-[#A6A9D0]/20 text-[#A6A9D0] border border-[#A6A9D0]/30 font-mono font-bold">Verifiable v2.4</span>
         </div>
-        <p class="text-[11px] opacity-70">Autonomous Financial Intelligence</p>
+        <p class="text-[11px] opacity-75 font-medium">Autonomous Financial Intelligence</p>
       </div>
     </div>
 
@@ -205,8 +216,8 @@
     <!-- Right Side: Dark / Light Mode Toggle -->
     <div class="flex items-center space-x-2">
       <button onclick="toggleTheme()" id="theme-toggle-btn" class="glass-pill px-3 py-1.5 rounded-full text-xs font-medium flex items-center gap-1.5 hover:scale-105 active:scale-95 transition" title="Toggle Light / Dark Mode">
-        <i id="theme-icon" class="fa-solid fa-moon text-indigo-400"></i>
-        <span id="theme-text" class="text-[11px] font-mono hidden sm:inline">Dark</span>
+        <i id="theme-icon" class="fa-solid fa-moon text-[#A6A9D0]"></i>
+        <span id="theme-text" class="text-[11px] font-mono font-semibold hidden sm:inline">Dark</span>
       </button>
     </div>
   </header>
@@ -214,13 +225,13 @@
   <!-- 3. MAIN APPLICATION CONTAINER -->
   <main class="app-content flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 flex flex-col">
 
-    <!-- VIEW 1: HERO VIEW (AI Architecture & Live Dual-Engine Interactive Playground) -->
+    <!-- VIEW 1: HERO VIEW -->
     <section id="view-hero" class="flex flex-col items-center justify-center text-center py-10 md:py-16 space-y-8">
       
       <!-- Pill Badge -->
-      <div class="inline-flex items-center gap-2 glass-pill px-4 py-1.5 rounded-full text-xs border border-indigo-500/40 shadow-sm">
-        <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
-        <span class="font-semibold tracking-wide uppercase text-[10px] text-cyan-300">Dual-Engine Verifiable Intelligence</span>
+      <div class="inline-flex items-center gap-2 glass-pill px-4 py-1.5 rounded-full text-xs border border-[#A6A9D0]/30 shadow-sm">
+        <span class="w-2 h-2 rounded-full bg-[#E5AEA9] animate-pulse"></span>
+        <span class="font-semibold tracking-wide uppercase text-[10px] text-[#A6A9D0]">Dual-Engine Verifiable Intelligence</span>
       </div>
 
       <!-- Main Catchphrase -->
@@ -229,58 +240,58 @@
           Verifiable <br class="hidden sm:block">
           <span class="hero-title-gradient">Financial Intelligence</span>
         </h1>
-        <p class="text-base sm:text-lg max-w-2xl mx-auto font-normal opacity-85 leading-relaxed">
+        <p class="text-base sm:text-lg max-w-2xl mx-auto font-medium opacity-90 leading-relaxed text-[var(--text-sub)]">
           Zero hallucination finance. Computations run through mathematical PostgreSQL routines, and contractual clauses cite your indexed PDF documents with verifiable runtime proofs.
         </p>
       </div>
 
       <!-- Primary Action Buttons -->
       <div class="flex flex-wrap items-center justify-center gap-4 pt-1">
-        <button onclick="switchView('chat')" class="bg-gradient-to-r from-indigo-500 via-purple-600 to-cyan-500 hover:opacity-90 text-white font-bold px-8 py-3.5 rounded-full text-sm transition flex items-center gap-2 shadow-xl hover:scale-105 active:scale-95 duration-200">
+        <button onclick="switchView('chat')" class="bg-gradient-to-r from-[#35627A] via-[#487c9b] to-[#E5AEA9] hover:opacity-95 text-white font-bold px-8 py-3.5 rounded-full text-sm transition flex items-center gap-2 shadow-xl hover:scale-105 active:scale-95 duration-200">
           <span>Launch Financial AI</span>
           <i class="fa-solid fa-arrow-right text-xs"></i>
         </button>
-        <button onclick="switchView('documents')" class="glass-pill hover:bg-slate-800/40 font-semibold px-6 py-3.5 rounded-full text-sm transition flex items-center gap-2 border border-indigo-500/30">
-          <i class="fa-solid fa-file-pdf text-rose-400"></i>
+        <button onclick="switchView('documents')" class="glass-pill hover:bg-white/10 font-bold px-6 py-3.5 rounded-full text-sm transition flex items-center gap-2 border border-[#A6A9D0]/30 text-[var(--text-main)]">
+          <i class="fa-solid fa-file-pdf text-[#E5AEA9]"></i>
           <span>Document Vault</span>
         </button>
       </div>
 
       <!-- Professional Interactive Architecture Showcase -->
       <div class="w-full max-w-5xl pt-8">
-        <div class="glass-card rounded-3xl p-6 md:p-8 console-box text-left border border-indigo-500/20">
+        <div class="glass-card rounded-3xl p-6 md:p-8 console-box text-left border border-[#A6A9D0]/20">
           
-          <div class="flex flex-wrap items-center justify-between pb-6 border-b border-indigo-500/15 gap-4">
+          <div class="flex flex-wrap items-center justify-between pb-6 border-b border-[#A6A9D0]/15 gap-4">
             <div>
-              <div class="text-xs uppercase tracking-widest text-cyan-400 font-mono font-bold">Interactive System Runtime</div>
-              <h2 class="text-xl font-bold mt-0.5">Execution & Retrieval Pipeline</h2>
+              <div class="text-xs uppercase tracking-widest text-[#A6A9D0] font-mono font-bold">Interactive System Runtime</div>
+              <h2 class="text-xl font-bold mt-0.5 text-[var(--text-main)]">Execution & Retrieval Pipeline</h2>
             </div>
             <!-- Live Status Indicators -->
-            <div class="flex items-center gap-4 text-xs font-mono">
-              <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-cyan-400"></span> Neon DB: Active</span>
-              <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-indigo-400"></span> Gemini/Groq: Ready</span>
-              <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-400"></span> Hybrid BM25: Synced</span>
+            <div class="flex items-center gap-4 text-xs font-mono font-medium">
+              <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-400"></span> Neon DB: Active</span>
+              <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-cyan-400"></span> Gemini/Groq: Ready</span>
+              <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-indigo-400"></span> Hybrid BM25: Synced</span>
             </div>
           </div>
 
-          <!-- Architecture Flow Steps -->
+          <!-- Architecture Flow Steps with Crisp High-Contrast Styling -->
           <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-6">
             
             <!-- Step 1: Text-to-SQL Engine -->
-            <div class="p-5 rounded-2xl bg-black/20 border border-indigo-500/15 space-y-3 hover:border-cyan-500/40 transition duration-300">
+            <div class="p-5 rounded-2xl glass-subcard space-y-3 hover:border-[#35627A] transition duration-300">
               <div class="flex items-center justify-between">
-                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 uppercase font-bold">Engine 01</span>
-                <span class="text-xs font-bold text-cyan-400">100% Accuracy</span>
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-[#35627A]/30 text-[#A6A9D0] uppercase font-bold">Engine 01</span>
+                <span class="text-xs font-bold text-emerald-500 dark:text-emerald-400">100% Accuracy</span>
               </div>
-              <h3 class="text-base font-bold flex items-center gap-2">
-                <i class="fa-solid fa-database text-cyan-400"></i>
+              <h3 class="text-base font-bold flex items-center gap-2 text-[var(--text-main)]">
+                <i class="fa-solid fa-database text-[#35627A] dark:text-[#A6A9D0]"></i>
                 <span>Deterministic SQL</span>
               </h3>
-              <p class="text-xs opacity-75 leading-relaxed">
+              <p class="text-xs font-medium leading-relaxed text-[var(--text-sub)]">
                 Aggregates 23,500+ transactions, balances, and budgets with mathematical precision. Never invents financial figures.
               </p>
               <div class="pt-2">
-                <button onclick="sendQuickPrompt('How much did I spend on food last month?')" class="text-[11px] font-medium text-cyan-300 hover:underline flex items-center gap-1">
+                <button onclick="sendQuickPrompt('How much did I spend on food last month?')" class="text-[11px] font-bold text-[#35627A] dark:text-[#E5AEA9] hover:underline flex items-center gap-1">
                   <span>Run SQL Query Demo</span>
                   <i class="fa-solid fa-chevron-right text-[9px]"></i>
                 </button>
@@ -288,20 +299,20 @@
             </div>
 
             <!-- Step 2: Cross-Encoder RAG -->
-            <div class="p-5 rounded-2xl bg-black/20 border border-indigo-500/15 space-y-3 hover:border-indigo-500/40 transition duration-300">
+            <div class="p-5 rounded-2xl glass-subcard space-y-3 hover:border-[#E5AEA9] transition duration-300">
               <div class="flex items-center justify-between">
-                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 uppercase font-bold">Engine 02</span>
-                <span class="text-xs font-bold text-indigo-400">98% Hit Rate@5</span>
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-[#A6A9D0]/20 text-[#A6A9D0] uppercase font-bold">Engine 02</span>
+                <span class="text-xs font-bold text-cyan-600 dark:text-cyan-400">98% Hit Rate@5</span>
               </div>
-              <h3 class="text-base font-bold flex items-center gap-2">
-                <i class="fa-solid fa-file-invoice-dollar text-indigo-400"></i>
+              <h3 class="text-base font-bold flex items-center gap-2 text-[var(--text-main)]">
+                <i class="fa-solid fa-file-invoice-dollar text-[#35627A] dark:text-[#E5AEA9]"></i>
                 <span>Hybrid Grounded RAG</span>
               </h3>
-              <p class="text-xs opacity-75 leading-relaxed">
+              <p class="text-xs font-medium leading-relaxed text-[var(--text-sub)]">
                 Fuses exact BM25 keyword matching with dense neural embeddings and cross-encoder reranking to cite PDF clauses directly.
               </p>
               <div class="pt-2">
-                <button onclick="sendQuickPrompt('What is the prepayment penalty on my floating rate home loan?')" class="text-[11px] font-medium text-indigo-300 hover:underline flex items-center gap-1">
+                <button onclick="sendQuickPrompt('What is the prepayment penalty on my floating rate home loan?')" class="text-[11px] font-bold text-[#35627A] dark:text-[#E5AEA9] hover:underline flex items-center gap-1">
                   <span>Test Policy RAG Demo</span>
                   <i class="fa-solid fa-chevron-right text-[9px]"></i>
                 </button>
@@ -309,20 +320,20 @@
             </div>
 
             <!-- Step 3: Runtime Verifier -->
-            <div class="p-5 rounded-2xl bg-black/20 border border-indigo-500/15 space-y-3 hover:border-purple-500/40 transition duration-300">
+            <div class="p-5 rounded-2xl glass-subcard space-y-3 hover:border-[#B46258] transition duration-300">
               <div class="flex items-center justify-between">
-                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-purple-500/20 text-purple-300 uppercase font-bold">Guardrail 03</span>
-                <span class="text-xs font-bold text-purple-400">0.0% Hallucination</span>
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-[#B46258]/20 text-[#B46258] dark:text-[#E5AEA9] uppercase font-bold">Guardrail 03</span>
+                <span class="text-xs font-bold text-rose-600 dark:text-[#E5AEA9]">0.0% Hallucination</span>
               </div>
-              <h3 class="text-base font-bold flex items-center gap-2">
-                <i class="fa-solid fa-shield-virus text-purple-400"></i>
+              <h3 class="text-base font-bold flex items-center gap-2 text-[var(--text-main)]">
+                <i class="fa-solid fa-shield-virus text-[#B46258] dark:text-[#E5AEA9]"></i>
                 <span>Runtime Number Verifier</span>
               </h3>
-              <p class="text-xs opacity-75 leading-relaxed">
+              <p class="text-xs font-medium leading-relaxed text-[var(--text-sub)]">
                 Every numerical output is cross-checked against executed database rows and extracted snippets before delivery to user.
               </p>
               <div class="pt-2">
-                <button onclick="switchView('evals')" class="text-[11px] font-medium text-purple-300 hover:underline flex items-center gap-1">
+                <button onclick="switchView('evals')" class="text-[11px] font-bold text-[#35627A] dark:text-[#E5AEA9] hover:underline flex items-center gap-1">
                   <span>View Benchmark Suite</span>
                   <i class="fa-solid fa-chevron-right text-[9px]"></i>
                 </button>
@@ -336,12 +347,12 @@
 
     <!-- VIEW 2: FINANCIAL ASSISTANT (CHAT) -->
     <section id="view-chat" class="hidden flex-1 flex flex-col space-y-4">
-      <div class="flex items-center justify-between pb-2 border-b border-indigo-500/15">
+      <div class="flex items-center justify-between pb-2 border-b border-[#A6A9D0]/20">
         <div>
-          <h2 class="text-lg font-bold">Financial Assistant</h2>
-          <p class="text-xs opacity-70">Ask questions about spending, account balances, policies, or uploaded documents.</p>
+          <h2 class="text-lg font-bold text-[var(--text-main)]">Financial Assistant</h2>
+          <p class="text-xs font-medium text-[var(--text-sub)]">Ask questions about spending, account balances, policies, or uploaded documents.</p>
         </div>
-        <button onclick="switchView('hero')" class="text-xs glass-pill px-3 py-1.5 rounded-full transition flex items-center gap-1">
+        <button onclick="switchView('hero')" class="text-xs glass-pill px-3 py-1.5 rounded-full transition flex items-center gap-1 text-[var(--text-main)] font-semibold">
           <i class="fa-solid fa-arrow-left"></i>
           <span>Back to Home</span>
         </button>
@@ -349,17 +360,17 @@
 
       <!-- Quick Prompt Pills -->
       <div class="flex items-center space-x-2 overflow-x-auto pb-2 text-xs">
-        <span class="opacity-70 uppercase font-semibold text-[10px] tracking-wider">Try:</span>
-        <button onclick="sendQuickPrompt('How much did I spend on food last month?')" class="glass-pill hover:opacity-80 px-3.5 py-1.5 rounded-full transition whitespace-nowrap text-cyan-300">
+        <span class="opacity-70 uppercase font-semibold text-[10px] tracking-wider text-[var(--text-sub)]">Try:</span>
+        <button onclick="sendQuickPrompt('How much did I spend on food last month?')" class="glass-pill hover:bg-slate-700/30 px-3.5 py-1.5 rounded-full transition whitespace-nowrap text-[var(--text-main)] font-semibold">
           📊 Food spend last month (SQL)
         </button>
-        <button onclick="sendQuickPrompt('What is the prepayment penalty on my floating rate home loan?')" class="glass-pill hover:opacity-80 px-3.5 py-1.5 rounded-full transition whitespace-nowrap text-indigo-300">
+        <button onclick="sendQuickPrompt('What is the prepayment penalty on my floating rate home loan?')" class="glass-pill hover:bg-slate-700/30 px-3.5 py-1.5 rounded-full transition whitespace-nowrap text-[var(--text-main)] font-semibold">
           📄 Prepayment terms (RAG)
         </button>
-        <button onclick="sendQuickPrompt('What is my total spending by category this month?')" class="glass-pill hover:opacity-80 px-3.5 py-1.5 rounded-full transition whitespace-nowrap text-purple-300">
+        <button onclick="sendQuickPrompt('What is my total spending by category this month?')" class="glass-pill hover:bg-slate-700/30 px-3.5 py-1.5 rounded-full transition whitespace-nowrap text-[var(--text-main)] font-semibold">
           📈 Category breakdown (SQL)
         </button>
-        <button onclick="sendQuickPrompt('What is the room rent limit per day for normal hospitalization?')" class="glass-pill hover:opacity-80 px-3.5 py-1.5 rounded-full transition whitespace-nowrap text-sky-300">
+        <button onclick="sendQuickPrompt('What is the room rent limit per day for normal hospitalization?')" class="glass-pill hover:bg-slate-700/30 px-3.5 py-1.5 rounded-full transition whitespace-nowrap text-[var(--text-main)] font-semibold">
           🏥 Health insurance limits (RAG)
         </button>
       </div>
@@ -368,15 +379,15 @@
       <div id="chat-messages" class="flex-1 glass-card rounded-3xl p-5 overflow-y-auto space-y-4 min-h-[440px] max-h-[580px]">
         <!-- Welcome Message -->
         <div class="flex items-start space-x-3 max-w-2xl">
-          <div class="w-8 h-8 rounded-xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center flex-shrink-0 text-sm border border-indigo-500/30">
+          <div class="w-8 h-8 rounded-xl bg-[#35627A] text-white flex items-center justify-center flex-shrink-0 text-sm shadow">
             <i class="fa-solid fa-shield-halved"></i>
           </div>
-          <div class="glass-card rounded-2xl rounded-tl-sm p-4 text-sm space-y-2">
-            <p class="font-bold">Hello! Welcome to <strong>Fintrix</strong>.</p>
-            <p class="opacity-80 leading-relaxed text-xs">
+          <div class="glass-subcard rounded-2xl rounded-tl-sm p-4 text-sm space-y-2">
+            <p class="font-bold text-[var(--text-main)]">Hello! Welcome to <strong>Fintrix</strong>.</p>
+            <p class="leading-relaxed text-xs font-medium text-[var(--text-sub)]">
               Every numerical claim is backed by verified SQL queries, and every policy claim cites your uploaded documents directly. Ask anything about your finances or documents.
             </p>
-            <div class="text-[10px] opacity-60 italic pt-1 border-t border-indigo-500/15">
+            <div class="text-[10px] text-[var(--text-muted)] italic pt-1 border-t border-[#A6A9D0]/20 font-medium">
               Disclaimer: This is informational and not financial advice.
             </div>
           </div>
@@ -389,12 +400,12 @@
           id="chat-input" 
           type="text" 
           placeholder="Ask a question about your finances, loans, or uploaded documents..." 
-          class="w-full glass-card rounded-2xl pl-5 pr-28 py-4 text-sm placeholder:opacity-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition shadow-inner"
+          class="w-full glass-card rounded-2xl pl-5 pr-28 py-4 text-sm text-[var(--text-main)] placeholder:text-[var(--text-muted)] font-medium focus:outline-none focus:ring-2 focus:ring-[#35627A] transition shadow-inner"
         />
         <button 
           type="submit" 
           id="send-btn"
-          class="absolute right-2.5 bg-gradient-to-r from-indigo-500 via-purple-600 to-cyan-500 text-white font-bold px-5 py-2 rounded-xl text-xs flex items-center space-x-1.5 shadow transition"
+          class="absolute right-2.5 bg-[#35627A] hover:bg-[#487c9b] text-white font-bold px-5 py-2 rounded-xl text-xs flex items-center space-x-1.5 shadow transition"
         >
           <span>Ask</span>
           <i class="fa-solid fa-arrow-right text-[10px]"></i>
@@ -404,12 +415,12 @@
 
     <!-- VIEW 3: FINANCIAL SUMMARY -->
     <section id="view-summary" class="hidden space-y-6">
-      <div class="flex items-center justify-between pb-2 border-b border-indigo-500/15">
+      <div class="flex items-center justify-between pb-2 border-b border-[#A6A9D0]/20">
         <div>
-          <h2 class="text-lg font-bold">Monthly Financial Overview</h2>
-          <p class="text-xs opacity-70">Real-time metrics calculated directly from PostgreSQL transactions.</p>
+          <h2 class="text-lg font-bold text-[var(--text-main)]">Monthly Financial Overview</h2>
+          <p class="text-xs font-medium text-[var(--text-sub)]">Real-time metrics calculated directly from PostgreSQL transactions.</p>
         </div>
-        <button onclick="loadFinancialSummary()" class="text-xs glass-pill px-3 py-1.5 rounded-full transition">
+        <button onclick="loadFinancialSummary()" class="text-xs glass-pill px-3 py-1.5 rounded-full transition font-semibold text-[var(--text-main)]">
           <i class="fa-solid fa-rotate-right mr-1"></i> Refresh Data
         </button>
       </div>
@@ -417,16 +428,16 @@
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         <!-- Budgets Progress -->
         <div class="md:col-span-2 glass-card rounded-3xl p-6 space-y-4">
-          <h3 class="text-sm font-semibold flex items-center">
-            <i class="fa-solid fa-bullseye text-cyan-400 mr-2"></i> Budget vs Actual Spending
+          <h3 class="text-sm font-bold flex items-center text-[var(--text-main)]">
+            <i class="fa-solid fa-bullseye text-[#35627A] mr-2"></i> Budget vs Actual Spending
           </h3>
           <div id="budget-bars" class="space-y-4 pt-2"></div>
         </div>
 
         <!-- Upcoming Bills -->
         <div class="glass-card rounded-3xl p-6 space-y-4">
-          <h3 class="text-sm font-semibold flex items-center">
-            <i class="fa-solid fa-receipt text-indigo-400 mr-2"></i> Upcoming & Overdue Bills
+          <h3 class="text-sm font-bold flex items-center text-[var(--text-main)]">
+            <i class="fa-solid fa-receipt text-[#A6A9D0] mr-2"></i> Upcoming & Overdue Bills
           </h3>
           <div id="bills-list" class="space-y-2.5"></div>
         </div>
@@ -434,8 +445,8 @@
 
       <!-- Category Chips -->
       <div class="glass-card rounded-3xl p-6 space-y-4">
-        <h3 class="text-sm font-semibold flex items-center">
-          <i class="fa-solid fa-layer-group text-purple-400 mr-2"></i> Spending by Category
+        <h3 class="text-sm font-bold flex items-center text-[var(--text-main)]">
+          <i class="fa-solid fa-layer-group text-[#E5AEA9] mr-2"></i> Spending by Category
         </h3>
         <div id="category-chips" class="grid grid-cols-2 sm:grid-cols-4 gap-3"></div>
       </div>
@@ -443,21 +454,21 @@
 
     <!-- VIEW 4: DOCUMENT VAULT -->
     <section id="view-documents" class="hidden space-y-6">
-      <div class="flex items-center justify-between pb-2 border-b border-indigo-500/15">
+      <div class="flex items-center justify-between pb-2 border-b border-[#A6A9D0]/20">
         <div>
-          <h2 class="text-lg font-bold">Document Vault (RAG Corpus)</h2>
-          <p class="text-xs opacity-70">Uploaded financial policies, statements, and resumes indexed into hybrid vector chunks.</p>
+          <h2 class="text-lg font-bold text-[var(--text-main)]">Document Vault (RAG Corpus)</h2>
+          <p class="text-xs font-medium text-[var(--text-sub)]">Uploaded financial policies, statements, and resumes indexed into hybrid vector chunks.</p>
         </div>
-        <label class="cursor-pointer bg-gradient-to-r from-indigo-500 to-purple-600 hover:opacity-90 text-white font-semibold px-4 py-2 rounded-full text-xs flex items-center space-x-2 transition shadow">
-          <i class="fa-solid fa-cloud-arrow-up text-cyan-300"></i>
+        <label class="cursor-pointer bg-[#35627A] hover:bg-[#487c9b] text-white font-bold px-4 py-2 rounded-full text-xs flex items-center space-x-2 transition shadow">
+          <i class="fa-solid fa-cloud-arrow-up text-[#E5AEA9]"></i>
           <span>Upload Document (PDF, Word, TXT)</span>
           <input type="file" id="pdf-upload-input" accept=".pdf,.docx,.doc,.md,.txt" class="hidden" onchange="handleFileUpload(event)">
         </label>
       </div>
 
-      <div class="glass-card rounded-3xl overflow-hidden border border-indigo-500/15">
+      <div class="glass-card rounded-3xl overflow-hidden border border-[#A6A9D0]/20">
         <table class="w-full text-left text-xs">
-          <thead class="bg-black/20 opacity-70 uppercase text-[10px] tracking-wider border-b border-indigo-500/15">
+          <thead class="bg-black/10 dark:bg-black/30 font-bold uppercase text-[10px] tracking-wider border-b border-[#A6A9D0]/20 text-[var(--text-main)]">
             <tr>
               <th class="py-3.5 px-5">Filename</th>
               <th class="py-3.5 px-5">Category</th>
@@ -466,58 +477,58 @@
               <th class="py-3.5 px-5 text-right">Actions</th>
             </tr>
           </thead>
-          <tbody id="documents-table-body" class="divide-y divide-indigo-500/10"></tbody>
+          <tbody id="documents-table-body" class="divide-y divide-[#A6A9D0]/15"></tbody>
         </table>
       </div>
     </section>
 
     <!-- VIEW 5: TRACES INSPECTOR -->
     <section id="view-traces" class="hidden space-y-6">
-      <div class="flex items-center justify-between pb-2 border-b border-indigo-500/15">
+      <div class="flex items-center justify-between pb-2 border-b border-[#A6A9D0]/20">
         <div>
-          <h2 class="text-lg font-bold">Execution Traces & Latency Inspector</h2>
-          <p class="text-xs opacity-70">Full audit trail of routing decisions, SQL repair loops, and retrieved chunks.</p>
+          <h2 class="text-lg font-bold text-[var(--text-main)]">Execution Traces & Latency Inspector</h2>
+          <p class="text-xs font-medium text-[var(--text-sub)]">Full audit trail of routing decisions, SQL repair loops, and retrieved chunks.</p>
         </div>
       </div>
       <div id="latest-trace-container" class="glass-card rounded-3xl p-6 space-y-4">
-        <p class="text-xs opacity-70">Ask a question in the Financial Assistant tab to generate live execution traces.</p>
+        <p class="text-xs font-medium text-[var(--text-sub)]">Ask a question in the Financial Assistant tab to generate live execution traces.</p>
       </div>
     </section>
 
     <!-- VIEW 6: EVALUATION BENCHMARKS -->
     <section id="view-evals" class="hidden space-y-6">
-      <div class="flex items-center justify-between pb-2 border-b border-indigo-500/15">
+      <div class="flex items-center justify-between pb-2 border-b border-[#A6A9D0]/20">
         <div>
-          <h2 class="text-lg font-bold">Autonomous Evaluation Suites</h2>
-          <p class="text-xs opacity-70">Benchmark suites validating SQL yield, retrieval Hit Rate@K, and routing accuracy.</p>
+          <h2 class="text-lg font-bold text-[var(--text-main)]">Autonomous Evaluation Suites</h2>
+          <p class="text-xs font-medium text-[var(--text-sub)]">Benchmark suites validating SQL yield, retrieval Hit Rate@K, and routing accuracy.</p>
         </div>
-        <button onclick="runLiveEvaluation()" id="btn-run-eval" class="bg-gradient-to-r from-indigo-500 via-purple-600 to-cyan-500 text-white font-bold px-4 py-2 rounded-full text-xs flex items-center space-x-2 transition shadow">
+        <button onclick="runLiveEvaluation()" id="btn-run-eval" class="bg-[#35627A] hover:bg-[#487c9b] text-white font-bold px-4 py-2 rounded-full text-xs flex items-center space-x-2 transition shadow">
           <i class="fa-solid fa-play"></i>
           <span>Run Benchmark Suites</span>
         </button>
       </div>
 
-      <!-- Stat Cards -->
+      <!-- Stat Cards in High Contrast -->
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div class="glass-card p-4 rounded-2xl">
-          <div class="text-[10px] opacity-70 uppercase font-semibold">SQL Execution Accuracy</div>
-          <div class="text-2xl font-bold text-cyan-400 mt-1" id="eval-sql-acc">100.0%</div>
-          <div class="text-[10px] opacity-60 mt-0.5">Target: &ge; 85% (60 Cases)</div>
+          <div class="text-[10px] font-bold uppercase text-[var(--text-muted)]">SQL Execution Accuracy</div>
+          <div class="text-2xl font-black text-emerald-600 dark:text-emerald-400 mt-1" id="eval-sql-acc">100.0%</div>
+          <div class="text-[10px] font-medium text-[var(--text-sub)] mt-0.5">Target: &ge; 85% (60 Cases)</div>
         </div>
         <div class="glass-card p-4 rounded-2xl">
-          <div class="text-[10px] opacity-70 uppercase font-semibold">Retrieval Hit Rate@5</div>
-          <div class="text-2xl font-bold text-indigo-400 mt-1" id="eval-ret-hr5">98.0%</div>
-          <div class="text-[10px] opacity-60 mt-0.5">Target: &ge; 85% (50 Questions)</div>
+          <div class="text-[10px] font-bold uppercase text-[var(--text-muted)]">Retrieval Hit Rate@5</div>
+          <div class="text-2xl font-black text-cyan-600 dark:text-cyan-400 mt-1" id="eval-ret-hr5">98.0%</div>
+          <div class="text-[10px] font-medium text-[var(--text-sub)] mt-0.5">Target: &ge; 85% (50 Questions)</div>
         </div>
         <div class="glass-card p-4 rounded-2xl">
-          <div class="text-[10px] opacity-70 uppercase font-semibold">Routing Accuracy</div>
-          <div class="text-2xl font-bold text-purple-400 mt-1" id="eval-routing-acc">100.0%</div>
-          <div class="text-[10px] opacity-60 mt-0.5">Target: &ge; 90% (30 Cases)</div>
+          <div class="text-[10px] font-bold uppercase text-[var(--text-muted)]">Routing Accuracy</div>
+          <div class="text-2xl font-black text-[#35627A] dark:text-[#A6A9D0] mt-1" id="eval-routing-acc">100.0%</div>
+          <div class="text-[10px] font-medium text-[var(--text-sub)] mt-0.5">Target: &ge; 90% (30 Cases)</div>
         </div>
         <div class="glass-card p-4 rounded-2xl">
-          <div class="text-[10px] opacity-70 uppercase font-semibold">SQL vs RAG Yield Delta</div>
-          <div class="text-2xl font-bold text-emerald-400 mt-1">+100.0%</div>
-          <div class="text-[10px] opacity-60 mt-0.5">Target: &ge; +30.0%</div>
+          <div class="text-[10px] font-bold uppercase text-[var(--text-muted)]">SQL vs RAG Yield Delta</div>
+          <div class="text-2xl font-black text-[#B46258] dark:text-[#E5AEA9] mt-1">+100.0%</div>
+          <div class="text-[10px] font-medium text-[var(--text-sub)] mt-0.5">Target: &ge; +30.0%</div>
         </div>
       </div>
     </section>
@@ -553,7 +564,7 @@
       } else {
         root.classList.remove('light');
         root.classList.add('dark');
-        if (icon) icon.className = "fa-solid fa-moon text-indigo-400";
+        if (icon) icon.className = "fa-solid fa-moon text-[#A6A9D0]";
         if (text) text.innerText = "Dark";
         localStorage.setItem('fintrix_theme', 'dark');
       }
@@ -621,7 +632,7 @@
       const div = document.createElement('div');
       div.className = "flex items-start justify-end space-x-3";
       div.innerHTML = `
-        <div class="bg-gradient-to-r from-indigo-600 via-purple-600 to-cyan-600 text-white font-medium rounded-2xl rounded-tr-sm px-4 py-2.5 text-xs max-w-xl shadow">
+        <div class="bg-[#35627A] text-white font-bold rounded-2xl rounded-tr-sm px-4 py-2.5 text-xs max-w-xl shadow">
           ${text}
         </div>
       `;
@@ -643,30 +654,30 @@
       let citationsHtml = '';
       if (citations.length > 0) {
         citationsHtml = `
-          <div class="pt-2 border-t border-indigo-500/15 space-y-2">
-            <div class="text-[10px] font-semibold opacity-70 uppercase tracking-wider flex items-center">
-              <i class="fa-solid fa-link mr-1 text-cyan-400"></i> Grounded Citations (${citations.length})
+          <div class="pt-2 border-t border-[#A6A9D0]/20 space-y-2">
+            <div class="text-[10px] font-bold uppercase tracking-wider flex items-center text-[var(--text-main)]">
+              <i class="fa-solid fa-link mr-1 text-[#35627A]"></i> Grounded Citations (${citations.length})
             </div>
             <div class="space-y-1.5">
               ${citations.map((c, idx) => {
                 if (c.type === 'sql') {
                   return `
-                    <details class="bg-black/30 border border-indigo-500/15 rounded-xl p-2.5 text-xs">
-                      <summary class="cursor-pointer font-medium text-cyan-400 flex items-center justify-between">
+                    <details class="glass-subcard rounded-xl p-2.5 text-xs">
+                      <summary class="cursor-pointer font-bold text-[#35627A] dark:text-[#A6A9D0] flex items-center justify-between">
                         <span><i class="fa-solid fa-database mr-1.5"></i> SQL Query (${c.tables.join(', ')}) &bull; ${c.rows} row(s)</span>
-                        <span class="text-[10px] opacity-60">View Query</span>
+                        <span class="text-[10px] font-semibold opacity-70">View Query</span>
                       </summary>
-                      <pre class="mt-2 p-2 bg-black/40 rounded text-cyan-300 overflow-x-auto text-[11px] font-mono">${c.query}</pre>
+                      <pre class="mt-2 p-2 bg-black/10 dark:bg-black/40 rounded text-[var(--text-sub)] overflow-x-auto text-[11px] font-mono font-medium">${c.query}</pre>
                     </details>
                   `;
                 } else {
                   return `
-                    <details class="bg-black/30 border border-indigo-500/15 rounded-xl p-2.5 text-xs">
-                      <summary class="cursor-pointer font-medium text-indigo-400 flex items-center justify-between">
+                    <details class="glass-subcard rounded-xl p-2.5 text-xs">
+                      <summary class="cursor-pointer font-bold text-[#35627A] dark:text-[#A6A9D0] flex items-center justify-between">
                         <span><i class="fa-solid fa-file-lines mr-1.5"></i> ${c.doc} (Page ${c.page}) &bull; ${c.section}</span>
-                        <span class="text-[10px] opacity-60">View Snippet</span>
+                        <span class="text-[10px] font-semibold opacity-70">View Snippet</span>
                       </summary>
-                      <p class="mt-2 p-2 bg-black/40 rounded italic text-[11px] leading-relaxed">"${c.snippet}"</p>
+                      <p class="mt-2 p-2 bg-black/10 dark:bg-black/40 rounded italic text-[11px] leading-relaxed font-medium text-[var(--text-sub)]">"${c.snippet}"</p>
                     </details>
                   `;
                 }
@@ -681,7 +692,7 @@
         badgesHtml = `
           <div class="flex flex-wrap gap-1.5 pt-1">
             ${numbers.map(n => `
-              <span class="bg-indigo-500/20 border border-indigo-500/40 text-cyan-300 text-[10px] px-2 py-0.5 rounded-md font-mono">
+              <span class="bg-[#35627A]/15 border border-[#35627A]/40 text-[#35627A] dark:text-[#E5AEA9] text-[10px] px-2 py-0.5 rounded-md font-mono font-bold">
                 ${n.label}: ₹${Number(n.value).toLocaleString('en-IN')}
               </span>
             `).join('')}
@@ -690,25 +701,25 @@
       }
 
       div.innerHTML = `
-        <div class="w-8 h-8 rounded-xl bg-indigo-500/30 text-indigo-300 flex items-center justify-center flex-shrink-0 text-sm border border-indigo-500/30">
+        <div class="w-8 h-8 rounded-xl bg-[#35627A] text-white flex items-center justify-center flex-shrink-0 text-sm shadow">
           <i class="fa-solid fa-shield-halved"></i>
         </div>
         <div class="glass-card rounded-2xl rounded-tl-sm p-4 text-xs space-y-3">
-          <div class="flex items-center justify-between text-[10px] opacity-70 pb-1 border-b border-indigo-500/15">
-            <span class="font-medium">Route: <strong class="text-cyan-400 uppercase">${data.route}</strong></span>
+          <div class="flex items-center justify-between text-[10px] pb-1 border-b border-[#A6A9D0]/20 font-bold text-[var(--text-muted)]">
+            <span>Route: <strong class="text-[#35627A] dark:text-[#A6A9D0] uppercase">${data.route}</strong></span>
             <span class="font-mono">Latency: ${data.latency_ms}ms</span>
           </div>
 
-          <p class="leading-relaxed text-sm font-normal">${answerText}</p>
+          <p class="leading-relaxed text-sm font-semibold text-[var(--text-main)]">${answerText}</p>
           ${badgesHtml}
           ${citationsHtml}
 
-          <div class="flex items-center justify-between pt-1 border-t border-indigo-500/15 text-[10px]">
-            <span class="opacity-60 italic">${ans.disclaimer || "Not financial advice."}</span>
-            <div class="flex items-center space-x-2 opacity-70">
+          <div class="flex items-center justify-between pt-1 border-t border-[#A6A9D0]/20 text-[10px] font-medium text-[var(--text-sub)]">
+            <span class="italic">${ans.disclaimer || "Not financial advice."}</span>
+            <div class="flex items-center space-x-2">
               <span>Helpful?</span>
-              <button onclick="submitFeedback('${traceId}', 'up')" class="hover:text-cyan-400 transition"><i class="fa-regular fa-thumbs-up"></i></button>
-              <button onclick="submitFeedback('${traceId}', 'down')" class="hover:text-rose-400 transition"><i class="fa-regular fa-thumbs-down"></i></button>
+              <button onclick="submitFeedback('${traceId}', 'up')" class="hover:text-emerald-500 transition"><i class="fa-regular fa-thumbs-up"></i></button>
+              <button onclick="submitFeedback('${traceId}', 'down')" class="hover:text-rose-500 transition"><i class="fa-regular fa-thumbs-down"></i></button>
             </div>
           </div>
         </div>
@@ -720,7 +731,7 @@
     function appendErrorMessage(msg) {
       const box = document.getElementById('chat-messages');
       const div = document.createElement('div');
-      div.className = "p-3 bg-rose-500/20 border border-rose-500/40 text-rose-300 rounded-xl text-xs";
+      div.className = "p-3 bg-rose-500/10 border border-rose-500/30 text-rose-600 dark:text-rose-300 rounded-xl text-xs font-semibold";
       div.innerText = msg;
       box.appendChild(div);
     }
@@ -752,14 +763,14 @@
         bContainer.innerHTML = '';
         data.budgets.forEach(b => {
           const pct = Math.min(100, Math.round((b.spent / b.limit) * 100));
-          const colorClass = pct > 90 ? 'bg-rose-500' : (pct > 75 ? 'bg-indigo-500' : 'bg-cyan-500');
+          const colorClass = pct > 90 ? 'bg-rose-500' : (pct > 75 ? 'bg-[#E5AEA9]' : 'bg-[#35627A]');
           bContainer.innerHTML += `
             <div>
-              <div class="flex justify-between text-xs font-medium mb-1">
+              <div class="flex justify-between text-xs font-bold mb-1 text-[var(--text-main)]">
                 <span class="capitalize">${b.category}</span>
-                <span class="opacity-70 font-mono">₹${b.spent.toLocaleString()} / ₹${b.limit.toLocaleString()} (${pct}%)</span>
+                <span class="font-mono text-[var(--text-sub)]">₹${b.spent.toLocaleString()} / ₹${b.limit.toLocaleString()} (${pct}%)</span>
               </div>
-              <div class="w-full bg-black/20 rounded-full h-2 overflow-hidden border border-indigo-500/15">
+              <div class="w-full bg-black/10 dark:bg-black/30 rounded-full h-2 overflow-hidden border border-[#A6A9D0]/20">
                 <div class="${colorClass} h-2 rounded-full" style="width: ${pct}%"></div>
               </div>
             </div>
@@ -772,16 +783,16 @@
         data.bills.forEach(bill => {
           const isOverdue = bill.status === 'overdue';
           const isPaid = bill.status === 'paid';
-          const statusBg = isOverdue ? 'bg-rose-500/20 text-rose-400 border border-rose-500/30' : (isPaid ? 'bg-cyan-500/30 text-cyan-300 border border-cyan-500/40' : 'bg-indigo-500/20 text-indigo-300 border border-indigo-500/30');
+          const statusBg = isOverdue ? 'bg-rose-500/15 text-rose-600 dark:text-rose-300 border border-rose-500/30' : (isPaid ? 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-300 border border-emerald-500/30' : 'bg-amber-500/15 text-amber-600 dark:text-amber-300 border border-amber-500/30');
           billsContainer.innerHTML += `
-            <div class="flex items-center justify-between p-3 glass-card rounded-xl border border-indigo-500/15 text-xs">
+            <div class="flex items-center justify-between p-3 glass-subcard rounded-xl text-xs font-semibold">
               <div>
-                <div class="font-medium">${bill.name}</div>
-                <div class="text-[10px] opacity-60">Due: ${bill.due_date}</div>
+                <div class="text-[var(--text-main)]">${bill.name}</div>
+                <div class="text-[10px] text-[var(--text-muted)]">Due: ${bill.due_date}</div>
               </div>
               <div class="text-right">
-                <div class="font-bold font-mono">₹${bill.amount.toLocaleString()}</div>
-                <span class="text-[9px] uppercase px-1.5 py-0.5 rounded font-semibold ${statusBg}">${bill.status}</span>
+                <div class="font-black font-mono text-[var(--text-main)]">₹${bill.amount.toLocaleString()}</div>
+                <span class="text-[9px] uppercase px-1.5 py-0.5 rounded font-bold ${statusBg}">${bill.status}</span>
               </div>
             </div>
           `;
@@ -792,9 +803,9 @@
         catContainer.innerHTML = '';
         for (const [cat, amt] of Object.entries(data.category_spending)) {
           catContainer.innerHTML += `
-            <div class="p-3 glass-card rounded-xl border border-indigo-500/15">
-              <div class="text-[11px] opacity-70 capitalize">${cat}</div>
-              <div class="text-base font-bold mt-1 font-mono">₹${amt.toLocaleString()}</div>
+            <div class="p-3 glass-subcard rounded-xl">
+              <div class="text-[11px] font-bold capitalize text-[var(--text-muted)]">${cat}</div>
+              <div class="text-base font-black mt-1 font-mono text-[var(--text-main)]">₹${amt.toLocaleString()}</div>
             </div>
           `;
         }
@@ -811,15 +822,15 @@
         tbody.innerHTML = '';
         data.documents.forEach(doc => {
           tbody.innerHTML += `
-            <tr class="hover:bg-white/5 transition">
-              <td class="py-3 px-5 font-medium flex items-center">
-                <i class="fa-regular fa-file-pdf text-rose-400 mr-2 text-sm"></i> ${doc.filename}
+            <tr class="hover:bg-black/5 dark:hover:bg-white/5 transition font-semibold">
+              <td class="py-3 px-5 text-[var(--text-main)] flex items-center">
+                <i class="fa-regular fa-file-pdf text-[#E5AEA9] mr-2 text-sm"></i> ${doc.filename}
               </td>
-              <td class="py-3 px-5 capitalize opacity-70">${doc.doc_type}</td>
-              <td class="py-3 px-5 font-mono text-cyan-400">${doc.chunk_count} chunks</td>
-              <td class="py-3 px-5 opacity-70 text-[11px]">${doc.uploaded_at ? doc.uploaded_at.split('T')[0] : 'N/A'}</td>
+              <td class="py-3 px-5 capitalize text-[var(--text-sub)]">${doc.doc_type}</td>
+              <td class="py-3 px-5 font-mono text-[#35627A] dark:text-[#E5AEA9]">${doc.chunk_count} chunks</td>
+              <td class="py-3 px-5 text-[var(--text-muted)] text-[11px]">${doc.uploaded_at ? doc.uploaded_at.split('T')[0] : 'N/A'}</td>
               <td class="py-3 px-5 text-right">
-                <button onclick="deleteDoc(${doc.doc_id})" class="opacity-60 hover:text-rose-400 text-xs transition">
+                <button onclick="deleteDoc(${doc.doc_id})" class="text-[var(--text-muted)] hover:text-rose-500 text-xs transition">
                   <i class="fa-solid fa-trash"></i>
                 </button>
               </td>
@@ -866,14 +877,14 @@
     function renderTraceInspector(data) {
       const c = document.getElementById('latest-trace-container');
       c.innerHTML = `
-        <div class="flex justify-between items-center pb-2 border-b border-indigo-500/15">
+        <div class="flex justify-between items-center pb-2 border-b border-[#A6A9D0]/20 font-bold">
           <div>
-            <span class="text-xs opacity-70 font-mono">Trace ID: ${data.trace_id}</span>
-            <span class="ml-3 px-2 py-0.5 rounded text-[10px] uppercase font-bold bg-indigo-500/30 text-cyan-300 border border-indigo-500/50">${data.route}</span>
+            <span class="text-xs font-mono text-[var(--text-muted)]">Trace ID: ${data.trace_id}</span>
+            <span class="ml-3 px-2 py-0.5 rounded text-[10px] uppercase font-bold bg-[#35627A]/20 text-[#35627A] dark:text-[#A6A9D0] border border-[#35627A]/30">${data.route}</span>
           </div>
-          <span class="text-xs opacity-70 font-mono">${data.latency_ms} ms</span>
+          <span class="text-xs font-mono text-[var(--text-muted)]">${data.latency_ms} ms</span>
         </div>
-        <pre class="bg-black/40 p-4 rounded-2xl text-xs text-cyan-200 font-mono overflow-x-auto max-h-96 border border-indigo-500/15">${JSON.stringify(data, null, 2)}</pre>
+        <pre class="bg-black/10 dark:bg-black/40 p-4 rounded-2xl text-xs text-[var(--text-sub)] font-mono overflow-x-auto max-h-96 border border-[#A6A9D0]/20">${JSON.stringify(data, null, 2)}</pre>
       `;
     }
 
