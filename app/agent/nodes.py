@@ -44,7 +44,9 @@ def classify_and_plan_node(state: AgentState) -> AgentState:
         "penalty", "lock-in", "policy", "agreement", "waiting period", "room rent",
         "icu", "foreclosure", "apr", "bonus", "cashless", "clause", "tariff",
         "coverage", "exclusion", "grace period", "maternity", "terms and conditions",
-        "contract", "specified in"
+        "contract", "specified in", "document", "documents", "pdf", "file", "uploaded",
+        "resume", "cv", "cgpa", "grade", "college", "university", "education",
+        "experience", "project", "skills", "according to", "in my"
     ]
     if any(k in q for k in doc_indicators):
         state.route = "documents"
@@ -62,7 +64,13 @@ def classify_and_plan_node(state: AgentState) -> AgentState:
         state.plan = ["sql", "compose"]
         return state
 
-    state.route = "sql"
+    # If question mentions uploaded file or document search, route to documents
+    if "uploaded" in q or "pdf" in q or "doc" in q or "file" in q:
+        state.route = "documents"
+        state.plan = ["documents", "compose"]
+        return state
+
+    state.route = "documents"
     state.plan = ["sql", "compose"]
     return state
 
