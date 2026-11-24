@@ -40,8 +40,7 @@ class LLMClient:
                 if provider_name == "gemini":
                     return self._call_gemini(api_key, model, prompt, system_prompt, temperature)
                 elif provider_name == "groq":
-                    base_url = "https://api.groq.com/openai/v1"
-                    return self._call_openai_compatible(base_url, api_key, model, prompt, system_prompt, temperature)
+                    return self._call_groq(api_key, model, prompt, system_prompt, temperature)
             except Exception as e:
                 err_msg = f"Provider '{provider_name}' failed ({e}). Shifting to next fallback provider..."
                 logger.warning(err_msg)
@@ -69,7 +68,8 @@ class LLMClient:
             data = resp.json()
             return data["candidates"][0]["content"]["parts"][0]["text"].strip()
 
-    def _call_openai_compatible(self, base_url: str, api_key: str, model: str, prompt: str, system_prompt: Optional[str], temperature: float) -> str:
+    def _call_groq(self, api_key: str, model: str, prompt: str, system_prompt: Optional[str], temperature: float) -> str:
+        url = "https://api.groq.com/openai/v1/chat/completions"
         headers = {"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"}
         messages = []
         if system_prompt:
@@ -82,28 +82,9 @@ class LLMClient:
             "temperature": temperature
         }
         with httpx.Client(timeout=25.0) as client:
-            resp = client.post(f"{base_url}/chat/completions", headers=headers, json=payload)
+            resp = client.post(url, headers=headers, json=payload)
             resp.raise_for_status()
             data = resp.json()
             return data["choices"][0]["message"]["content"].strip()
-
-    def _call_anthropic(self, api_key: str, model: str, prompt: str, system_prompt: Optional[str], temperature: float) -> str:
-        headers = {
-            "x-api-key": api_key,
-            "anthropic-version": "2023-06-01",
-            "Content-Type": "application/json"
-        }
-        payload = {
-            "model": model,
-            "max_tokens": 1024,
-            "temperature": temperature,
-            "system": system_prompt or "",
-            "messages": [{"role": "user", "content": prompt}]
-        }
-        with httpx.Client(timeout=25.0) as client:
-            resp = client.post("https://api.anthropic.com/v1/messages", headers=headers, json=payload)
-            resp.raise_for_status()
-            data = resp.json()
-            return data["content"][0]["text"].strip()
 
 llm_client = LLMClient()
