@@ -113,8 +113,19 @@ def deterministic_text_to_sql(question: str, user_id: int) -> str:
         "october": 10, "oct": 10, "november": 11, "nov": 11, "december": 12, "dec": 12
     }
 
-    # Affordability / Purchase / Balance queries (e.g. "i want to purchase a car which cost 10 lakh rupee can i buy it tommorow?", "can i afford", "what is my balance", "how much money do i have")
-    if any(k in q for k in ["afford", "can i buy", "can i purchase", "want to buy", "want to purchase", "enough money", "have that much money", "my balance", "available balance", "account balance", "how much money do i have", "how much money i have", "current balance"]) or (("purchase" in q or "buy" in q) and ("car" in q or "cost" in q or "worth" in q or "can i" in q)):
+    # Affordability / Purchase / Balance queries (handles any phrasing: "is it possible to get a bike for 1.5 lakh", "can my wallet handle", "am I capable of acquiring an apartment", "what is my balance")
+    balance_inquiry = any(k in q for k in ["balance", "how much money", "available funds", "my savings", "net worth", "current balance"])
+    feasibility_words = ["can i", "could i", "can we", "is it possible", "am i able", "able to", "capable of", "handle", "permit", "allow", "feasible", "afford", "enough", "wallet", "pocket", "bandwidth", "do i have"]
+    intent_words = ["want to", "planning to", "thinking of", "would like to", "wish to", "hope to", "tomorrow", "next week", "future"]
+    action_words = ["buy", "purchase", "get", "take", "acquire", "order", "book", "spend on"]
+    assets = ["car", "bike", "vehicle", "flat", "house", "apartment", "property", "phone", "iphone", "laptop", "macbook", "watch", "gadget", "trip", "vacation", "flight", "ticket"]
+
+    has_feasibility = any(w in q for w in feasibility_words)
+    has_intent = any(w in q for w in intent_words)
+    has_action = any(w in q for w in action_words)
+    has_asset = any(w in q for w in assets)
+
+    if balance_inquiry or has_feasibility or (has_intent and (has_action or has_asset)) or (has_action and has_asset):
         return (f"SELECT COALESCE(SUM(CASE WHEN direction = 'credit' THEN amount ELSE -amount END), 0) AS available_balance "
                 f"FROM transactions WHERE user_id = {user_id};")
 

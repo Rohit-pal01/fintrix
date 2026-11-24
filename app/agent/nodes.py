@@ -14,24 +14,43 @@ from app.db.models import Trace
 DISCLAIMER_TEXT = "This is informational and not financial advice."
 
 def parse_target_amount(text: str) -> Optional[float]:
-    """Parse monetary amounts including Indian numbering units (lakh, crore, k) from user questions."""
+    """Parse monetary amounts including Indian numbering units (lakh, crore, k, L, Cr) and prepositions from user questions."""
     t = text.lower().replace(',', '')
-    # Check crore: e.g. 1.5 crore, 2 cr
+    
+    # 1. Crore / Cr (e.g. 1.5 crore, 2.5cr, 1 cr)
     cr_match = re.search(r'(\d+(?:\.\d+)?)\s*(?:crore|cr)\b', t)
     if cr_match:
         return float(cr_match.group(1)) * 10000000.0
-    # Check lakh / lac: e.g. 10 lakh, 2.5 lac
-    lakh_match = re.search(r'(\d+(?:\.\d+)?)\s*(?:lakh|lac|lacs|lakhs)\b', t)
+        
+    # 2. Lakh / Lac / L (e.g. 10 lakh, 2.5 lac, 10l, 1.5l)
+    lakh_match = re.search(r'(\d+(?:\.\d+)?)\s*(?:lakh|lac|lacs|lakhs|l)\b', t)
     if lakh_match:
         return float(lakh_match.group(1)) * 100000.0
-    # Check k: e.g. 50k
+        
+    # 3. K (e.g. 50k, 80 k)
     k_match = re.search(r'(\d+(?:\.\d+)?)\s*k\b', t)
     if k_match:
         return float(k_match.group(1)) * 1000.0
-    # Check raw numbers preceded by cost, worth, for, or rupee symbols
-    raw_match = re.search(r'(?:cost|worth|for|rs\.?|inr|₹)\s*(\d+(?:\.\d+)?)', t)
-    if raw_match:
-        return float(raw_match.group(1))
+        
+    # 4. Currency symbols or currency words (e.g. ₹50000, rs 50000, 50000 rupee, 50000 inr)
+    curr_match = re.search(r'(?:rs\.?|inr|₹)\s*(\d+(?:\.\d+)?)', t)
+    if curr_match:
+        return float(curr_match.group(1))
+    curr_suffix = re.search(r'(\d+(?:\.\d+)?)\s*(?:rupees?|rs\.?|inr|bucks)', t)
+    if curr_suffix:
+        return float(curr_suffix.group(1))
+        
+    # 5. Prepositions before amounts (e.g. of 20000, for 20000, worth 20000, cost 20000, costing 20000, around 20000)
+    prep_match = re.search(r'(?:cost|costing|worth|for|of|at|around|upto)\s*(\d+(?:\.\d+)?)', t)
+    if prep_match:
+        return float(prep_match.group(1))
+        
+    # 6. Fallback: Any standalone number >= 500 (likely a purchase price, excluding calendar years)
+    for num in re.findall(r'\b(\d+(?:\.\d+)?)\b', t):
+        val = float(num)
+        if val >= 500 and val not in (2024, 2025, 2026, 2027):
+            return val
+            
     return None
 
 def classify_and_plan_node(state: AgentState) -> AgentState:
@@ -81,7 +100,8 @@ def classify_and_plan_node(state: AgentState) -> AgentState:
         "balance", "how much", "highest", "top 5", "top 3", "total", "cost",
         "credit", "credited", "deposit", "deposited", "how many", "count", "frequency",
         "times", "debit", "debited", "withdraw", "withdrawal", "transferred", "received", "inflow", "outflow",
-        "buy", "purchase", "afford", "enough money", "have that much money", "car"
+        "buy", "purchase", "afford", "enough", "get", "wallet", "pocket", "capable", "possible", "permit", "allow",
+        "car", "bike", "laptop", "phone", "flat", "house", "trip", "ticket", "gadget", "watch"
     ]
     if any(k in q for k in sql_indicators):
         state.route = "sql"
