@@ -984,38 +984,33 @@
       let citationsHtml = '';
       if (citations.length > 0) {
         citationsHtml = `
-          <div class="pt-2 border-t border-cyan-500/15 space-y-2">
+          <div class="pt-2 flex flex-wrap items-center gap-2">
+            <span class="text-[10px] text-[var(--text-muted)] font-semibold uppercase tracking-wider">Proof:</span>
             ${citations.map((c, idx) => {
               if (c.type === 'sql') {
                 return `
-                  <details class="text-xs group">
-                    <summary class="cursor-pointer flex items-center justify-between px-3 py-2 rounded-xl bg-cyan-500/10 hover:bg-cyan-500/15 dark:bg-cyan-950/30 border border-cyan-500/20 transition list-none">
-                      <span class="flex items-center gap-1.5 text-[11px] font-semibold text-cyan-800 dark:text-cyan-300">
-                        <i class="fa-solid fa-calculator text-cyan-600 dark:text-cyan-400"></i>
-                        <span>Verified Database Calculation (${c.rows} row)</span>
-                      </span>
-                      <span class="text-[10px] font-mono text-cyan-700 dark:text-cyan-400 font-bold flex items-center gap-1">
-                        <span class="group-open:hidden">View SQL Query <i class="fa-solid fa-chevron-down text-[8px] ml-0.5"></i></span>
-                        <span class="hidden group-open:inline">Hide SQL Query <i class="fa-solid fa-chevron-up text-[8px] ml-0.5"></i></span>
-                      </span>
+                  <details class="text-xs group inline-block">
+                    <summary class="cursor-pointer inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-cyan-500/10 hover:bg-cyan-500/15 dark:bg-cyan-950/30 text-cyan-800 dark:text-cyan-300 border border-cyan-500/25 transition list-none text-[10px] font-semibold">
+                      <i class="fa-solid fa-calculator text-[9px] text-cyan-600 dark:text-cyan-400"></i>
+                      <span>Verified SQL Ledger (${c.rows} row)</span>
+                      <i class="fa-solid fa-chevron-down text-[7px] ml-0.5 group-open:rotate-180 transition-transform"></i>
                     </summary>
-                    <pre class="mt-2 p-2.5 bg-slate-100 dark:bg-black/60 rounded-xl text-slate-800 dark:text-cyan-200 overflow-x-auto text-[11px] font-mono border border-slate-200 dark:border-cyan-500/20">${c.query}</pre>
+                    <div class="mt-2 p-2.5 bg-slate-100 dark:bg-black/60 rounded-xl text-slate-800 dark:text-cyan-200 overflow-x-auto text-[11px] font-mono border border-slate-200 dark:border-cyan-500/20">
+                      <code class="whitespace-pre">${c.query}</code>
+                    </div>
                   </details>
                 `;
               } else {
                 return `
-                  <details class="text-xs group">
-                    <summary class="cursor-pointer flex items-center justify-between px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200/60 dark:bg-slate-900/40 border border-slate-200 dark:border-cyan-500/20 transition list-none">
-                      <span class="flex items-center gap-1.5 text-[11px] font-semibold text-slate-700 dark:text-slate-300">
-                        <i class="fa-regular fa-file-pdf text-rose-500"></i>
-                        <span>${c.doc} &bull; Page ${c.page}</span>
-                      </span>
-                      <span class="text-[10px] font-mono text-slate-600 dark:text-slate-400 font-bold flex items-center gap-1">
-                        <span class="group-open:hidden">View Source Excerpt <i class="fa-solid fa-chevron-down text-[8px] ml-0.5"></i></span>
-                        <span class="hidden group-open:inline">Hide Excerpt <i class="fa-solid fa-chevron-up text-[8px] ml-0.5"></i></span>
-                      </span>
+                  <details class="text-xs group inline-block">
+                    <summary class="cursor-pointer inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100 hover:bg-slate-200/70 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 transition list-none text-[10px] font-semibold">
+                      <i class="fa-regular fa-file-pdf text-[9px] text-rose-500"></i>
+                      <span>${c.doc} &bull; Page ${c.page}</span>
+                      <i class="fa-solid fa-chevron-down text-[7px] ml-0.5 group-open:rotate-180 transition-transform"></i>
                     </summary>
-                    <p class="mt-2 p-2.5 bg-slate-50 dark:bg-slate-900/60 rounded-xl italic text-[11px] leading-relaxed text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-cyan-500/20">"${c.snippet}"</p>
+                    <div class="mt-2 p-2.5 bg-slate-50 dark:bg-slate-900/60 rounded-xl italic text-[11px] leading-relaxed text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700">
+                      "${c.snippet}"
+                    </div>
                   </details>
                 `;
               }
@@ -1028,11 +1023,14 @@
       if (numbers.length > 0) {
         badgesHtml = `
           <div class="flex flex-wrap gap-1.5 pt-1">
-            ${numbers.map(n => `
-              <span class="bg-cyan-500/15 border border-cyan-500/30 text-cyan-700 dark:text-cyan-300 text-[10px] px-2 py-0.5 rounded-md font-mono font-bold">
-                ${n.label}: ₹${Number(n.value).toLocaleString('en-IN')}
-              </span>
-            `).join('')}
+            ${numbers.map(n => {
+              const labelClean = (n.label || '').replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+              return `
+                <span class="bg-cyan-500/10 border border-cyan-500/25 text-cyan-800 dark:text-cyan-300 text-[10px] px-2.5 py-0.5 rounded-full font-mono font-bold">
+                  ${labelClean}: ₹${Number(n.value).toLocaleString('en-IN')}
+                </span>
+              `;
+            }).join('')}
           </div>
         `;
       }
