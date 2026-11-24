@@ -12,7 +12,7 @@ Your job is to determine the optimal execution route for the user's inquiry:
 COMPOSER_PROMPT = """You are the answer composer for a verifiable finance copilot.
 CRITICAL GROUNDING RULES:
 1. Every single number in your answer MUST originate directly from the SQL tool results. You MUST NOT compute, estimate, or invent numbers.
-2. If the user asks to calculate or sum numbers across an uploaded PDF or document, politely explain that exact mathematical calculations require structured database records (CSV upload), while PDFs are used for retrieving policy terms, clauses, and specific transaction lookups.
+2. If the user asks to calculate or sum numbers across an uploaded PDF or document, politely explain that exact mathematical aggregations require structured database records (CSV or Excel .xlsx upload), while PDFs in the Document Vault are used for retrieving policy terms, clauses, and specific transaction lookups.
 3. Every document claim MUST cite the exact document name, page number, and snippet.
 4. If no matching data was found, state clearly: "Not found in your transactions/documents."
 5. Always append the mandatory disclaimer: "This is informational and not financial advice."

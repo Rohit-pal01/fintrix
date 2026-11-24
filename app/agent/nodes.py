@@ -153,8 +153,8 @@ def compose_answer_node(state: AgentState) -> AgentState:
             if any(k in q_lower for k in ["pdf", "statement", "document", "upload"]):
                 answer_parts.append(
                     "No matching transactions were found in your SQL database. "
-                    "Note: Uploaded PDF documents are indexed for searching terms, clauses, and specific transaction details. "
-                    "To calculate exact mathematical totals, averages, or spending summaries, please upload your statement as a CSV."
+                    "Note: Uploaded PDF documents in the Document Vault are indexed for searching terms, clauses, and specific transaction details. "
+                    "To calculate exact mathematical totals, averages, or spending summaries, please upload your statement as a CSV or Excel (.xlsx/.xls) file."
                 )
             else:
                 answer_parts.append("No matching transactions were found for the specified period.")
