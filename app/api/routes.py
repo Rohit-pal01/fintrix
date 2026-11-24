@@ -254,16 +254,33 @@ def get_financial_summary(user_id: int = 1, db: Session = Depends(get_db)):
             ).order_by(Transaction.amount.desc()).limit(6).all()
             category_summary = {t[0][:20]: float(t[1]) for t in top_txns}
 
-        # Dynamic budgets tailored to user's spending
+        # Budgets: Check if user has explicit budget targets configured in the database
+        explicit_budgets = db.query(Budget, Category.name).join(
+            Category, Budget.category_id == Category.category_id
+        ).filter(Budget.user_id == user_id).all()
+
         budget_summary = []
-        for cat_name, spent in category_summary.items():
-            limit = round(spent * 1.25, 2)
-            budget_summary.append({
-                "category": cat_name,
-                "limit": limit,
-                "spent": spent,
-                "remaining": max(0.0, limit - spent)
-            })
+        if explicit_budgets:
+            for b, cat_name in explicit_budgets:
+                spent = category_summary.get(cat_name, 0.0)
+                limit = float(b.limit_amount)
+                budget_summary.append({
+                    "category": cat_name,
+                    "limit": limit,
+                    "spent": spent,
+                    "remaining": max(0.0, limit - spent)
+                })
+        else:
+            # When statement only contains expenses without pre-configured limits,
+            # present clear category totals and auto-benchmarked targets
+            for cat_name, spent in category_summary.items():
+                limit = round(spent * 1.25, 2)
+                budget_summary.append({
+                    "category": cat_name,
+                    "limit": limit,
+                    "spent": spent,
+                    "remaining": max(0.0, limit - spent)
+                })
 
         # Bills
         bills = db.query(Bill).filter_by(user_id=user_id).all()
