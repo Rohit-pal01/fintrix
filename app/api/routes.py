@@ -232,10 +232,22 @@ def delete_document(doc_id: int, user_id: int = 1, db: Session = Depends(get_db)
         )
 
     target_user_id = doc.user_id
+    doc_fname = doc.filename
+
+    # 1. Remove physical file from disk if it exists
+    upload_dir = os.path.join("data", "documents")
+    disk_path = os.path.join(upload_dir, f"{target_user_id}_{doc_fname}")
+    if os.path.exists(disk_path):
+        try:
+            os.remove(disk_path)
+        except Exception as e:
+            print(f"Warning: could not delete disk file {disk_path}: {e}")
+
+    # 2. Delete database document record (cascades to chunks)
     db.delete(doc)
     db.commit()
 
-    # If the user has no remaining uploaded documents, purge extracted transactions, accounts, and bills
+    # 3. If the user has no remaining uploaded documents, purge extracted transactions, accounts, and bills
     # so their ledger cleanly resets back to demo baseline
     remaining_docs = db.query(Document).filter(Document.user_id == target_user_id).count()
     if remaining_docs == 0 and target_user_id != 1:
@@ -244,8 +256,9 @@ def delete_document(doc_id: int, user_id: int = 1, db: Session = Depends(get_db)
         db.query(Bill).filter(Bill.user_id == target_user_id).delete()
         db.commit()
 
+    # 4. Sync in-memory retriever cache & BM25 index
     sync_retriever()
-    return {"message": f"Document '{doc.filename}' deleted successfully."}
+    return {"message": f"Document '{doc_fname}' deleted successfully."}
 
 @router.post("/transactions/ingest")
 def ingest_transactions(req: IngestTransactionsRequest, db: Session = Depends(get_db)):
