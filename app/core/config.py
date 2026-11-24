@@ -18,15 +18,13 @@ class Settings(BaseSettings):
     DATABASE_URL: str = "sqlite:///./finance_copilot.db"
     READONLY_DATABASE_URL: Optional[str] = None
 
-    # LLM Settings (Supports Gemini, OpenAI, Groq, Anthropic, Ollama, Mock)
-    LLM_PROVIDER: str = "auto"  # auto | gemini | openai | groq | anthropic | ollama | mock
+    # LLM Settings (Free Providers: Gemini & Groq)
+    LLM_PROVIDER: str = "auto"  # auto | gemini | groq
     LLM_MODEL: Optional[str] = None
     
-    # Provider API Keys
+    # Free Provider API Keys
     GEMINI_API_KEY: Optional[str] = None
-    OPENAI_API_KEY: Optional[str] = None
     GROQ_API_KEY: Optional[str] = None
-    ANTHROPIC_API_KEY: Optional[str] = None
     
     # Generic API Key / Base URL
     LLM_API_KEY: Optional[str] = None

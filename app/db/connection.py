@@ -8,11 +8,16 @@ import logging
 logger = logging.getLogger(__name__)
 
 # Connect args for SQLite if used
-connect_args = {"check_same_thread": False} if settings.DATABASE_URL.startswith("sqlite") else {}
+db_url = settings.DATABASE_URL
+# Automatically normalize postgresql:// to postgresql+psycopg2:// if needed
+if db_url.startswith("postgresql://"):
+    db_url = db_url.replace("postgresql://", "postgresql+psycopg2://", 1)
+
+connect_args = {"check_same_thread": False} if db_url.startswith("sqlite") else {}
 
 # Primary Engine (Read-Write)
 engine = create_engine(
-    settings.DATABASE_URL,
+    db_url,
     connect_args=connect_args,
     pool_pre_ping=True
 )
@@ -20,7 +25,10 @@ engine = create_engine(
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 # Read-Only Engine
-readonly_url = settings.READONLY_DATABASE_URL or settings.DATABASE_URL
+readonly_url = settings.READONLY_DATABASE_URL or db_url
+if readonly_url.startswith("postgresql://"):
+    readonly_url = readonly_url.replace("postgresql://", "postgresql+psycopg2://", 1)
+
 ro_connect_args = {"check_same_thread": False} if readonly_url.startswith("sqlite") else {}
 
 readonly_engine = create_engine(

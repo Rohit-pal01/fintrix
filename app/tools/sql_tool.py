@@ -90,7 +90,7 @@ def retrieve_schema_context(db: Session, user_id: int) -> str:
 
 def deterministic_text_to_sql(question: str, user_id: int) -> str:
     """
-    Deterministic Text-to-SQL compiler for offline/eval/mock mode.
+    Deterministic Text-to-SQL compiler for self-contained/eval/mock mode.
     Handles aggregations, category breakdowns, bills, budgets, and merchants.
     """
     q = question.lower()
@@ -211,7 +211,7 @@ def generate_sql(question: str, schema_context: str, user_id: int, feedback: Opt
             if clean_sql.upper().startswith("SELECT"):
                 return clean_sql
 
-    # Deterministic compiler fallback for offline mode, testing, or API failure
+    # Deterministic compiler fallback for self-contained mode, testing, or API failure
     sql = deterministic_text_to_sql(question, user_id)
     if feedback and "syntax error" in feedback.lower():
         sql = sql.replace(";;", ";")

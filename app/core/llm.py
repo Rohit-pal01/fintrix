@@ -20,10 +20,6 @@ class LLMClient:
             providers.append(("gemini", settings.GEMINI_API_KEY, settings.LLM_MODEL or "gemini-1.5-flash"))
         if settings.GROQ_API_KEY:
             providers.append(("groq", settings.GROQ_API_KEY, settings.LLM_MODEL or "llama-3.3-70b-versatile"))
-        if settings.OPENAI_API_KEY:
-            providers.append(("openai", settings.OPENAI_API_KEY, settings.LLM_MODEL or "gpt-4o-mini"))
-        if settings.ANTHROPIC_API_KEY:
-            providers.append(("anthropic", settings.ANTHROPIC_API_KEY, settings.LLM_MODEL or "claude-3-5-sonnet-20241022"))
         return providers
 
     def is_live_ai_enabled(self) -> bool:
@@ -31,9 +27,8 @@ class LLMClient:
 
     def complete(self, prompt: str, system_prompt: Optional[str] = None, temperature: float = 0.1) -> str:
         """
-        Executes text completion with cascading failover across configured providers.
-        If Gemini key is exhausted / rate-limited (429), it automatically falls back
-        to Groq, then OpenAI, then Anthropic.
+        Executes text completion with cascading failover across configured free providers (Gemini -> Groq).
+        If Gemini is exhausted or rate-limited (429), it automatically falls back to Groq.
         """
         providers = self.get_available_providers()
         if not providers:
@@ -44,11 +39,9 @@ class LLMClient:
             try:
                 if provider_name == "gemini":
                     return self._call_gemini(api_key, model, prompt, system_prompt, temperature)
-                elif provider_name in ("openai", "groq"):
-                    base_url = "https://api.groq.com/openai/v1" if provider_name == "groq" else "https://api.openai.com/v1"
+                elif provider_name == "groq":
+                    base_url = "https://api.groq.com/openai/v1"
                     return self._call_openai_compatible(base_url, api_key, model, prompt, system_prompt, temperature)
-                elif provider_name == "anthropic":
-                    return self._call_anthropic(api_key, model, prompt, system_prompt, temperature)
             except Exception as e:
                 err_msg = f"Provider '{provider_name}' failed ({e}). Shifting to next fallback provider..."
                 logger.warning(err_msg)

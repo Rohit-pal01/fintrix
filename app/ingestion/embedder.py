@@ -1,6 +1,6 @@
 """Dense Vector Embedding Generator (384-dimensional).
 
-Supports high-speed deterministic hashing/TF-IDF projection for instant offline 
+Supports high-speed deterministic hashing/TF-IDF projection for instant self-contained 
 evaluation & tests, with seamless compatibility for Sentence-Transformers.
 """
 import numpy as np
