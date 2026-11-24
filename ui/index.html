@@ -207,6 +207,139 @@
       color: #ffffff;
       box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
     }
+
+    /* Executive Luxury Shield Badge (Stripe / Mercury FinTech Aesthetic) */
+    .fintrix-shield-badge {
+      background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 50%, #0284c7 100%);
+      color: #ffffff !important;
+      box-shadow: 0 4px 16px -2px rgba(37, 99, 235, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    html.light .fintrix-shield-badge {
+      background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 50%, #0284c7 100%);
+      box-shadow: 0 4px 14px -2px rgba(29, 78, 216, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+    }
+    .fintrix-shield-badge i {
+      color: #ffffff !important;
+      filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.35));
+    }
+
+    /* 4 Distinct Executive Quick Prompt Pills */
+    .try-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.4rem 0.85rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      white-space: nowrap;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: pointer;
+      backdrop-filter: blur(8px);
+    }
+    .try-pill:hover {
+      transform: translateY(-1px);
+    }
+    .try-pill:active {
+      transform: translateY(0);
+    }
+
+    /* 1. Food Spend: Amber Gold */
+    .try-pill-food {
+      background: rgba(245, 158, 11, 0.08);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      color: #fde68a;
+    }
+    .try-pill-food i { color: #f59e0b; }
+    .try-pill-food:hover {
+      background: rgba(245, 158, 11, 0.18);
+      border-color: #f59e0b;
+      box-shadow: 0 4px 12px rgba(245, 158, 11, 0.15);
+    }
+    html.light .try-pill-food {
+      background: #fffbeb;
+      border: 1px solid #fcd34d;
+      color: #92400e;
+      box-shadow: 0 1px 3px rgba(245, 158, 11, 0.08);
+    }
+    html.light .try-pill-food:hover {
+      background: #fef3c7;
+      border-color: #f59e0b;
+    }
+
+    /* 2. Loan Prepayment: Executive Emerald */
+    .try-pill-loan {
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: #a7f3d0;
+    }
+    .try-pill-loan i { color: #10b981; }
+    .try-pill-loan:hover {
+      background: rgba(16, 185, 129, 0.18);
+      border-color: #10b981;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15);
+    }
+    html.light .try-pill-loan {
+      background: #ecfdf5;
+      border: 1px solid #a7f3d0;
+      color: #065f46;
+      box-shadow: 0 1px 3px rgba(16, 185, 129, 0.08);
+    }
+    html.light .try-pill-loan:hover {
+      background: #d1fae5;
+      border-color: #10b981;
+    }
+
+    /* 3. Category Spending: Royal Indigo */
+    .try-pill-spend {
+      background: rgba(99, 102, 241, 0.08);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      color: #c7d2fe;
+    }
+    .try-pill-spend i { color: #818cf8; }
+    .try-pill-spend:hover {
+      background: rgba(99, 102, 241, 0.18);
+      border-color: #818cf8;
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15);
+    }
+    html.light .try-pill-spend {
+      background: #eef2ff;
+      border: 1px solid #c7d2fe;
+      color: #3730a3;
+      box-shadow: 0 1px 3px rgba(99, 102, 241, 0.08);
+    }
+    html.light .try-pill-spend:hover {
+      background: #e0e7ff;
+      border-color: #6366f1;
+    }
+
+    /* 4. Health Insurance: Protective Rose */
+    .try-pill-health {
+      background: rgba(244, 63, 94, 0.08);
+      border: 1px solid rgba(244, 63, 94, 0.3);
+      color: #fecdd3;
+    }
+    .try-pill-health i { color: #f43f5e; }
+    .try-pill-health:hover {
+      background: rgba(244, 63, 94, 0.18);
+      border-color: #f43f5e;
+      box-shadow: 0 4px 12px rgba(244, 63, 94, 0.15);
+    }
+    html.light .try-pill-health {
+      background: #fff1f2;
+      border: 1px solid #fecdd3;
+      color: #9f1239;
+      box-shadow: 0 1px 3px rgba(244, 63, 94, 0.08);
+    }
+    html.light .try-pill-health:hover {
+      background: #ffe4e6;
+      border-color: #f43f5e;
+    }
     .btn-hero-launch {
       background: #0284c7;
       color: #ffffff !important;
@@ -295,7 +428,7 @@
   <header class="app-content sticky top-0 z-50 glass-nav px-6 py-3.5 flex items-center justify-between">
     <!-- Brand -->
     <div class="flex items-center space-x-3 cursor-pointer" onclick="switchView('hero')">
-      <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center font-bold text-white text-base shadow-lg shadow-cyan-500/25">
+      <div class="w-9 h-9 rounded-xl fintrix-shield-badge font-bold text-base">
         <i class="fa-solid fa-shield-halved text-white text-sm"></i>
       </div>
       <div>
@@ -465,22 +598,22 @@
       </div>
 
       <!-- Quick Prompt Pills (Only displayed for default demo mode; hidden once user uploads their own files) -->
-      <div id="quick-prompt-pills" class="flex items-center space-x-2 overflow-x-auto pb-2 text-xs">
-        <span class="opacity-70 uppercase font-semibold text-[10px] tracking-wider text-[var(--text-sub)]">Try:</span>
-        <button onclick="sendQuickPrompt('How much did I spend on food last month?')" class="glass-pill hover:bg-slate-700/30 px-3.5 py-1.5 rounded-full transition whitespace-nowrap text-[var(--text-main)] font-semibold flex items-center gap-1.5">
-          <i class="fa-solid fa-utensils text-cyan-500 text-[10px]"></i>
+      <div id="quick-prompt-pills" class="flex items-center space-x-2.5 overflow-x-auto pb-2 text-xs">
+        <span class="opacity-70 uppercase font-bold text-[10px] tracking-wider text-[var(--text-sub)]">Try:</span>
+        <button onclick="sendQuickPrompt('How much did I spend on food last month?')" class="try-pill try-pill-food">
+          <i class="fa-solid fa-utensils text-[11px]"></i>
           <span>Food spend last month</span>
         </button>
-        <button onclick="sendQuickPrompt('What is the prepayment penalty on my floating rate home loan?')" class="glass-pill hover:bg-slate-700/30 px-3.5 py-1.5 rounded-full transition whitespace-nowrap text-[var(--text-main)] font-semibold flex items-center gap-1.5">
-          <i class="fa-solid fa-file-contract text-cyan-500 text-[10px]"></i>
+        <button onclick="sendQuickPrompt('What is the prepayment penalty on my floating rate home loan?')" class="try-pill try-pill-loan">
+          <i class="fa-solid fa-file-contract text-[11px]"></i>
           <span>Prepayment terms on home loan</span>
         </button>
-        <button onclick="sendQuickPrompt('What is my total spending by category this month?')" class="glass-pill hover:bg-slate-700/30 px-3.5 py-1.5 rounded-full transition whitespace-nowrap text-[var(--text-main)] font-semibold flex items-center gap-1.5">
-          <i class="fa-solid fa-chart-pie text-cyan-500 text-[10px]"></i>
+        <button onclick="sendQuickPrompt('What is my total spending by category this month?')" class="try-pill try-pill-spend">
+          <i class="fa-solid fa-chart-pie text-[11px]"></i>
           <span>Spending by category</span>
         </button>
-        <button onclick="sendQuickPrompt('What is the room rent limit per day for normal hospitalization?')" class="glass-pill hover:bg-slate-700/30 px-3.5 py-1.5 rounded-full transition whitespace-nowrap text-[var(--text-main)] font-semibold flex items-center gap-1.5">
-          <i class="fa-solid fa-hospital text-cyan-500 text-[10px]"></i>
+        <button onclick="sendQuickPrompt('What is the room rent limit per day for normal hospitalization?')" class="try-pill try-pill-health">
+          <i class="fa-solid fa-hospital text-[11px]"></i>
           <span>Health insurance room rent limit</span>
         </button>
       </div>
@@ -489,8 +622,8 @@
       <div id="chat-messages" class="flex-1 glass-card rounded-3xl p-5 overflow-y-auto space-y-4 min-h-[440px] max-h-[580px]">
         <!-- Welcome Message -->
         <div class="flex items-start space-x-3 max-w-2xl">
-          <div class="w-8 h-8 rounded-xl bg-cyan-600 text-white flex items-center justify-center flex-shrink-0 text-sm shadow">
-            <i class="fa-solid fa-shield-halved"></i>
+          <div class="w-8 h-8 rounded-xl fintrix-shield-badge flex-shrink-0 text-sm">
+            <i class="fa-solid fa-shield-halved text-white text-xs"></i>
           </div>
           <div class="glass-subcard rounded-2xl rounded-tl-sm p-4 text-sm space-y-1.5 border border-cyan-500/15">
             <p class="font-bold text-[var(--text-main)] tracking-tight">Welcome to Fintrix</p>
@@ -750,8 +883,8 @@
         <!-- Col 1: Brand & Identity -->
         <div class="space-y-3">
           <div class="flex items-center space-x-2.5">
-            <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center font-bold text-white text-sm shadow">
-              <i class="fa-solid fa-shield-halved text-white"></i>
+            <div class="w-8 h-8 rounded-xl fintrix-shield-badge font-bold text-sm">
+              <i class="fa-solid fa-shield-halved text-white text-xs"></i>
             </div>
             <span class="text-base font-extrabold tracking-tight text-[var(--text-main)]">Fintrix</span>
           </div>
@@ -1052,8 +1185,8 @@
       }
 
       div.innerHTML = `
-        <div class="w-8 h-8 rounded-xl bg-cyan-600 text-white flex items-center justify-center flex-shrink-0 text-sm shadow">
-          <i class="fa-solid fa-shield-halved"></i>
+        <div class="w-8 h-8 rounded-xl fintrix-shield-badge flex items-center justify-center flex-shrink-0 text-sm">
+          <i class="fa-solid fa-shield-halved text-white text-xs"></i>
         </div>
         <div class="glass-card rounded-2xl rounded-tl-sm p-4 text-xs space-y-2.5 shadow-sm">
           <p class="leading-relaxed text-sm sm:text-base font-semibold text-[var(--text-main)]">${answerText}</p>
