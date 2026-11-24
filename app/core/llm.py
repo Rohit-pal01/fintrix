@@ -17,9 +17,12 @@ class LLMClient:
         """
         providers = []
         if settings.GEMINI_API_KEY:
-            providers.append(("gemini", settings.GEMINI_API_KEY, settings.LLM_MODEL or "gemini-flash-latest"))
+            # Prefer gemini-flash-lite-latest which has active quota and supports free tier
+            gemini_model = "gemini-flash-lite-latest" if not settings.LLM_MODEL or "gemini" in settings.LLM_MODEL else settings.LLM_MODEL
+            providers.append(("gemini", settings.GEMINI_API_KEY, gemini_model))
         if settings.GROQ_API_KEY:
-            providers.append(("groq", settings.GROQ_API_KEY, settings.LLM_MODEL or "qwen/qwen3.8-27b"))
+            groq_model = "qwen/qwen3.8-27b" if not settings.LLM_MODEL or "groq" in settings.LLM_MODEL or "gemini" in settings.LLM_MODEL else settings.LLM_MODEL
+            providers.append(("groq", settings.GROQ_API_KEY, groq_model))
         return providers
 
     def is_live_ai_enabled(self) -> bool:
@@ -62,15 +65,20 @@ class LLMClient:
             "contents": contents,
             "generationConfig": {"temperature": temperature, "maxOutputTokens": 1024}
         }
+        headers = {"Content-Type": "application/json", "User-Agent": "Fintrix-Financial-Intelligence/1.0"}
         with httpx.Client(timeout=25.0) as client:
-            resp = client.post(url, json=payload)
+            resp = client.post(url, headers=headers, json=payload)
             resp.raise_for_status()
             data = resp.json()
             return data["candidates"][0]["content"]["parts"][0]["text"].strip()
 
     def _call_groq(self, api_key: str, model: str, prompt: str, system_prompt: Optional[str], temperature: float) -> str:
         url = "https://api.groq.com/openai/v1/chat/completions"
-        headers = {"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"}
+        headers = {
+            "Authorization": f"Bearer {api_key}",
+            "Content-Type": "application/json",
+            "User-Agent": "Fintrix-Financial-Intelligence/1.0"
+        }
         messages = []
         if system_prompt:
             messages.append({"role": "system", "content": system_prompt})
