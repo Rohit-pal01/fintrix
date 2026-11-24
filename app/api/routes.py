@@ -2,6 +2,8 @@
 import os
 import shutil
 import time
+import hashlib
+import uuid
 from typing import List, Dict, Any, Optional
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form
 from pydantic import BaseModel, Field
@@ -9,7 +11,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import func
 from app.db.connection import get_db, SessionLocal
 from app.db.models import (
-    Transaction, Category, Budget, Bill, Goal, Document, Chunk, 
+    User, Transaction, Category, Budget, Bill, Goal, Document, Chunk, 
     Trace, EvalRun, EvalCase, Feedback
 )
 from app.agent.graph import FinanceCopilotAgent
@@ -270,10 +272,13 @@ def get_financial_summary(user_id: int = 1, db: Session = Depends(get_db)):
 
     # If new guest has no transactions, fall back to demo user 1 statistics so charts showcase capabilities
     if not category_summary and not budget_summary and not bill_summary and user_id != 1:
-        return get_financial_summary(user_id=1, db=db)
+        demo_data = get_financial_summary(user_id=1, db=db)
+        demo_data["is_demo"] = True
+        return demo_data
 
     return {
         "current_month": "2026-11",
+        "is_demo": False,
         "category_spending": category_summary,
         "budgets": budget_summary,
         "bills": bill_summary

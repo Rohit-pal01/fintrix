@@ -447,6 +447,22 @@
         </button>
       </div>
 
+      <!-- Demo Fallback Notice Banner -->
+      <div id="summary-demo-banner" class="hidden p-4 rounded-2xl bg-violet-500/10 border border-violet-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+        <div class="flex items-center space-x-3">
+          <div class="w-8 h-8 rounded-xl bg-violet-600/20 text-violet-600 dark:text-violet-400 flex items-center justify-center flex-shrink-0">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+          </div>
+          <div>
+            <div class="font-bold text-[var(--text-main)]">Interactive Demo Portfolio Preview</div>
+            <div class="text-[var(--text-sub)] text-[11px]">You are viewing sample metrics. Upload your own bank statement in Document Vault to generate your real-time personal analytics!</div>
+          </div>
+        </div>
+        <button onclick="switchView('documents')" class="glass-pill px-3 py-1.5 rounded-xl text-violet-600 dark:text-violet-300 font-bold hover:border-violet-500 transition text-[11px] whitespace-nowrap self-start sm:self-auto">
+          Upload Statement &rarr;
+        </button>
+      </div>
+
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         <!-- Budgets Progress -->
         <div class="md:col-span-2 glass-card rounded-3xl p-6 space-y-4">
@@ -956,6 +972,16 @@
         const uid = await getOrInitUserId();
         const res = await fetch(`/api/summary?user_id=${uid}`);
         const data = await res.json();
+
+        // Toggle Demo Banner
+        const demoBanner = document.getElementById('summary-demo-banner');
+        if (demoBanner) {
+          if (data.is_demo) {
+            demoBanner.classList.remove('hidden');
+          } else {
+            demoBanner.classList.add('hidden');
+          }
+        }
 
         // Render Budgets
         const bContainer = document.getElementById('budget-bars');
