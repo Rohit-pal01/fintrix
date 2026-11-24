@@ -9,46 +9,51 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script>
+    window.tailwind = {
+      darkMode: 'class'
+    };
+  </script>
   <script src="https://cdn.tailwindcss.com"></script>
 
   <style>
     /*
-      Vibrant Cyan & Royal Lavender Palette:
+      Radiant Royal Lavender & Light Sky Cyan Palette:
       - Dark Cosmos Base: #070a12
-      - Electric Cyan: #06b6d4 / #38bdf8
-      - Royal Lavender: #6366f1 / #818cf8 / #c4b5fd
-      - Pure Light Base: #f8fafc / #ffffff
+      - Royal Lavender: #c4b5fd / #a78bfa / #8b5cf6 / #7c3aed
+      - Light Sky Cyan: #38bdf8 / #7dd3fc
+      - Pure Light Base: #fbfbfe / #ffffff
     */
     :root {
       --bg: #070a12;
       --card-bg: rgba(13, 18, 30, 0.85);
-      --card-border: rgba(56, 189, 248, 0.22);
+      --card-border: rgba(167, 139, 250, 0.25);
       --subcard-bg: rgba(15, 23, 42, 0.72);
       --text-main: #FFFFFF;
       --text-sub: #cbd5e1;
       --text-muted: #94a3b8;
-      --primary: #06b6d4;
-      --primary-hover: #0891b2;
+      --primary: #8b5cf6;
+      --primary-hover: #7c3aed;
       --lavender: #c4b5fd;
       --cyan: #38bdf8;
-      --glass-nav: rgba(7, 10, 18, 0.88);
+      --glass-nav: rgba(7, 10, 18, 0.90);
       --video-opacity: 0.65;
     }
 
     html.light {
-      --bg: #f8fafc;
+      --bg: #fbfbfe;
       --card-bg: #ffffff;
-      --card-border: rgba(203, 213, 225, 0.95);
-      --subcard-bg: #f1f5f9;
-      --text-main: #0f172a;
-      --text-sub: #334155;
+      --card-border: #ede9fe;
+      --subcard-bg: #f5f3ff;
+      --text-main: #1e1b4b;
+      --text-sub: #475569;
       --text-muted: #64748b;
-      --primary: #0284c7;
-      --primary-hover: #0369a1;
-      --lavender: #4f46e5;
-      --cyan: #0284c7;
+      --primary: #8b5cf6;
+      --primary-hover: #7c3aed;
+      --lavender: #8b5cf6;
+      --cyan: #38bdf8;
       --glass-nav: rgba(255, 255, 255, 0.95);
-      --video-opacity: 0.65;
+      --video-opacity: 0.85;
     }
 
     * { box-sizing: border-box; }
@@ -77,9 +82,9 @@
       box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
     }
     html.light .glass-card {
-      background: #ffffff;
-      border: 1px solid rgba(226, 232, 240, 0.95);
-      box-shadow: 0 10px 30px -5px rgba(15, 23, 42, 0.06), 0 0 0 1px rgba(226, 232, 240, 0.7);
+      background: #ffffff !important;
+      border: 1px solid #ede9fe !important;
+      box-shadow: 0 10px 30px -5px rgba(139, 92, 246, 0.06), 0 0 0 1px rgba(237, 233, 254, 0.8) !important;
     }
     .glass-subcard {
       background: var(--subcard-bg);
@@ -87,22 +92,22 @@
       box-shadow: 0 2px 10px -1px rgba(0, 0, 0, 0.03);
     }
     html.light .glass-subcard {
-      background: #f8fafc;
-      border: 1px solid rgba(226, 232, 240, 0.95);
-      box-shadow: 0 2px 8px -2px rgba(15, 23, 42, 0.04);
+      background: #f5f3ff !important;
+      border: 1px solid #ede9fe !important;
+      box-shadow: 0 2px 8px -2px rgba(139, 92, 246, 0.04) !important;
     }
     .glass-pill {
-      background: rgba(56, 189, 248, 0.1);
+      background: rgba(139, 92, 246, 0.12);
       backdrop-filter: blur(12px);
       border: 1px solid var(--card-border);
     }
     html.light .glass-pill {
-      background: #ffffff;
-      border: 1px solid rgba(203, 213, 225, 0.9);
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+      background: #ffffff !important;
+      border: 1px solid #ddd6fe !important;
+      box-shadow: 0 2px 6px rgba(139, 92, 246, 0.05) !important;
     }
 
-    /* Fixed Video Background (Sharp & Crystal Clear in Both Modes) */
+    /* Fixed Video Background (Light Purple / Lavender Earth in Both Modes) */
     .bg-video-container {
       position: fixed;
       inset: 0;
@@ -127,24 +132,23 @@
       filter: contrast(1.15) saturate(1.25);
       transition: opacity 0.3s ease;
     }
-    /* Light Mode: Invert black space to pure white + multiply blend = ZERO GREY FOG! */
+    /* Light Mode: Invert black space to pure white + rotate to light lavender/purple earth = ZERO GREY FOG! */
     html.light .bg-video {
-      filter: invert(1) hue-rotate(180deg) contrast(1.4) brightness(1.02);
+      filter: invert(1) hue-rotate(245deg) contrast(1.3) brightness(1.02);
       mix-blend-mode: multiply;
-      opacity: 0.65;
+      opacity: 0.85;
     }
     .bg-gradient-overlay {
       position: fixed;
       inset: 0;
-      background: radial-gradient(circle at 50% 18%, rgba(6, 182, 212, 0.22), transparent 65%),
+      background: radial-gradient(circle at 50% 18%, rgba(139, 92, 246, 0.22), transparent 65%),
                   linear-gradient(180deg, rgba(7, 10, 18, 0.20) 0%, rgba(7, 10, 18, 0.95) 75%, #070a12 100%);
       z-index: 1;
       pointer-events: none;
     }
     html.light .bg-gradient-overlay {
-      background: radial-gradient(circle at 50% 18%, rgba(6, 182, 212, 0.12), transparent 65%),
-                  radial-gradient(circle at 80% 40%, rgba(99, 102, 241, 0.08), transparent 50%),
-                  linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, rgba(248, 250, 252, 0.8) 60%, #f8fafc 100%);
+      background: radial-gradient(circle at 50% 18%, rgba(196, 181, 253, 0.25), transparent 65%),
+                  linear-gradient(180deg, rgba(251, 251, 254, 0.15) 0%, rgba(251, 251, 254, 0.85) 60%, #fbfbfe 100%);
     }
 
     .app-content {
@@ -159,38 +163,103 @@
     }
     .tab-btn:hover {
       color: var(--text-main);
-      background: rgba(56, 189, 248, 0.15);
+      background: rgba(139, 92, 246, 0.15);
     }
     .tab-btn.active {
-      background: linear-gradient(135deg, #0284c7 0%, #4f46e5 100%);
+      background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
       color: #ffffff !important;
       border: 1px solid rgba(255, 255, 255, 0.3);
-      box-shadow: 0 4px 15px rgba(2, 132, 199, 0.35);
+      box-shadow: 0 4px 15px rgba(139, 92, 246, 0.35);
     }
     html.dark .tab-btn.active {
-      background: linear-gradient(135deg, #0891b2 0%, #6366f1 100%);
-      box-shadow: 0 0 20px rgba(6, 182, 212, 0.4);
+      background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+      box-shadow: 0 0 20px rgba(139, 92, 246, 0.4);
     }
 
-    /* High Contrast Vibrant Cyan & Lavender Text Gradient */
+    /* Vibrant Lavender & Light Cyan Text Gradient (NO Dark Blue) */
     .hero-title-gradient {
-      background: linear-gradient(135deg, #38bdf8 0%, #818cf8 55%, #c4b5fd 100%);
+      background: linear-gradient(135deg, #c4b5fd 0%, #a78bfa 50%, #7dd3fc 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
     html.light .hero-title-gradient {
-      background: linear-gradient(135deg, #0284c7 0%, #0891b2 35%, #4f46e5 100%);
+      background: linear-gradient(135deg, #6d28d9 0%, #8b5cf6 50%, #38bdf8 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
 
-    /* Console Box with Cyan / Lavender Glow */
+    /* Console Box with Lavender Glow */
     .console-box {
-      box-shadow: 0 20px 60px -15px rgba(0, 0, 0, 0.7), 0 0 45px -10px rgba(6, 182, 212, 0.25);
+      box-shadow: 0 20px 60px -15px rgba(0, 0, 0, 0.7), 0 0 45px -10px rgba(139, 92, 246, 0.25);
     }
     html.light .console-box {
-      box-shadow: 0 15px 45px -10px rgba(15, 23, 42, 0.08), 0 0 0 1px rgba(226, 232, 240, 0.8);
+      box-shadow: 0 15px 45px -10px rgba(139, 92, 246, 0.08), 0 0 0 1px rgba(237, 233, 254, 0.9);
     }
+
+    /* Hero Buttons */
+    .btn-hero-launch {
+      background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 50%, #6366f1 100%);
+      color: #ffffff !important;
+      box-shadow: 0 4px 20px rgba(139, 92, 246, 0.4);
+    }
+    .btn-hero-launch:hover {
+      background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 50%, #4f46e5 100%);
+      box-shadow: 0 6px 25px rgba(139, 92, 246, 0.5);
+    }
+    .btn-hero-vault {
+      background: rgba(139, 92, 246, 0.18);
+      color: #ffffff !important;
+      border: 1px solid rgba(196, 181, 253, 0.4);
+    }
+    .btn-hero-vault i {
+      color: #c4b5fd;
+    }
+    html.light .btn-hero-vault {
+      background: #ffffff !important;
+      color: #6d28d9 !important;
+      border: 2px solid #c4b5fd !important;
+      box-shadow: 0 4px 15px rgba(139, 92, 246, 0.12) !important;
+    }
+    html.light .btn-hero-vault i {
+      color: #7c3aed !important;
+    }
+    html.light .btn-hero-vault:hover {
+      background: #f5f3ff !important;
+      border-color: #a78bfa !important;
+      color: #5b21b6 !important;
+    }
+
+    /* Enterprise Clean Footer (Guaranteed No Dark Grey Block in Light Mode) */
+    .app-footer {
+      background-color: #0b0f19;
+      border-top: 1px solid rgba(139, 92, 246, 0.2);
+      color: #cbd5e1;
+      transition: background-color 0.3s ease, border-color 0.3s ease;
+    }
+    html.light .app-footer {
+      background-color: #ffffff !important;
+      border-top: 1px solid #ede9fe !important;
+      color: #475569 !important;
+      box-shadow: 0 -10px 30px rgba(139, 92, 246, 0.04) !important;
+    }
+    html.light .app-footer * {
+      color: inherit;
+    }
+    html.light .app-footer .text-\[var\(--text-main\)\] {
+      color: #1e1b4b !important;
+    }
+    html.light .app-footer .text-\[var\(--text-sub\)\] {
+      color: #475569 !important;
+    }
+    html.light .app-footer .text-\[var\(--text-muted\)\] {
+      color: #64748b !important;
+    }
+    html.light .app-footer .glass-subcard {
+      background-color: #f5f3ff !important;
+      border: 1px solid #ddd6fe !important;
+      color: #6d28d9 !important;
+    }
+  </style>
   </style>
 </head>
 <body class="min-h-screen flex flex-col">
@@ -207,13 +276,13 @@
   <header class="app-content sticky top-0 z-50 glass-nav px-6 py-3.5 flex items-center justify-between">
     <!-- Brand -->
     <div class="flex items-center space-x-3 cursor-pointer" onclick="switchView('hero')">
-      <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-500 to-indigo-600 flex items-center justify-center font-bold text-white text-base shadow-lg shadow-cyan-500/25">
+      <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-purple-500 to-indigo-600 flex items-center justify-center font-bold text-white text-base shadow-lg shadow-purple-500/25">
         <i class="fa-solid fa-shield-halved text-white text-sm"></i>
       </div>
       <div>
         <div class="text-sm font-extrabold tracking-tight flex items-center gap-2">
           <span>Fintrix</span>
-          <span class="text-[9px] uppercase px-1.5 py-0.5 rounded-full bg-cyan-500/15 text-cyan-700 dark:text-cyan-300 border border-cyan-500/30 font-mono font-bold">Verifiable v2.4</span>
+          <span class="text-[9px] uppercase px-1.5 py-0.5 rounded-full bg-purple-500/15 text-purple-700 dark:text-purple-300 border border-purple-500/30 font-mono font-bold">Verifiable v2.4</span>
         </div>
         <p class="text-[11px] opacity-75 font-medium">Autonomous Financial Intelligence</p>
       </div>
@@ -238,7 +307,7 @@
     <!-- Right Side: Dark / Light Mode Toggle -->
     <div class="flex items-center space-x-2">
       <button onclick="toggleTheme()" id="theme-toggle-btn" class="glass-pill px-3 py-1.5 rounded-full text-xs font-medium flex items-center gap-1.5 hover:scale-105 active:scale-95 transition" title="Toggle Light / Dark Mode">
-        <i id="theme-icon" class="fa-solid fa-moon text-cyan-400"></i>
+        <i id="theme-icon" class="fa-solid fa-moon text-purple-400"></i>
         <span id="theme-text" class="text-[11px] font-mono font-semibold hidden sm:inline">Dark</span>
       </button>
     </div>
@@ -250,10 +319,10 @@
     <!-- VIEW 1: HERO VIEW -->
     <section id="view-hero" class="flex flex-col items-center justify-center text-center py-10 md:py-16 space-y-8">
       
-      <!-- Pill Badge (Cyan & Lavender theme) -->
-      <div class="inline-flex items-center gap-2 glass-pill px-4 py-1.5 rounded-full text-xs border border-cyan-500/30 dark:border-cyan-400/30 shadow-sm">
-        <span class="w-2 h-2 rounded-full bg-cyan-500 dark:bg-cyan-400 animate-pulse"></span>
-        <span class="font-bold tracking-wide uppercase text-[10px] text-cyan-800 dark:text-cyan-300">Deterministic SQL + Grounded Hybrid RAG</span>
+      <!-- Pill Badge (Lavender & Light Sky Cyan) -->
+      <div class="inline-flex items-center gap-2 glass-pill px-4 py-1.5 rounded-full text-xs border border-purple-400/30 shadow-sm">
+        <span class="w-2 h-2 rounded-full bg-purple-500 animate-pulse"></span>
+        <span class="font-bold tracking-wide uppercase text-[10px] text-purple-700 dark:text-purple-300">Deterministic SQL + Grounded Hybrid RAG</span>
       </div>
 
       <!-- Main Catchphrase -->
@@ -269,51 +338,51 @@
 
       <!-- Primary Action Buttons -->
       <div class="flex flex-wrap items-center justify-center gap-4 pt-1">
-        <button onclick="switchView('chat')" class="bg-gradient-to-r from-cyan-500 via-sky-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white font-bold px-8 py-3.5 rounded-full text-sm transition flex items-center gap-2 shadow-xl shadow-cyan-500/20 hover:scale-105 active:scale-95 duration-200">
+        <button onclick="switchView('chat')" class="btn-hero-launch font-bold px-8 py-3.5 rounded-full text-sm transition flex items-center gap-2 shadow-lg hover:scale-105 active:scale-95 duration-200">
           <span>Launch Financial AI</span>
           <i class="fa-solid fa-arrow-right text-xs"></i>
         </button>
-        <button onclick="switchView('documents')" class="bg-white dark:bg-white/10 hover:bg-slate-50 dark:hover:bg-white/15 text-slate-800 dark:text-white font-bold px-6 py-3.5 rounded-full text-sm transition flex items-center gap-2 border border-slate-300 dark:border-white/20 shadow-sm">
-          <i class="fa-solid fa-file-pdf text-indigo-500 dark:text-cyan-400"></i>
-          <span>Document Vault</span>
+        <button onclick="switchView('documents')" class="btn-hero-vault font-bold px-7 py-3.5 rounded-full text-sm transition flex items-center gap-2.5 shadow-sm hover:scale-105 active:scale-95 duration-200">
+          <i class="fa-solid fa-cloud-arrow-up text-base"></i>
+          <span>Upload Document</span>
         </button>
       </div>
 
       <!-- Professional Interactive Architecture Showcase -->
       <div class="w-full max-w-5xl pt-8">
-        <div class="glass-card rounded-3xl p-6 md:p-8 console-box text-left border border-cyan-500/20">
+        <div class="glass-card rounded-3xl p-6 md:p-8 console-box text-left border border-purple-500/20">
           
-          <div class="flex flex-wrap items-center justify-between pb-6 border-b border-cyan-500/15 gap-4">
+          <div class="flex flex-wrap items-center justify-between pb-6 border-b border-purple-500/15 gap-4">
             <div>
-              <div class="text-xs uppercase tracking-widest text-cyan-600 dark:text-cyan-300 font-mono font-bold">Interactive System Runtime</div>
+              <div class="text-xs uppercase tracking-widest text-purple-600 dark:text-purple-300 font-mono font-bold">Interactive System Runtime</div>
               <h2 class="text-xl font-bold mt-0.5 text-[var(--text-main)]">Execution & Retrieval Pipeline</h2>
             </div>
             <!-- Live Status Indicators -->
             <div class="flex items-center gap-4 text-xs font-mono font-medium">
               <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-400"></span> Neon DB: Active</span>
-              <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-cyan-400"></span> Gemini/Groq: Ready</span>
-              <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-indigo-400"></span> Hybrid BM25: Synced</span>
+              <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-purple-400"></span> Gemini/Groq: Ready</span>
+              <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-sky-400"></span> Hybrid BM25: Synced</span>
             </div>
           </div>
 
-          <!-- Architecture Flow Steps with Crisp High-Contrast Styling -->
+          <!-- Architecture Flow Steps with Crisp Lavender & Sky Contrast -->
           <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-6">
             
             <!-- Step 1: Text-to-SQL Engine -->
-            <div class="p-5 rounded-2xl glass-subcard space-y-3 hover:border-cyan-500 transition duration-300">
+            <div class="p-5 rounded-2xl glass-subcard space-y-3 hover:border-purple-500 transition duration-300">
               <div class="flex items-center justify-between">
-                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-cyan-500/15 text-cyan-700 dark:text-cyan-300 uppercase font-bold">Relational Core</span>
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-purple-500/15 text-purple-700 dark:text-purple-300 uppercase font-bold">Relational Core</span>
                 <span class="text-xs font-bold text-emerald-500 dark:text-emerald-400">100% Execution Yield</span>
               </div>
               <h3 class="text-base font-bold flex items-center gap-2 text-[var(--text-main)]">
-                <i class="fa-solid fa-database text-cyan-600 dark:text-cyan-400"></i>
+                <i class="fa-solid fa-database text-purple-600 dark:text-purple-400"></i>
                 <span>Deterministic Text-to-SQL</span>
               </h3>
               <p class="text-xs font-medium leading-relaxed text-[var(--text-sub)]">
                 Translates natural queries into validated PostgreSQL aggregates across 13 relational tables with AST validation.
               </p>
               <div class="pt-2">
-                <button onclick="sendQuickPrompt('How much did I spend on food last month?')" class="text-[11px] font-bold text-cyan-600 dark:text-cyan-300 hover:underline flex items-center gap-1">
+                <button onclick="sendQuickPrompt('How much did I spend on food last month?')" class="text-[11px] font-bold text-purple-600 dark:text-purple-300 hover:underline flex items-center gap-1">
                   <span>Explore SQL Execution</span>
                   <i class="fa-solid fa-chevron-right text-[9px]"></i>
                 </button>
@@ -321,20 +390,20 @@
             </div>
 
             <!-- Step 2: Cross-Encoder RAG -->
-            <div class="p-5 rounded-2xl glass-subcard space-y-3 hover:border-indigo-500 transition duration-300">
+            <div class="p-5 rounded-2xl glass-subcard space-y-3 hover:border-violet-500 transition duration-300">
               <div class="flex items-center justify-between">
-                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-indigo-500/15 text-indigo-700 dark:text-indigo-300 uppercase font-bold">Semantic Engine</span>
-                <span class="text-xs font-bold text-indigo-600 dark:text-indigo-400">98% Hit Rate@5</span>
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-violet-500/15 text-violet-700 dark:text-violet-300 uppercase font-bold">Semantic Engine</span>
+                <span class="text-xs font-bold text-violet-600 dark:text-violet-400">98% Hit Rate@5</span>
               </div>
               <h3 class="text-base font-bold flex items-center gap-2 text-[var(--text-main)]">
-                <i class="fa-solid fa-file-invoice-dollar text-indigo-600 dark:text-indigo-400"></i>
+                <i class="fa-solid fa-file-invoice-dollar text-violet-600 dark:text-violet-400"></i>
                 <span>Hybrid Grounded RAG</span>
               </h3>
               <p class="text-xs font-medium leading-relaxed text-[var(--text-sub)]">
                 Pairs BM25 lexical token retrieval with dense semantic vectors and BGE cross-encoder reranking for contract verification.
               </p>
               <div class="pt-2">
-                <button onclick="sendQuickPrompt('What is the prepayment penalty on my floating rate home loan?')" class="text-[11px] font-bold text-indigo-600 dark:text-indigo-300 hover:underline flex items-center gap-1">
+                <button onclick="sendQuickPrompt('What is the prepayment penalty on my floating rate home loan?')" class="text-[11px] font-bold text-violet-600 dark:text-violet-300 hover:underline flex items-center gap-1">
                   <span>Explore Policy Retrieval</span>
                   <i class="fa-solid fa-chevron-right text-[9px]"></i>
                 </button>
@@ -342,20 +411,20 @@
             </div>
 
             <!-- Step 3: Runtime Verifier -->
-            <div class="p-5 rounded-2xl glass-subcard space-y-3 hover:border-sky-500 transition duration-300">
+            <div class="p-5 rounded-2xl glass-subcard space-y-3 hover:border-indigo-500 transition duration-300">
               <div class="flex items-center justify-between">
-                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-sky-500/15 text-sky-700 dark:text-sky-300 uppercase font-bold">Verification Gate</span>
-                <span class="text-xs font-bold text-cyan-600 dark:text-cyan-300">0.0% Hallucination</span>
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-indigo-500/15 text-indigo-700 dark:text-indigo-300 uppercase font-bold">Verification Gate</span>
+                <span class="text-xs font-bold text-purple-600 dark:text-purple-300">0.0% Hallucination</span>
               </div>
               <h3 class="text-base font-bold flex items-center gap-2 text-[var(--text-main)]">
-                <i class="fa-solid fa-shield-virus text-sky-600 dark:text-sky-400"></i>
+                <i class="fa-solid fa-shield-virus text-indigo-600 dark:text-indigo-400"></i>
                 <span>Post-Generation Verifier</span>
               </h3>
               <p class="text-xs font-medium leading-relaxed text-[var(--text-sub)]">
                 Every numerical claim undergoes automated runtime consistency checks against source database rows prior to presentation.
               </p>
               <div class="pt-2">
-                <button onclick="switchView('evals')" class="text-[11px] font-bold text-sky-600 dark:text-sky-300 hover:underline flex items-center gap-1">
+                <button onclick="switchView('evals')" class="text-[11px] font-bold text-indigo-600 dark:text-indigo-300 hover:underline flex items-center gap-1">
                   <span>Review Benchmark Metrics</span>
                   <i class="fa-solid fa-chevron-right text-[9px]"></i>
                 </button>
@@ -626,8 +695,8 @@
 
   </main>
 
-  <!-- 4. CLEAN ENTERPRISE FOOTER (Matching QuickKart Light & Dark Excellence) -->
-  <footer class="app-content mt-20 border-t border-slate-200/90 dark:border-white/10 bg-white/95 dark:bg-black/60 backdrop-blur-xl transition duration-300">
+  <!-- 4. CLEAN ENTERPRISE FOOTER -->
+  <footer class="app-content app-footer mt-20">
     <div class="max-w-7xl mx-auto px-6 py-12">
       <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
         
