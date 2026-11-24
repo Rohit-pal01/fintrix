@@ -179,11 +179,13 @@
     /* Vibrant Executive Dual-Tone Gradient (Linear/Stripe Style: Royal Indigo & Cobalt Blue) */
     .hero-title-gradient {
       background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 50%, #818cf8 100%);
+      background-clip: text;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
     html.light .hero-title-gradient {
       background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 50%, #4f46e5 100%);
+      background-clip: text;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
@@ -1095,7 +1097,16 @@
         // Render Bills
         const billsContainer = document.getElementById('bills-list');
         billsContainer.innerHTML = '';
-        data.bills.forEach(bill => {
+        if (!data.bills || data.bills.length === 0) {
+          billsContainer.innerHTML = `
+            <div class="p-4 rounded-xl glass-subcard text-center space-y-1">
+              <i class="fa-solid fa-circle-check text-emerald-500 text-base"></i>
+              <div class="text-xs font-bold text-[var(--text-main)]">No Pending or Overdue Bills</div>
+              <p class="text-[10px] text-[var(--text-muted)]">All obligations in your uploaded statement are settled.</p>
+            </div>
+          `;
+        } else {
+          data.bills.forEach(bill => {
           const isOverdue = bill.status === 'overdue';
           const isPaid = bill.status === 'paid';
           const statusBg = isOverdue 
@@ -1115,7 +1126,8 @@
               </div>
             </div>
           `;
-        });
+          });
+        }
 
         // Render Category Chips
         const catContainer = document.getElementById('category-chips');
