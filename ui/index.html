@@ -291,19 +291,25 @@
       </div>
     </div>
 
-    <!-- Center Floating Nav Island (Consumer-focused: 4 Core Capabilities) -->
-    <nav class="flex items-center space-x-1.5 glass-pill px-3 py-1.5 rounded-full shadow-inner">
-      <button onclick="switchView('hero')" id="nav-btn-hero" class="tab-btn active px-3.5 py-1.5 rounded-full text-xs font-semibold">
-        <i class="fa-solid fa-house mr-1.5 text-[11px]"></i> Home
+    <!-- Center Floating Nav Island (All 6 Core Capabilities) -->
+    <nav class="flex items-center space-x-1 glass-pill px-2.5 py-1.5 rounded-full shadow-inner overflow-x-auto max-w-full">
+      <button onclick="switchView('hero')" id="nav-btn-hero" class="tab-btn active px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap">
+        <i class="fa-solid fa-house mr-1 text-[11px]"></i> Home
       </button>
-      <button onclick="switchView('chat')" id="nav-btn-chat" class="tab-btn px-3.5 py-1.5 rounded-full text-xs font-medium">
-        <i class="fa-solid fa-comments mr-1.5 text-[11px]"></i> Assistant
+      <button onclick="switchView('chat')" id="nav-btn-chat" class="tab-btn px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap">
+        <i class="fa-solid fa-comments mr-1 text-[11px]"></i> Assistant
       </button>
-      <button onclick="switchView('documents')" id="nav-btn-documents" class="tab-btn px-3.5 py-1.5 rounded-full text-xs font-medium">
-        <i class="fa-solid fa-folder-open mr-1.5 text-[11px]"></i> Document Vault
+      <button onclick="switchView('documents')" id="nav-btn-documents" class="tab-btn px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap">
+        <i class="fa-solid fa-folder-open mr-1 text-[11px]"></i> Document Vault
       </button>
-      <button onclick="switchView('summary')" id="nav-btn-summary" class="tab-btn px-3.5 py-1.5 rounded-full text-xs font-medium">
-        <i class="fa-solid fa-chart-pie mr-1.5 text-[11px]"></i> Financial Summary
+      <button onclick="switchView('summary')" id="nav-btn-summary" class="tab-btn px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap">
+        <i class="fa-solid fa-chart-pie mr-1 text-[11px]"></i> Financial Summary
+      </button>
+      <button onclick="switchView('evals')" id="nav-btn-evals" class="tab-btn px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap">
+        <i class="fa-solid fa-trophy mr-1 text-[11px]"></i> Benchmark
+      </button>
+      <button onclick="switchView('traces')" id="nav-btn-traces" class="tab-btn px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap">
+        <i class="fa-solid fa-terminal mr-1 text-[11px]"></i> Traces
       </button>
     </nav>
 
