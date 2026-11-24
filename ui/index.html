@@ -469,11 +469,17 @@
           <h2 class="text-lg font-bold text-[var(--text-main)]">Document Vault</h2>
           <p class="text-xs font-medium text-[var(--text-sub)]">Manage your personal indexed documents or inspect pre-loaded demo reference contracts.</p>
         </div>
-        <label class="cursor-pointer bg-violet-600 hover:bg-violet-700 text-white font-bold px-4 py-2 rounded-full text-xs flex items-center space-x-2 transition shadow self-start sm:self-auto">
-          <i class="fa-solid fa-cloud-arrow-up text-violet-200"></i>
-          <span>Upload Document (PDF, Word, TXT)</span>
-          <input type="file" id="pdf-upload-input" accept=".pdf,.docx,.doc,.md,.txt" class="hidden" onchange="handleFileUpload(event)">
-        </label>
+        <div class="flex items-center gap-2.5">
+          <button onclick="resetSession()" class="text-xs glass-pill px-3.5 py-2 rounded-full text-[var(--text-sub)] hover:text-violet-500 transition flex items-center gap-1.5 font-medium border border-violet-500/20" title="Start a fresh private visitor session">
+            <i class="fa-solid fa-arrows-rotate text-[10px]"></i>
+            <span class="hidden sm:inline">New Visitor Session</span>
+          </button>
+          <label class="cursor-pointer bg-violet-600 hover:bg-violet-700 text-white font-bold px-4 py-2 rounded-full text-xs flex items-center space-x-2 transition shadow self-start sm:self-auto">
+            <i class="fa-solid fa-cloud-arrow-up text-violet-200"></i>
+            <span>Upload Document (PDF, Word, TXT)</span>
+            <input type="file" id="pdf-upload-input" accept=".pdf,.docx,.doc,.md,.txt" class="hidden" onchange="handleFileUpload(event)">
+          </label>
+        </div>
       </div>
 
       <!-- Vault Sub-Navigation: My Uploads vs Demo Samples -->
@@ -746,6 +752,31 @@
       scrollToTop();
     }
 
+    async function getOrInitUserId() {
+      let uid = localStorage.getItem('fintrix_session_uid');
+      if (uid && !isNaN(parseInt(uid, 10))) {
+        return parseInt(uid, 10);
+      }
+      try {
+        const res = await fetch('/api/session/init', { method: 'POST' });
+        const data = await res.json();
+        if (data.user_id) {
+          localStorage.setItem('fintrix_session_uid', data.user_id);
+          return data.user_id;
+        }
+      } catch (e) {
+        console.warn('Session init failed, fallback to 1', e);
+      }
+      return 1;
+    }
+
+    function resetSession() {
+      if (confirm("Start a new clean visitor session? Your current private workspace will be reset.")) {
+        localStorage.removeItem('fintrix_session_uid');
+        window.location.reload();
+      }
+    }
+
     function sendQuickPrompt(promptText) {
       switchView('chat');
       document.getElementById('chat-input').value = promptText;
@@ -762,10 +793,11 @@
       appendUserMessage(q);
 
       try {
+        const uid = await getOrInitUserId();
         const res = await fetch('/api/chat', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ question: q, user_id: 1 })
+          body: JSON.stringify({ question: q, user_id: uid })
         });
         const data = await res.json();
         activeTrace = data;
@@ -911,7 +943,8 @@
 
     async function loadFinancialSummary() {
       try {
-        const res = await fetch('/api/summary?user_id=1');
+        const uid = await getOrInitUserId();
+        const res = await fetch(`/api/summary?user_id=${uid}`);
         const data = await res.json();
 
         // Render Budgets
@@ -997,7 +1030,8 @@
 
     async function loadDocumentsList() {
       try {
-        const res = await fetch('/api/documents?user_id=1');
+        const uid = await getOrInitUserId();
+        const res = await fetch(`/api/documents?user_id=${uid}`);
         const data = await res.json();
         loadedDocuments = data.documents || [];
 
@@ -1064,10 +1098,11 @@
       const file = e.target.files[0];
       if (!file) return;
 
+      const uid = await getOrInitUserId();
       const fd = new FormData();
       fd.append('file', file);
       fd.append('doc_type', 'statement');
-      fd.append('user_id', '1');
+      fd.append('user_id', uid.toString());
 
       try {
         const res = await fetch('/api/documents', {
@@ -1086,7 +1121,8 @@
     async function deleteDoc(docId) {
       if (!confirm("Are you sure you want to delete this document and its chunks?")) return;
       try {
-        await fetch(`/api/documents/${docId}`, { method: 'DELETE' });
+        const uid = await getOrInitUserId();
+        await fetch(`/api/documents/${docId}?user_id=${uid}`, { method: 'DELETE' });
         loadDocumentsList();
       } catch (err) {
         console.error(err);

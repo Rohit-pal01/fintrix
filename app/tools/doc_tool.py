@@ -111,7 +111,18 @@ class DocumentRetriever:
     ) -> SearchDocsOutput:
         filtered_chunks = self.chunks
         if user_id is not None:
-            filtered_chunks = [c for c in self.chunks if c.get("user_id") in (user_id, None)]
+            system_docs = {
+                "bank_statement_hdfc.pdf",
+                "bank_statement_icici.pdf",
+                "car_loan_agreement.pdf",
+                "health_insurance_policy.pdf",
+                "home_loan_agreement.pdf",
+                "term_life_insurance.pdf"
+            }
+            filtered_chunks = [
+                c for c in self.chunks 
+                if c.get("user_id") == user_id or c.get("doc", "").lower() in system_docs
+            ]
 
         if not filtered_chunks:
             return SearchDocsOutput(results=[], confidence=0.0, mode_used=mode)

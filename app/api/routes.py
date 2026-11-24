@@ -31,7 +31,7 @@ retriever_instance = DocumentRetriever()
 def sync_retriever():
     """Sync retriever in-memory cache with database chunks."""
     with SessionLocal() as db:
-        chunks = db.query(Chunk, Document.filename).join(Document, Chunk.doc_id == Document.doc_id).all()
+        chunks = db.query(Chunk, Document.filename, Document.user_id).join(Document, Chunk.doc_id == Document.doc_id).all()
         chunks_data = [
             {
                 "chunk_id": c.chunk_id,
@@ -40,9 +40,9 @@ def sync_retriever():
                 "section": c.section_title,
                 "text": c.text,
                 "embedding": c.embedding,
-                "user_id": 1
+                "user_id": uid
             }
-            for c, fname in chunks
+            for c, fname, uid in chunks
         ]
         retriever_instance.chunks = chunks_data
         retriever_instance._init_bm25()
@@ -65,6 +65,17 @@ class IngestTransactionsRequest(BaseModel):
 def health():
     return {"status": "ok", "timestamp": time.time(), "version": "1.0.0"}
 
+@router.post("/session/init")
+def init_session(db: Session = Depends(get_db)):
+    """Initializes an isolated guest session for a new visitor."""
+    import uuid
+    guest_name = f"Guest_{uuid.uuid4().hex[:6]}"
+    user = User(name=guest_name)
+    db.add(user)
+    db.commit()
+    db.refresh(user)
+    return {"user_id": user.user_id, "name": user.name}
+
 @router.post("/chat")
 def chat(req: ChatRequest, db: Session = Depends(get_db)):
     """Primary copilot chat endpoint returning structured JSON with citations."""
@@ -85,19 +96,20 @@ async def upload_document(
     user_id: int = Form(1),
     db: Session = Depends(get_db)
 ):
-    """Uploads and ingests a PDF document idempotently."""
+    """Uploads and ingests a PDF document idempotently per user."""
     content = await file.read()
-    c_hash = compute_content_hash(content)
+    c_hash = hashlib.sha256(content + f":user_{user_id}".encode()).hexdigest()
 
-    existing = db.query(Document).filter_by(content_hash=c_hash).first()
+    existing = db.query(Document).filter_by(content_hash=c_hash, user_id=user_id).first()
     if existing:
-        return {"message": "Document already ingested.", "doc_id": existing.doc_id, "status": "duplicate"}
+        return {"message": "Document already ingested for this session.", "doc_id": existing.doc_id, "status": "duplicate"}
 
     # Save to disk
     upload_dir = os.path.join("data", "documents")
     os.makedirs(upload_dir, exist_ok=True)
-    pdf_path = os.path.join(upload_dir, file.filename)
+    pdf_path = os.path.join(upload_dir, f"{user_id}_{file.filename}")
     with open(pdf_path, "wb") as f:
+        f.write(content)
         f.write(content)
 
     # Database Document Record
@@ -160,10 +172,21 @@ SYSTEM_DOCS = {
 
 @router.get("/documents")
 def list_documents(user_id: int = 1, db: Session = Depends(get_db)):
-    """Lists all stored documents with chunk statistics and protection flags."""
-    docs = db.query(Document).filter_by(user_id=user_id).all()
+    """Lists all stored documents for user plus the shared baseline demo fixtures."""
+    # 1. User's private documents
+    user_docs = db.query(Document).filter_by(user_id=user_id).all()
+    
+    # 2. Shared baseline demo fixtures (seeded under user 1)
+    system_docs = []
+    if user_id != 1:
+        system_docs = db.query(Document).filter(
+            Document.user_id == 1,
+            Document.filename.in_(SYSTEM_DOCS)
+        ).all()
+
+    all_docs = user_docs + system_docs
     results = []
-    for d in docs:
+    for d in all_docs:
         c_count = db.query(Chunk).filter_by(doc_id=d.doc_id).count()
         results.append({
             "doc_id": d.doc_id,
@@ -173,10 +196,10 @@ def list_documents(user_id: int = 1, db: Session = Depends(get_db)):
             "chunk_count": c_count,
             "is_system": d.filename.lower() in SYSTEM_DOCS
         })
-    return {"documents": results}
+    return {"documents": results, "active_user_id": user_id}
 
 @router.delete("/documents/{doc_id}")
-def delete_document(doc_id: int, db: Session = Depends(get_db)):
+def delete_document(doc_id: int, user_id: int = 1, db: Session = Depends(get_db)):
     """Deletes a document along with all its chunks, protecting baseline demo files."""
     doc = db.query(Document).filter_by(doc_id=doc_id).first()
     if not doc:
@@ -201,7 +224,7 @@ def ingest_transactions(req: IngestTransactionsRequest, db: Session = Depends(ge
 
 @router.get("/summary")
 def get_financial_summary(user_id: int = 1, db: Session = Depends(get_db)):
-    """Provides high-level financial dashboard statistics."""
+    """Provides high-level financial dashboard statistics with demo fallback."""
     # 1. Spending by category for current month
     spending = db.query(
         Category.name, 
@@ -236,6 +259,25 @@ def get_financial_summary(user_id: int = 1, db: Session = Depends(get_db)):
     bills = db.query(Bill).filter_by(user_id=user_id).all()
     bill_summary = [
         {
+            "bill_id": b.bill_id,
+            "name": b.name,
+            "amount": float(b.amount),
+            "due_date": b.due_date.isoformat(),
+            "status": b.status
+        }
+        for b in bills
+    ]
+
+    # If new guest has no transactions, fall back to demo user 1 statistics so charts showcase capabilities
+    if not category_summary and not budget_summary and not bill_summary and user_id != 1:
+        return get_financial_summary(user_id=1, db=db)
+
+    return {
+        "current_month": "2026-11",
+        "category_spending": category_summary,
+        "budgets": budget_summary,
+        "bills": bill_summary
+    }
             "bill_id": b.bill_id,
             "name": b.name,
             "amount": float(b.amount),
