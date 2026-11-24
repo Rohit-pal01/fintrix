@@ -48,19 +48,19 @@ CRITICAL RULES:
    - If the user explicitly specifies a year, filter by both: EXTRACT(MONTH FROM txn_date) = 5 AND EXTRACT(YEAR FROM txn_date) = 2018.
    - For relative phrases without a month name like "this month" or "last month", reference CURRENT DATE: 2026-11-24 (e.g. txn_date >= '2026-11-01' AND txn_date <= '2026-11-30').
 4. Only return valid single SELECT queries. No comments, no writes.
-5. For affordability, purchase feasibility, or available balance inquiries (e.g. "Can I buy a car of 10 lakh?", "Can I afford X?", "What is my balance?", "Do I have enough money?"):
-   Query the net available balance across verified ledger transactions:
-   SELECT COALESCE(SUM(CASE WHEN direction = 'credit' THEN amount ELSE -amount END), 0) AS available_balance FROM transactions WHERE user_id = {user_id};
+5. For affordability, purchase feasibility, or available balance inquiries (e.g. "Can I buy a car of 10 lakh?", "Can I afford X?", "What is my balance?", "Do I have enough money?", "what is my current balance"):
+   Query the true net available balance by adding account opening balance to ledger transactions:
+   SELECT (COALESCE((SELECT opening_balance FROM accounts WHERE user_id = {user_id} LIMIT 1), 0) + COALESCE((SELECT SUM(CASE WHEN direction = 'credit' THEN amount ELSE -amount END) FROM transactions WHERE user_id = {user_id}), 0)) AS available_balance;
 """
 
 FEW_SHOT_EXAMPLES = [
     {
         "question": "I want to purchase a car which cost 10 lakh rupee can I buy it tomorrow?",
-        "sql": "SELECT COALESCE(SUM(CASE WHEN direction = 'credit' THEN amount ELSE -amount END), 0) AS available_balance FROM transactions WHERE user_id = {user_id};"
+        "sql": "SELECT (COALESCE((SELECT opening_balance FROM accounts WHERE user_id = {user_id} LIMIT 1), 0) + COALESCE((SELECT SUM(CASE WHEN direction = 'credit' THEN amount ELSE -amount END) FROM transactions WHERE user_id = {user_id}), 0)) AS available_balance;"
     },
     {
         "question": "What is my current account balance?",
-        "sql": "SELECT COALESCE(SUM(CASE WHEN direction = 'credit' THEN amount ELSE -amount END), 0) AS available_balance FROM transactions WHERE user_id = {user_id};"
+        "sql": "SELECT (COALESCE((SELECT opening_balance FROM accounts WHERE user_id = {user_id} LIMIT 1), 0) + COALESCE((SELECT SUM(CASE WHEN direction = 'credit' THEN amount ELSE -amount END) FROM transactions WHERE user_id = {user_id}), 0)) AS available_balance;"
     },
     {
         "question": "How much did I spend on food last month?",
