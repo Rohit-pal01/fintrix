@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verifiable Finance Copilot</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+    body { font-family: 'Inter', sans-serif; }
+    code, pre { font-family: 'JetBrains Mono', monospace; }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col">
+
+  <!-- Top Navigation Bar -->
+  <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-50 px-6 py-3 flex items-center justify-between">
+    <div class="flex items-center space-x-3">
+      <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-emerald-500 to-cyan-500 flex items-center justify-center font-bold text-slate-950 text-lg shadow-lg shadow-emerald-500/20">
+        <i class="fa-solid fa-shield-halved"></i>
+      </div>
+      <div>
+        <h1 class="text-base font-bold bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">Fintrix Finance Copilot</h1>
+        <p class="text-xs text-slate-400">Verifiable SQL + RAG Agent with Built-in Evals</p>
+      </div>
+    </div>
+    
+    <!-- Navigation Tabs -->
+    <nav class="flex items-center space-x-1 bg-slate-800/60 p-1 rounded-xl border border-slate-700/50">
+      <button onclick="switchTab('chat')" id="tab-btn-chat" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold text-white bg-slate-700 shadow-sm transition">
+        <i class="fa-solid fa-comments mr-1.5"></i> Copilot Chat
+      </button>
+      <button onclick="switchTab('summary')" id="tab-btn-summary" class="px-3.5 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition">
+        <i class="fa-solid fa-chart-pie mr-1.5"></i> Financial Summary
+      </button>
+      <button onclick="switchTab('documents')" id="tab-btn-documents" class="px-3.5 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition">
+        <i class="fa-solid fa-folder-open mr-1.5"></i> Document Vault
+      </button>
+      <button onclick="switchTab('traces')" id="tab-btn-traces" class="px-3.5 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition">
+        <i class="fa-solid fa-network-wired mr-1.5"></i> Trace Inspector
+      </button>
+      <button onclick="switchTab('evals')" id="tab-btn-evals" class="px-3.5 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition">
+        <i class="fa-solid fa-trophy mr-1.5"></i> Evaluation Benchmark
+      </button>
+    </nav>
+  </header>
+
+  <!-- Main Content Area -->
+  <main class="flex-1 max-w-7xl w-full mx-auto p-6 flex flex-col">
+
+    <!-- 1. CHAT TAB -->
+    <div id="tab-chat" class="flex-1 flex flex-col space-y-4">
+      <!-- Quick Prompts -->
+      <div class="flex items-center space-x-2 overflow-x-auto pb-2 text-xs">
+        <span class="text-slate-400 uppercase font-semibold text-[10px] tracking-wider">Try:</span>
+        <button onclick="sendQuickPrompt('How much did I spend on food last month?')" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1 rounded-full border border-slate-700 transition">
+          📊 Food spend last month (SQL)
+        </button>
+        <button onclick="sendQuickPrompt('What is the prepayment penalty on my floating rate home loan?')" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1 rounded-full border border-slate-700 transition">
+          📄 Prepayment terms (RAG)
+        </button>
+        <button onclick="sendQuickPrompt('What is my total spending by category this month?')" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1 rounded-full border border-slate-700 transition">
+          📈 Category breakdown (SQL)
+        </button>
+        <button onclick="sendQuickPrompt('What is the room rent limit per day for normal hospitalization?')" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1 rounded-full border border-slate-700 transition">
+          🏥 Health insurance limits (RAG)
+        </button>
+        <button onclick="sendQuickPrompt('Based on my current savings, can I afford to prepay my home loan given the 2% fee?')" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1 rounded-full border border-slate-700 transition">
+          ⚡ Savings vs Loan Prepayment (Both)
+        </button>
+      </div>
+
+      <!-- Chat History Container -->
+      <div id="chat-messages" class="flex-1 bg-slate-900/50 border border-slate-800 rounded-2xl p-6 overflow-y-auto space-y-4 min-h-[460px] max-h-[560px]">
+        <!-- Welcome Message -->
+        <div class="flex items-start space-x-3 max-w-3xl">
+          <div class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center flex-shrink-0 text-sm border border-emerald-500/30">
+            <i class="fa-solid fa-robot"></i>
+          </div>
+          <div class="bg-slate-800/80 border border-slate-700/60 rounded-2xl rounded-tl-sm p-4 text-sm space-y-2">
+            <p class="font-medium text-slate-200">Hello! I am your <strong>Verifiable Finance Copilot</strong>.</p>
+            <p class="text-slate-300 leading-relaxed">
+              Every numerical claim is backed by executed SQL, and every policy term is cited directly to your PDF documents. Ask me anything about your spending, budgets, bills, or loan/insurance terms.
+            </p>
+            <div class="text-[11px] text-slate-400 italic pt-1 border-t border-slate-700/40">
+              Disclaimer: This is informational and not financial advice.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chat Input Form -->
+      <form id="chat-form" onsubmit="handleChatSubmit(event)" class="relative flex items-center">
+        <input 
+          id="chat-input" 
+          type="text" 
+          placeholder="Ask a question about your finances or documents..." 
+          class="w-full bg-slate-900 border border-slate-700 rounded-2xl pl-5 pr-28 py-3.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition"
+        />
+        <button 
+          type="submit" 
+          id="send-btn"
+          class="absolute right-2 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-slate-950 font-semibold px-4 py-2 rounded-xl text-xs flex items-center space-x-1.5 shadow transition"
+        >
+          <span>Ask</span>
+          <i class="fa-solid fa-arrow-right text-[10px]"></i>
+        </button>
+      </form>
+    </div>
+
+    <!-- 2. FINANCIAL SUMMARY TAB -->
+    <div id="tab-summary" class="hidden space-y-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-xl font-bold text-white">Monthly Financial Overview</h2>
+          <p class="text-xs text-slate-400">Current Billing Period: November 2026</p>
+        </div>
+        <button onclick="loadFinancialSummary()" class="text-xs bg-slate-800 hover:bg-slate-700 px-3 py-1.5 rounded-lg border border-slate-700">
+          <i class="fa-solid fa-rotate-right mr-1"></i> Refresh
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Budgets vs Actual -->
+        <div class="md:col-span-2 bg-slate-900/60 border border-slate-800 rounded-2xl p-5 space-y-4">
+          <h3 class="text-sm font-semibold text-slate-200 flex items-center">
+            <i class="fa-solid fa-bullseye text-emerald-400 mr-2"></i> Budget vs Actual Spending
+          </h3>
+          <div id="budget-bars" class="space-y-4 pt-2">
+            <!-- Dynamic Budget Progress Bars -->
+          </div>
+        </div>
+
+        <!-- Upcoming Bills -->
+        <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-5 space-y-4">
+          <h3 class="text-sm font-semibold text-slate-200 flex items-center">
+            <i class="fa-solid fa-receipt text-cyan-400 mr-2"></i> Upcoming & Overdue Bills
+          </h3>
+          <div id="bills-list" class="space-y-2.5">
+            <!-- Dynamic Bills List -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Category Spending Breakdown -->
+      <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-5 space-y-4">
+        <h3 class="text-sm font-semibold text-slate-200 flex items-center">
+          <i class="fa-solid fa-layer-group text-purple-400 mr-2"></i> Spending by Category
+        </h3>
+        <div id="category-chips" class="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <!-- Dynamic Category Chips -->
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. DOCUMENT VAULT TAB -->
+    <div id="tab-documents" class="hidden space-y-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-xl font-bold text-white">Document Vault (RAG Corpus)</h2>
+          <p class="text-xs text-slate-400">Indexed financial PDF policies, statements, and loan agreements.</p>
+        </div>
+        <label class="cursor-pointer bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold px-4 py-2 rounded-xl text-xs flex items-center space-x-2 transition shadow">
+          <i class="fa-solid fa-cloud-arrow-up"></i>
+          <span>Upload PDF Document</span>
+          <input type="file" id="pdf-upload-input" accept=".pdf" class="hidden" onchange="handleFileUpload(event)">
+        </label>
+      </div>
+
+      <div class="bg-slate-900/60 border border-slate-800 rounded-2xl overflow-hidden">
+        <table class="w-full text-left text-xs">
+          <thead class="bg-slate-800/60 text-slate-400 uppercase text-[10px] tracking-wider border-b border-slate-800">
+            <tr>
+              <th class="py-3 px-4">Filename</th>
+              <th class="py-3 px-4">Category</th>
+              <th class="py-3 px-4">Chunks Indexed</th>
+              <th class="py-3 px-4">Uploaded At</th>
+              <th class="py-3 px-4 text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="documents-table-body" class="divide-y divide-slate-800 text-slate-300">
+            <!-- Dynamic Document Rows -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 4. TRACES TAB -->
+    <div id="tab-traces" class="hidden space-y-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-xl font-bold text-white">Observability & Execution Traces</h2>
+          <p class="text-xs text-slate-400">Inspect tool routing, SQL execution logs, retrieved chunks, and latency.</p>
+        </div>
+      </div>
+      <div id="latest-trace-container" class="bg-slate-900/60 border border-slate-800 rounded-2xl p-5 space-y-4">
+        <p class="text-xs text-slate-500">Ask a question in the chat tab to generate and inspect live execution traces.</p>
+      </div>
+    </div>
+
+    <!-- 5. EVALUATION BENCHMARK TAB -->
+    <div id="tab-evals" class="hidden space-y-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-xl font-bold text-white">Evaluation & Benchmark Framework</h2>
+          <p class="text-xs text-slate-400">Section 10 test suites: SQL execution accuracy, retrieval ablations, and routing.</p>
+        </div>
+        <button onclick="runLiveEvaluation()" id="btn-run-eval" class="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-bold px-4 py-2 rounded-xl text-xs flex items-center space-x-2 transition shadow">
+          <i class="fa-solid fa-play"></i>
+          <span>Run Evaluation Suites</span>
+        </button>
+      </div>
+
+      <!-- Benchmark Cards Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-4">
+          <div class="text-[11px] text-slate-400 uppercase font-semibold">SQL Execution Accuracy</div>
+          <div class="text-2xl font-bold text-emerald-400 mt-1" id="eval-sql-acc">100.0%</div>
+          <div class="text-[10px] text-slate-500 mt-1">Target: &ge; 85% (60 Cases)</div>
+        </div>
+        <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-4">
+          <div class="text-[11px] text-slate-400 uppercase font-semibold">Retrieval Hit Rate@5</div>
+          <div class="text-2xl font-bold text-cyan-400 mt-1" id="eval-ret-hr5">98.0%</div>
+          <div class="text-[10px] text-slate-500 mt-1">Target: &ge; 85% (50 Questions)</div>
+        </div>
+        <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-4">
+          <div class="text-[11px] text-slate-400 uppercase font-semibold">Routing Accuracy</div>
+          <div class="text-2xl font-bold text-indigo-400 mt-1" id="eval-routing-acc">100.0%</div>
+          <div class="text-[10px] text-slate-500 mt-1">Target: &ge; 90% (30 Cases)</div>
+        </div>
+        <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-4">
+          <div class="text-[11px] text-slate-400 uppercase font-semibold">SQL vs RAG Aggregation Delta</div>
+          <div class="text-2xl font-bold text-purple-400 mt-1">+100.0%</div>
+          <div class="text-[10px] text-slate-500 mt-1">Target: &ge; +30.0%</div>
+        </div>
+      </div>
+
+      <!-- Ablation Table -->
+      <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-5 space-y-4">
+        <h3 class="text-sm font-semibold text-slate-200">Ablation Comparison Across Configurations</h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-slate-800/60 text-slate-400 uppercase text-[10px] tracking-wider border-b border-slate-800">
+              <tr>
+                <th class="py-2.5 px-3">Configuration</th>
+                <th class="py-2.5 px-3">Hit Rate@1</th>
+                <th class="py-2.5 px-3">Hit Rate@5</th>
+                <th class="py-2.5 px-3">MRR</th>
+                <th class="py-2.5 px-3">Description</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-800 text-slate-300">
+              <tr>
+                <td class="py-2.5 px-3 font-semibold text-slate-200">vector_only</td>
+                <td class="py-2.5 px-3">54.0%</td>
+                <td class="py-2.5 px-3">78.0%</td>
+                <td class="py-2.5 px-3">0.6257</td>
+                <td class="py-2.5 px-3 text-slate-400">Cosine dense similarity only</td>
+              </tr>
+              <tr>
+                <td class="py-2.5 px-3 font-semibold text-slate-200">keyword_only</td>
+                <td class="py-2.5 px-3">90.0%</td>
+                <td class="py-2.5 px-3">98.0%</td>
+                <td class="py-2.5 px-3">0.9367</td>
+                <td class="py-2.5 px-3 text-slate-400">BM25 exact token matching</td>
+              </tr>
+              <tr>
+                <td class="py-2.5 px-3 font-semibold text-slate-200">hybrid</td>
+                <td class="py-2.5 px-3">72.0%</td>
+                <td class="py-2.5 px-3">98.0%</td>
+                <td class="py-2.5 px-3">0.7997</td>
+                <td class="py-2.5 px-3 text-slate-400">Reciprocal Rank Fusion (RRF)</td>
+              </tr>
+              <tr class="bg-emerald-500/10 text-emerald-300 font-semibold">
+                <td class="py-2.5 px-3">hybrid_rerank</td>
+                <td class="py-2.5 px-3">86.0%</td>
+                <td class="py-2.5 px-3">98.0%</td>
+                <td class="py-2.5 px-3">0.9033</td>
+                <td class="py-2.5 px-3">Full Cross-Encoder Reranker (Production)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    let activeTrace = null;
+
+    function switchTab(tabId) {
+      const tabs = ['chat', 'summary', 'documents', 'traces', 'evals'];
+      tabs.forEach(t => {
+        document.getElementById(`tab-${t}`).classList.add('hidden');
+        const btn = document.getElementById(`tab-btn-${t}`);
+        btn.classList.remove('text-white', 'bg-slate-700', 'shadow-sm');
+        btn.classList.add('text-slate-400');
+      });
+
+      document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+      const activeBtn = document.getElementById(`tab-btn-${tabId}`);
+      activeBtn.classList.remove('text-slate-400');
+      activeBtn.classList.add('text-white', 'bg-slate-700', 'shadow-sm');
+
+      if (tabId === 'summary') loadFinancialSummary();
+      if (tabId === 'documents') loadDocumentsList();
+    }
+
+    function sendQuickPrompt(promptText) {
+      document.getElementById('chat-input').value = promptText;
+      document.getElementById('chat-form').dispatchEvent(new Event('submit'));
+    }
+
+    async function handleChatSubmit(e) {
+      e.preventDefault();
+      const input = document.getElementById('chat-input');
+      const q = input.value.trim();
+      if (!q) return;
+
+      input.value = '';
+      appendUserMessage(q);
+
+      try {
+        const res = await fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ question: q, user_id: 1 })
+        });
+        const data = await res.json();
+        activeTrace = data;
+        appendBotMessage(data);
+        renderTraceInspector(data);
+      } catch (err) {
+        appendErrorMessage("Failed to receive response from backend copilot.");
+      }
+    }
+
+    function appendUserMessage(text) {
+      const box = document.getElementById('chat-messages');
+      const div = document.createElement('div');
+      div.className = "flex items-start justify-end space-x-3";
+      div.innerHTML = `
+        <div class="bg-emerald-600 text-white rounded-2xl rounded-tr-sm px-4 py-2.5 text-sm max-w-xl shadow">
+          ${text}
+        </div>
+      `;
+      box.appendChild(div);
+      box.scrollTop = box.scrollHeight;
+    }
+
+    function appendBotMessage(data) {
+      const box = document.getElementById('chat-messages');
+      const div = document.createElement('div');
+      div.className = "flex items-start space-x-3 max-w-3xl";
+
+      const ans = data.final_answer || {};
+      const answerText = ans.answer || "No response generated.";
+      const numbers = ans.numbers || [];
+      const citations = ans.citations || [];
+      const traceId = data.trace_id;
+
+      let citationsHtml = '';
+      if (citations.length > 0) {
+        citationsHtml = `
+          <div class="pt-2 border-t border-slate-700/50 space-y-2">
+            <div class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider flex items-center">
+              <i class="fa-solid fa-link mr-1"></i> Grounded Citations (${citations.length})
+            </div>
+            <div class="space-y-1.5">
+              ${citations.map((c, idx) => {
+                if (c.type === 'sql') {
+                  return `
+                    <details class="bg-slate-900/80 border border-slate-700/60 rounded-xl p-2.5 text-xs">
+                      <summary class="cursor-pointer font-medium text-emerald-400 flex items-center justify-between">
+                        <span><i class="fa-solid fa-database mr-1.5"></i> SQL Query (${c.tables.join(', ')}) &bull; ${c.rows} row(s)</span>
+                        <span class="text-[10px] text-slate-500">View Query</span>
+                      </summary>
+                      <pre class="mt-2 p-2 bg-slate-950 rounded text-slate-300 overflow-x-auto text-[11px]">${c.query}</pre>
+                    </details>
+                  `;
+                } else {
+                  return `
+                    <details class="bg-slate-900/80 border border-slate-700/60 rounded-xl p-2.5 text-xs">
+                      <summary class="cursor-pointer font-medium text-cyan-400 flex items-center justify-between">
+                        <span><i class="fa-solid fa-file-lines mr-1.5"></i> ${c.doc} (Page ${c.page}) &bull; ${c.section}</span>
+                        <span class="text-[10px] text-slate-500">View Snippet</span>
+                      </summary>
+                      <p class="mt-2 p-2 bg-slate-950 rounded text-slate-300 italic text-[11px] leading-relaxed">"${c.snippet}"</p>
+                    </details>
+                  `;
+                }
+              }).join('')}
+            </div>
+          </div>
+        `;
+      }
+
+      let badgesHtml = '';
+      if (numbers.length > 0) {
+        badgesHtml = `
+          <div class="flex flex-wrap gap-1.5 pt-1">
+            ${numbers.map(n => `
+              <span class="bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-[10px] px-2 py-0.5 rounded-md font-mono">
+                ${n.label}: ₹${Number(n.value).toLocaleString('en-IN')}
+              </span>
+            `).join('')}
+          </div>
+        `;
+      }
+
+      div.innerHTML = `
+        <div class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center flex-shrink-0 text-sm border border-emerald-500/30">
+          <i class="fa-solid fa-shield-halved"></i>
+        </div>
+        <div class="bg-slate-800/80 border border-slate-700/60 rounded-2xl rounded-tl-sm p-4 text-sm space-y-3">
+          <div class="flex items-center justify-between text-[11px] text-slate-400 pb-1 border-b border-slate-700/40">
+            <span class="font-medium text-slate-300">Route: <strong class="text-emerald-400 uppercase">${data.route}</strong></span>
+            <span>Latency: ${data.latency_ms}ms</span>
+          </div>
+
+          <p class="text-slate-200 leading-relaxed">${answerText}</p>
+          ${badgesHtml}
+          ${citationsHtml}
+
+          <!-- Feedback & Disclaimer -->
+          <div class="flex items-center justify-between pt-1 border-t border-slate-700/40 text-[11px]">
+            <span class="text-slate-500 italic">${ans.disclaimer || "Not financial advice."}</span>
+            <div class="flex items-center space-x-2 text-slate-400">
+              <span>Helpful?</span>
+              <button onclick="submitFeedback('${traceId}', 'up')" class="hover:text-emerald-400 transition"><i class="fa-regular fa-thumbs-up"></i></button>
+              <button onclick="submitFeedback('${traceId}', 'down')" class="hover:text-rose-400 transition"><i class="fa-regular fa-thumbs-down"></i></button>
+            </div>
+          </div>
+        </div>
+      `;
+      box.appendChild(div);
+      box.scrollTop = box.scrollHeight;
+    }
+
+    function appendErrorMessage(msg) {
+      const box = document.getElementById('chat-messages');
+      const div = document.createElement('div');
+      div.className = "p-3 bg-rose-500/10 border border-rose-500/30 text-rose-300 rounded-xl text-xs";
+      div.innerText = msg;
+      box.appendChild(div);
+    }
+
+    async function submitFeedback(traceId, rating) {
+      let correction = null;
+      if (rating === 'down') {
+        correction = prompt("How can this answer be improved? (Will be saved as gold eval case):");
+      }
+      try {
+        await fetch('/api/feedback', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ trace_id: traceId, rating: rating, correction: correction })
+        });
+        alert("Thank you! Feedback recorded.");
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    async function loadFinancialSummary() {
+      try {
+        const res = await fetch('/api/summary?user_id=1');
+        const data = await res.json();
+
+        // Render Budgets
+        const bContainer = document.getElementById('budget-bars');
+        bContainer.innerHTML = '';
+        data.budgets.forEach(b => {
+          const pct = Math.min(100, Math.round((b.spent / b.limit) * 100));
+          const colorClass = pct > 90 ? 'bg-rose-500' : (pct > 75 ? 'bg-amber-500' : 'bg-emerald-500');
+          bContainer.innerHTML += `
+            <div>
+              <div class="flex justify-between text-xs font-medium mb-1">
+                <span class="text-slate-200 capitalize">${b.category}</span>
+                <span class="text-slate-400">₹${b.spent.toLocaleString()} / ₹${b.limit.toLocaleString()} (${pct}%)</span>
+              </div>
+              <div class="w-full bg-slate-800 rounded-full h-2 overflow-hidden">
+                <div class="${colorClass} h-2 rounded-full" style="width: ${pct}%"></div>
+              </div>
+            </div>
+          `;
+        });
+
+        // Render Bills
+        const billsContainer = document.getElementById('bills-list');
+        billsContainer.innerHTML = '';
+        data.bills.forEach(bill => {
+          const isOverdue = bill.status === 'overdue';
+          const isPaid = bill.status === 'paid';
+          const statusBg = isOverdue ? 'bg-rose-500/20 text-rose-400' : (isPaid ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400');
+          billsContainer.innerHTML += `
+            <div class="flex items-center justify-between p-2.5 bg-slate-800/40 rounded-xl border border-slate-700/40 text-xs">
+              <div>
+                <div class="font-medium text-slate-200">${bill.name}</div>
+                <div class="text-[10px] text-slate-500">Due: ${bill.due_date}</div>
+              </div>
+              <div class="text-right">
+                <div class="font-semibold text-slate-100">₹${bill.amount.toLocaleString()}</div>
+                <span class="text-[9px] uppercase px-1.5 py-0.5 rounded font-semibold ${statusBg}">${bill.status}</span>
+              </div>
+            </div>
+          `;
+        });
+
+        // Render Category Chips
+        const catContainer = document.getElementById('category-chips');
+        catContainer.innerHTML = '';
+        for (const [cat, amt] of Object.entries(data.category_spending)) {
+          catContainer.innerHTML += `
+            <div class="p-3 bg-slate-800/40 rounded-xl border border-slate-700/40">
+              <div class="text-[11px] text-slate-400 capitalize">${cat}</div>
+              <div class="text-base font-bold text-slate-100 mt-1">₹${amt.toLocaleString()}</div>
+            </div>
+          `;
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    async function loadDocumentsList() {
+      try {
+        const res = await fetch('/api/documents?user_id=1');
+        const data = await res.json();
+        const tbody = document.getElementById('documents-table-body');
+        tbody.innerHTML = '';
+        data.documents.forEach(doc => {
+          tbody.innerHTML += `
+            <tr class="hover:bg-slate-800/30">
+              <td class="py-3 px-4 font-medium text-white flex items-center">
+                <i class="fa-regular fa-file-pdf text-rose-400 mr-2"></i> ${doc.filename}
+              </td>
+              <td class="py-3 px-4 capitalize text-slate-400">${doc.doc_type}</td>
+              <td class="py-3 px-4 font-mono text-emerald-400">${doc.chunk_count} chunks</td>
+              <td class="py-3 px-4 text-slate-500 text-[11px]">${doc.uploaded_at ? doc.uploaded_at.split('T')[0] : 'N/A'}</td>
+              <td class="py-3 px-4 text-right">
+                <button onclick="deleteDoc(${doc.doc_id})" class="text-slate-500 hover:text-rose-400 text-xs transition">
+                  <i class="fa-solid fa-trash"></i>
+                </button>
+              </td>
+            </tr>
+          `;
+        });
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    async function handleFileUpload(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const fd = new FormData();
+      fd.append('file', file);
+      fd.append('doc_type', 'statement');
+      fd.append('user_id', '1');
+
+      try {
+        const res = await fetch('/api/documents', {
+          method: 'POST',
+          body: fd
+        });
+        const data = await res.json();
+        alert(data.message);
+        loadDocumentsList();
+      } catch (err) {
+        alert("Upload failed.");
+      }
+    }
+
+    async function deleteDoc(docId) {
+      if (!confirm("Are you sure you want to delete this document and its chunks?")) return;
+      try {
+        await fetch(`/api/documents/${docId}`, { method: 'DELETE' });
+        loadDocumentsList();
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    function renderTraceInspector(data) {
+      const c = document.getElementById('latest-trace-container');
+      c.innerHTML = `
+        <div class="flex justify-between items-center pb-2 border-b border-slate-700">
+          <div>
+            <span class="text-xs text-slate-400 font-mono">Trace ID: ${data.trace_id}</span>
+            <span class="ml-3 px-2 py-0.5 rounded text-[10px] uppercase font-bold bg-emerald-500/20 text-emerald-400">${data.route}</span>
+          </div>
+          <span class="text-xs text-slate-400 font-mono">${data.latency_ms} ms</span>
+        </div>
+        <pre class="bg-slate-950 p-4 rounded-xl text-xs text-slate-300 font-mono overflow-x-auto max-h-96">${JSON.stringify(data, null, 2)}</pre>
+      `;
+    }
+
+    async function runLiveEvaluation() {
+      const btn = document.getElementById('btn-run-eval');
+      btn.disabled = true;
+      btn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i><span>Running Benchmarks...</span>`;
+
+      try {
+        const res = await fetch('/api/eval/run?config_name=hybrid_rerank', { method: 'POST' });
+        const data = await res.json();
+        const m = data.metrics;
+        document.getElementById('eval-sql-acc').innerText = `${m.sql.execution_accuracy_pct}%`;
+        document.getElementById('eval-ret-hr5').innerText = `${m.retrieval.hit_rate_at_5}%`;
+        document.getElementById('eval-routing-acc').innerText = `${m.routing.accuracy_pct}%`;
+        alert("Evaluation benchmark run completed! Results updated.");
+      } catch (err) {
+        alert("Evaluation run failed.");
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = `<i class="fa-solid fa-play"></i><span>Run Evaluation Suites</span>`;
+      }
+    }
+  </script>
+</body>
+</html>

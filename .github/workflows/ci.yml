@@ -1,0 +1,54 @@
+name: CI Regression & Evaluation Suite
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python 3.12
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.12"
+
+    - name: Install Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Generate Synthetic Financial Data & PDF Corpus
+      run: |
+        python scripts/generate_data.py
+        python scripts/generate_sample_documents.py
+
+    - name: Run SQL Validator Safety Unit Tests
+      run: |
+        pytest -v tests/test_sql_validator.py
+
+    - name: Run Phase 1 SQL Execution Accuracy Benchmark (Threshold >= 85%)
+      run: |
+        pytest -s tests/test_sql_eval.py
+
+    - name: Run Phase 2 Retrieval Ablations Benchmark (Threshold >= 85% Hit Rate@5)
+      run: |
+        pytest -s tests/test_retrieval_eval.py
+
+    - name: Run Phase 3 Agent Routing & RAG vs SQL Benchmark (Threshold >= 90% Routing)
+      run: |
+        pytest -s tests/test_agent_and_routing.py
+
+    - name: Run Phase 4 REST API & Ingestion Tests
+      run: |
+        pytest -v tests/test_api_endpoints.py
+
+    - name: Run Phase 5 Adversarial & Safety Suite (Threshold 100% Block Rate)
+      run: |
+        pytest -v tests/test_safety_suite.py

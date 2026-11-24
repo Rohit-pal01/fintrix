@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: fintrix-finance-copilot
+    env: python
+    region: oregon
+    plan: free
+    buildCommand: "pip install -r requirements.txt && python scripts/generate_data.py && python scripts/generate_sample_documents.py"
+    startCommand: "uvicorn app.main:app --host 0.0.0.0 --port $PORT"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.5
+      - key: ENVIRONMENT
+        value: production
+      - key: DATABASE_URL
+        sync: false
+        # Paste your Neon PostgreSQL URL in Render Dashboard
+      - key: GEMINI_API_KEY
+        sync: false
+        # Or OPENAI_API_KEY / GROQ_API_KEY
+      - key: LLM_PROVIDER
+        value: auto
