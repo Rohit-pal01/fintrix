@@ -57,7 +57,9 @@ def classify_and_plan_node(state: AgentState) -> AgentState:
     sql_indicators = [
         "spend", "spent", "spending", "food", "grocery", "groceries", "category", 
         "merchant", "salary", "income", "budget", "bill", "bills", "transaction",
-        "balance", "how much", "highest", "top 5", "top 3", "total", "cost"
+        "balance", "how much", "highest", "top 5", "top 3", "total", "cost",
+        "credit", "credited", "deposit", "deposited", "how many", "count", "frequency",
+        "times", "debit", "debited", "withdraw", "withdrawal", "transferred", "received", "inflow", "outflow"
     ]
     if any(k in q for k in sql_indicators):
         state.route = "sql"
@@ -70,7 +72,8 @@ def classify_and_plan_node(state: AgentState) -> AgentState:
         state.plan = ["documents", "compose"]
         return state
 
-    state.route = "documents"
+    # Default to SQL for general inquiries about accounts or finances
+    state.route = "sql"
     state.plan = ["sql", "compose"]
     return state
 
@@ -154,6 +157,9 @@ def compose_answer_node(state: AgentState) -> AgentState:
             elif "bill_id" in first_row:
                 bill_details = [f"{r.get('name')} (₹{r.get('amount', 0):,.2f} due {r.get('due_date')})" for r in rows]
                 answer_parts.append(f"You have {len(rows)} bills: {', '.join(bill_details)}.")
+            elif "transaction_count" in first_row:
+                cnt = first_row.get("transaction_count", 0)
+                answer_parts.append(f"Recorded {cnt} matching transaction(s) in your statement ledger.")
             else:
                 answer_parts.append(f"Retrieved {len(rows)} matching record(s) from your financial database.")
         else:
@@ -196,6 +202,8 @@ def compose_answer_node(state: AgentState) -> AgentState:
             # Enforce Indian Rupee symbol over accidental USD dollar signs
             if "$" in ai_narrative and "usd" not in state.question.lower() and "dollar" not in state.question.lower():
                 ai_narrative = re.sub(r'\$\s*(\d)', r'₹\1', ai_narrative)
+            # Strip ugly meta-citations like ((Source: Document Snippet 1))
+            ai_narrative = re.sub(r'\(+\s*Source:\s*[^)]+\)+', '', ai_narrative).strip()
             full_text = ai_narrative
 
     state.final_answer = {

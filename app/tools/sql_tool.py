@@ -102,7 +102,7 @@ def deterministic_text_to_sql(question: str, user_id: int) -> str:
         "october": 10, "oct": 10, "november": 11, "nov": 11, "december": 12, "dec": 12
     }
 
-    # Credit / deposit / credited in month (e.g. "total amount credited in may month")
+    # Credit / deposit / credited in month (e.g. "total amount credited in may month", "how many time amount credited in may")
     if any(k in q for k in ["credit", "deposit", "credited", "deposited", "received"]):
         target_m = None
         for m_name, m_num in month_names.items():
@@ -111,6 +111,17 @@ def deterministic_text_to_sql(question: str, user_id: int) -> str:
                 break
         year_match = re.search(r'\b(20\d\d)\b', q)
         year_clause = f"AND EXTRACT(YEAR FROM txn_date) = {year_match.group(1)} " if year_match else ""
+        is_count = any(k in q for k in ["how many", "count", "number of", "how often", "times", "frequency"])
+
+        if is_count:
+            if target_m:
+                return (f"SELECT COUNT(*) AS transaction_count "
+                        f"FROM transactions WHERE user_id = {user_id} AND direction = 'credit' "
+                        f"AND EXTRACT(MONTH FROM txn_date) = {target_m} {year_clause};")
+            else:
+                return (f"SELECT COUNT(*) AS transaction_count "
+                        f"FROM transactions WHERE user_id = {user_id} AND direction = 'credit';")
+
         if target_m:
             return (f"SELECT COALESCE(SUM(amount), 0) AS total_credited "
                     f"FROM transactions WHERE user_id = {user_id} AND direction = 'credit' "
@@ -119,7 +130,7 @@ def deterministic_text_to_sql(question: str, user_id: int) -> str:
             return (f"SELECT COALESCE(SUM(amount), 0) AS total_credited "
                     f"FROM transactions WHERE user_id = {user_id} AND direction = 'credit';")
 
-    # Debit / spend / spent / withdrawal in month (e.g. "total amount spent in may")
+    # Debit / spend / spent / withdrawal in month (e.g. "total amount spent in may", "how many times debited")
     if any(k in q for k in ["spent", "spend", "debit", "debited", "withdrawal", "withdrawn"]) and not any(k in q for k in ["food", "grocer", "category", "merchant"]):
         target_m = None
         for m_name, m_num in month_names.items():
@@ -128,6 +139,17 @@ def deterministic_text_to_sql(question: str, user_id: int) -> str:
                 break
         year_match = re.search(r'\b(20\d\d)\b', q)
         year_clause = f"AND EXTRACT(YEAR FROM txn_date) = {year_match.group(1)} " if year_match else ""
+        is_count = any(k in q for k in ["how many", "count", "number of", "how often", "times", "frequency"])
+
+        if is_count:
+            if target_m:
+                return (f"SELECT COUNT(*) AS transaction_count "
+                        f"FROM transactions WHERE user_id = {user_id} AND direction = 'debit' "
+                        f"AND EXTRACT(MONTH FROM txn_date) = {target_m} {year_clause};")
+            else:
+                return (f"SELECT COUNT(*) AS transaction_count "
+                        f"FROM transactions WHERE user_id = {user_id} AND direction = 'debit';")
+
         if target_m:
             return (f"SELECT COALESCE(SUM(amount), 0) AS total_spent "
                     f"FROM transactions WHERE user_id = {user_id} AND direction = 'debit' "

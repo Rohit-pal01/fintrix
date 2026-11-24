@@ -984,48 +984,42 @@
       let citationsHtml = '';
       if (citations.length > 0) {
         citationsHtml = `
-          <div class="pt-2 border-t border-cyan-500/20 space-y-2">
-            <div class="text-[10px] font-bold uppercase tracking-wider flex items-center text-[var(--text-main)]">
-              <i class="fa-solid fa-link mr-1 text-cyan-500"></i> Grounded Citations (${citations.length})
-            </div>
-            <div class="space-y-2">
-              ${citations.map((c, idx) => {
-                if (c.type === 'sql') {
-                  return `
-                    <div class="glass-subcard rounded-xl p-3 text-xs border border-cyan-500/20">
-                      <div class="flex items-center justify-between text-xs font-bold text-[var(--text-main)]">
-                        <span class="flex items-center gap-1.5"><i class="fa-solid fa-calculator text-cyan-500 dark:text-cyan-400"></i> Verified Numerical Computation</span>
-                        <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 font-mono font-bold">${c.rows} ledger row(s)</span>
-                      </div>
-                      <p class="text-[11px] text-[var(--text-sub)] mt-1 font-medium">Computed mathematically across relational tables: <span class="font-mono font-bold text-cyan-600 dark:text-cyan-300">${c.tables.join(', ')}</span> with zero arithmetic hallucination.</p>
-                      <details class="mt-2 text-xs group">
-                        <summary class="cursor-pointer font-bold text-cyan-700 dark:text-cyan-400 flex items-center justify-between p-2 rounded-lg bg-cyan-500/10 hover:bg-cyan-500/15 dark:bg-cyan-950/30 dark:hover:bg-cyan-950/50 border border-cyan-500/20 transition list-none">
-                          <span class="text-[10px] font-mono flex items-center gap-1.5">
-                            <i class="fa-solid fa-code text-cyan-600 dark:text-cyan-400"></i>
-                            <span>Technical SQL Query (Auditor Proof)</span>
-                          </span>
-                          <span class="text-[9px] font-mono px-2 py-0.5 rounded bg-cyan-500/15 text-cyan-800 dark:text-cyan-300 font-bold flex items-center gap-1">
-                            <span class="group-open:hidden">View Query <i class="fa-solid fa-chevron-down text-[8px] ml-0.5"></i></span>
-                            <span class="hidden group-open:inline">Hide Query <i class="fa-solid fa-chevron-up text-[8px] ml-0.5"></i></span>
-                          </span>
-                        </summary>
-                        <pre class="mt-2 p-2.5 bg-slate-100 dark:bg-black/50 rounded-lg text-slate-800 dark:text-cyan-200 overflow-x-auto text-[11px] font-mono border border-slate-200 dark:border-cyan-500/20">${c.query}</pre>
-                      </details>
-                    </div>
-                  `;
-                } else {
-                  return `
-                    <div class="glass-subcard rounded-xl p-3 text-xs border border-cyan-500/20">
-                      <div class="flex items-center justify-between text-xs font-bold text-[var(--text-main)]">
-                        <span class="flex items-center gap-1.5"><i class="fa-solid fa-file-lines text-cyan-500 dark:text-cyan-400"></i> ${c.doc} &bull; Page ${c.page}</span>
-                        <span class="text-[10px] px-2 py-0.5 rounded bg-cyan-500/15 text-cyan-600 dark:text-cyan-400 font-mono font-bold">${c.section}</span>
-                      </div>
-                      <p class="mt-1.5 p-2.5 bg-slate-100 dark:bg-slate-900/60 rounded-lg italic text-[11px] leading-relaxed font-medium text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-cyan-500/20">"${c.snippet}"</p>
-                    </div>
-                  `;
-                }
-              }).join('')}
-            </div>
+          <div class="pt-2 border-t border-cyan-500/15 space-y-2">
+            ${citations.map((c, idx) => {
+              if (c.type === 'sql') {
+                return `
+                  <details class="text-xs group">
+                    <summary class="cursor-pointer flex items-center justify-between px-3 py-2 rounded-xl bg-cyan-500/10 hover:bg-cyan-500/15 dark:bg-cyan-950/30 border border-cyan-500/20 transition list-none">
+                      <span class="flex items-center gap-1.5 text-[11px] font-semibold text-cyan-800 dark:text-cyan-300">
+                        <i class="fa-solid fa-calculator text-cyan-600 dark:text-cyan-400"></i>
+                        <span>Verified Database Calculation (${c.rows} row)</span>
+                      </span>
+                      <span class="text-[10px] font-mono text-cyan-700 dark:text-cyan-400 font-bold flex items-center gap-1">
+                        <span class="group-open:hidden">View SQL Query <i class="fa-solid fa-chevron-down text-[8px] ml-0.5"></i></span>
+                        <span class="hidden group-open:inline">Hide SQL Query <i class="fa-solid fa-chevron-up text-[8px] ml-0.5"></i></span>
+                      </span>
+                    </summary>
+                    <pre class="mt-2 p-2.5 bg-slate-100 dark:bg-black/60 rounded-xl text-slate-800 dark:text-cyan-200 overflow-x-auto text-[11px] font-mono border border-slate-200 dark:border-cyan-500/20">${c.query}</pre>
+                  </details>
+                `;
+              } else {
+                return `
+                  <details class="text-xs group">
+                    <summary class="cursor-pointer flex items-center justify-between px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200/60 dark:bg-slate-900/40 border border-slate-200 dark:border-cyan-500/20 transition list-none">
+                      <span class="flex items-center gap-1.5 text-[11px] font-semibold text-slate-700 dark:text-slate-300">
+                        <i class="fa-regular fa-file-pdf text-rose-500"></i>
+                        <span>${c.doc} &bull; Page ${c.page}</span>
+                      </span>
+                      <span class="text-[10px] font-mono text-slate-600 dark:text-slate-400 font-bold flex items-center gap-1">
+                        <span class="group-open:hidden">View Source Excerpt <i class="fa-solid fa-chevron-down text-[8px] ml-0.5"></i></span>
+                        <span class="hidden group-open:inline">Hide Excerpt <i class="fa-solid fa-chevron-up text-[8px] ml-0.5"></i></span>
+                      </span>
+                    </summary>
+                    <p class="mt-2 p-2.5 bg-slate-50 dark:bg-slate-900/60 rounded-xl italic text-[11px] leading-relaxed text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-cyan-500/20">"${c.snippet}"</p>
+                  </details>
+                `;
+              }
+            }).join('')}
           </div>
         `;
       }
@@ -1047,18 +1041,18 @@
         <div class="w-8 h-8 rounded-xl bg-cyan-600 text-white flex items-center justify-center flex-shrink-0 text-sm shadow">
           <i class="fa-solid fa-shield-halved"></i>
         </div>
-        <div class="glass-card rounded-2xl rounded-tl-sm p-4 text-xs space-y-3">
-          <div class="flex items-center justify-between text-[10px] pb-1 border-b border-cyan-500/20 font-bold text-[var(--text-muted)]">
-            <span>Route: <strong class="text-cyan-600 dark:text-cyan-300 uppercase">${data.route}</strong></span>
-            <span class="font-mono">Latency: ${data.latency_ms}ms</span>
-          </div>
-
+        <div class="glass-card rounded-2xl rounded-tl-sm p-4 text-xs space-y-2.5 shadow-sm">
           <p class="leading-relaxed text-sm font-semibold text-[var(--text-main)]">${answerText}</p>
           ${badgesHtml}
           ${citationsHtml}
 
-          <div class="flex items-center justify-between pt-1 border-t border-cyan-500/20 text-[10px] font-medium text-[var(--text-sub)]">
-            <span class="italic">${ans.disclaimer || "Not financial advice."}</span>
+          <div class="flex items-center justify-between pt-2 border-t border-cyan-500/15 text-[10px] font-medium text-[var(--text-sub)]">
+            <div class="flex items-center gap-2">
+              <span class="px-1.5 py-0.5 rounded bg-cyan-500/10 text-cyan-700 dark:text-cyan-300 font-mono font-bold uppercase text-[9px]">${data.route}</span>
+              <span class="font-mono opacity-70">${data.latency_ms}ms</span>
+              <span class="opacity-30">&bull;</span>
+              <span class="italic opacity-80">${ans.disclaimer || "Not financial advice."}</span>
+            </div>
             <div class="flex items-center space-x-2">
               <span>Helpful?</span>
               <button onclick="submitFeedback('${traceId}', 'up')" class="hover:text-emerald-500 transition"><i class="fa-regular fa-thumbs-up"></i></button>
