@@ -82,7 +82,17 @@ def init_session(db: Session = Depends(get_db)):
 def chat(req: ChatRequest, db: Session = Depends(get_db)):
     """Primary copilot chat endpoint returning structured JSON with citations."""
     agent = FinanceCopilotAgent(retriever=retriever_instance)
-    state = agent.run(question=req.question, user_id=req.user_id, db=db)
+    
+    # If a guest user has no uploaded documents or transactions (e.g. after deleting them),
+    # seamlessly fall back to demo baseline (user 1) so demo exploration works out-of-the-box.
+    effective_user_id = req.user_id
+    if effective_user_id != 1:
+        has_tx = db.query(Transaction.txn_id).filter_by(user_id=effective_user_id).first()
+        has_doc = db.query(Document.doc_id).filter_by(user_id=effective_user_id).first()
+        if not has_tx and not has_doc:
+            effective_user_id = 1
+
+    state = agent.run(question=req.question, user_id=effective_user_id, db=db)
     return {
         "trace_id": state.trace_id,
         "route": state.route,
@@ -210,7 +220,7 @@ def list_documents(user_id: int = 1, db: Session = Depends(get_db)):
 
 @router.delete("/documents/{doc_id}")
 def delete_document(doc_id: int, user_id: int = 1, db: Session = Depends(get_db)):
-    """Deletes a document along with all its chunks, protecting baseline demo files."""
+    """Deletes a document along with all its chunks and extracted transactions."""
     doc = db.query(Document).filter_by(doc_id=doc_id).first()
     if not doc:
         raise HTTPException(status_code=404, detail="Document not found.")
@@ -221,8 +231,19 @@ def delete_document(doc_id: int, user_id: int = 1, db: Session = Depends(get_db)
             detail="Default baseline system documents are protected and cannot be deleted."
         )
 
+    target_user_id = doc.user_id
     db.delete(doc)
     db.commit()
+
+    # If the user has no remaining uploaded documents, purge extracted transactions, accounts, and bills
+    # so their ledger cleanly resets back to demo baseline
+    remaining_docs = db.query(Document).filter(Document.user_id == target_user_id).count()
+    if remaining_docs == 0 and target_user_id != 1:
+        db.query(Transaction).filter(Transaction.user_id == target_user_id).delete()
+        db.query(Account).filter(Account.user_id == target_user_id).delete()
+        db.query(Bill).filter(Bill.user_id == target_user_id).delete()
+        db.commit()
+
     sync_retriever()
     return {"message": f"Document '{doc.filename}' deleted successfully."}
 
