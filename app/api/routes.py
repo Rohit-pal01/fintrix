@@ -278,21 +278,6 @@ def get_financial_summary(user_id: int = 1, db: Session = Depends(get_db)):
         "budgets": budget_summary,
         "bills": bill_summary
     }
-            "bill_id": b.bill_id,
-            "name": b.name,
-            "amount": float(b.amount),
-            "due_date": b.due_date.isoformat(),
-            "status": b.status
-        }
-        for b in bills
-    ]
-
-    return {
-        "current_month": "2026-11",
-        "category_spending": category_summary,
-        "budgets": budget_summary,
-        "bills": bill_summary
-    }
 
 @router.get("/traces/{trace_id}")
 def get_trace(trace_id: str, db: Session = Depends(get_db)):
