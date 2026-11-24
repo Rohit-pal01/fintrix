@@ -14,7 +14,7 @@ from app.db.models import (
 )
 from app.agent.graph import FinanceCopilotAgent
 from app.tools.doc_tool import DocumentRetriever
-from app.ingestion.pdf_parser import extract_text_from_pdf, compute_content_hash
+from app.ingestion.pdf_parser import extract_text_from_document, compute_content_hash
 from app.ingestion.chunker import chunk_document
 from app.ingestion.embedder import get_text_embedding
 from app.ingestion.transactions import ingest_transactions_csv
@@ -111,8 +111,8 @@ async def upload_document(
     db.add(doc)
     db.flush()
 
-    # Extract and Chunk
-    pages = extract_text_from_pdf(pdf_path)
+    # Extract and Chunk (Supports PDF, Word DOCX, Markdown MD, Text TXT)
+    pages = extract_text_from_document(pdf_path)
     chunks = chunk_document(pages)
 
     for ch in chunks:
