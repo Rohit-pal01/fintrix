@@ -147,11 +147,23 @@ def create_sample_pdf(output_path: str, title: str, pages_content: List[Dict[str
 
     def draw_page_header(p, is_first: bool):
         if is_first:
-            # Elegant header banner
-            p.draw_rect(fitz.Rect(40, 30, 555, 68), color=None, fill=(0.08, 0.16, 0.32))
-            p.insert_text(fitz.Point(52, 54), title, fontsize=11.5, fontname="helv", color=(1, 1, 1))
-            p.insert_text(fitz.Point(395, 54), "OFFICIAL FINANCIAL CONTRACT", fontsize=7.5, fontname="helv", color=(0.75, 0.85, 0.95))
-            return 82
+            # Elegant header banner with stacked non-overlapping title & subtitle
+            p.draw_rect(fitz.Rect(40, 30, 555, 76), color=None, fill=(0.08, 0.16, 0.32))
+            p.insert_textbox(
+                fitz.Rect(50, 36, 545, 56), 
+                title, 
+                fontsize=11, 
+                fontname="helv", 
+                color=(1, 1, 1)
+            )
+            p.insert_text(
+                fitz.Point(50, 68), 
+                "VERIFIED FINANCIAL DISCLOSURE RECORD - CONFIDENTIAL", 
+                fontsize=7, 
+                fontname="helv", 
+                color=(0.65, 0.8, 0.92)
+            )
+            return 92
         else:
             # Running header on continuation pages
             p.draw_line(fitz.Point(40, 35), fitz.Point(555, 35), color=(0.75, 0.80, 0.85), width=0.8)
