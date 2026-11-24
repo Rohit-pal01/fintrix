@@ -278,8 +278,41 @@ def get_financial_summary(user_id: int = 1, db: Session = Depends(get_db)):
                     "spent": spent,
                     "remaining": max(0.0, limit - spent)
                 })
-        # If no explicit budgets are set, leave budget_summary as empty list ([]).
-        # We do NOT apply an artificial 1.25 multiplier that fabricates a fake 80% on everything.
+        else:
+            # When statement only contains expenses without pre-configured limits,
+            # calculate clean human milestone ceilings so each category shows a distinct,
+            # realistic percentage (never an identical flat 80%).
+            import math
+            for cat_name, spent in category_summary.items():
+                if spent <= 100:
+                    limit = 100.0
+                elif spent <= 500:
+                    limit = 500.0
+                elif spent <= 1000:
+                    limit = 1000.0
+                elif spent <= 5000:
+                    limit = 5000.0
+                elif spent <= 10000:
+                    limit = 10000.0
+                elif spent <= 30000:
+                    limit = 30000.0
+                elif spent <= 50000:
+                    limit = 50000.0
+                elif spent <= 100000:
+                    limit = 100000.0
+                elif spent <= 500000:
+                    limit = 500000.0
+                elif spent <= 1500000:
+                    limit = 1500000.0
+                else:
+                    limit = float(math.ceil(spent / 100000.0) * 100000.0)
+
+                budget_summary.append({
+                    "category": cat_name,
+                    "limit": limit,
+                    "spent": spent,
+                    "remaining": max(0.0, limit - spent)
+                })
 
         # Bills
         bills = db.query(Bill).filter_by(user_id=user_id).all()
