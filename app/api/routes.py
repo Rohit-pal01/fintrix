@@ -154,6 +154,14 @@ async def upload_document(
         except Exception as e:
             print(f"Warning: PDF transaction table scan error: {e}")
 
+    # Also automatically scan for billing details (due date, amount due, credit limits) across all uploaded docs
+    from app.ingestion.billing import extract_billing_and_budget_info
+    try:
+        full_doc_text = "\n".join(p.get("text", "") for p in pages)
+        extract_billing_and_budget_info(db, full_doc_text, file.filename, user_id=user_id)
+    except Exception as e:
+        print(f"Warning: Billing extraction error: {e}")
+
     sync_retriever()
 
     return {
@@ -270,17 +278,8 @@ def get_financial_summary(user_id: int = 1, db: Session = Depends(get_db)):
                     "spent": spent,
                     "remaining": max(0.0, limit - spent)
                 })
-        else:
-            # When statement only contains expenses without pre-configured limits,
-            # present clear category totals and auto-benchmarked targets
-            for cat_name, spent in category_summary.items():
-                limit = round(spent * 1.25, 2)
-                budget_summary.append({
-                    "category": cat_name,
-                    "limit": limit,
-                    "spent": spent,
-                    "remaining": max(0.0, limit - spent)
-                })
+        # If no explicit budgets are set, leave budget_summary as empty list ([]).
+        # We do NOT apply an artificial 1.25 multiplier that fabricates a fake 80% on everything.
 
         # Bills
         bills = db.query(Bill).filter_by(user_id=user_id).all()
@@ -331,10 +330,7 @@ def get_financial_summary(user_id: int = 1, db: Session = Depends(get_db)):
         budget_summary = []
         for b, cat_name in budgets:
             spent = category_summary.get(cat_name, 0.0)
-            # Calibrate demo limits realistically so they display clean healthy bars rather than all 100% red overflow
             limit = float(b.limit_amount)
-            if limit < spent:
-                limit = round(spent * 1.25, 2)
             budget_summary.append({
                 "category": cat_name,
                 "limit": limit,

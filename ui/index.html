@@ -467,17 +467,21 @@
       <!-- Quick Prompt Pills -->
       <div class="flex items-center space-x-2 overflow-x-auto pb-2 text-xs">
         <span class="opacity-70 uppercase font-semibold text-[10px] tracking-wider text-[var(--text-sub)]">Try:</span>
-        <button onclick="sendQuickPrompt('How much did I spend on food last month?')" class="glass-pill hover:bg-slate-700/30 px-3.5 py-1.5 rounded-full transition whitespace-nowrap text-[var(--text-main)] font-semibold">
-          📊 Food spend last month
+        <button onclick="sendQuickPrompt('How much did I spend on food last month?')" class="glass-pill hover:bg-slate-700/30 px-3.5 py-1.5 rounded-full transition whitespace-nowrap text-[var(--text-main)] font-semibold flex items-center gap-1.5">
+          <i class="fa-solid fa-utensils text-cyan-500 text-[10px]"></i>
+          <span>Food spend last month</span>
         </button>
-        <button onclick="sendQuickPrompt('What is the prepayment penalty on my floating rate home loan?')" class="glass-pill hover:bg-slate-700/30 px-3.5 py-1.5 rounded-full transition whitespace-nowrap text-[var(--text-main)] font-semibold">
-          📄 Prepayment terms on home loan
+        <button onclick="sendQuickPrompt('What is the prepayment penalty on my floating rate home loan?')" class="glass-pill hover:bg-slate-700/30 px-3.5 py-1.5 rounded-full transition whitespace-nowrap text-[var(--text-main)] font-semibold flex items-center gap-1.5">
+          <i class="fa-solid fa-file-contract text-cyan-500 text-[10px]"></i>
+          <span>Prepayment terms on home loan</span>
         </button>
-        <button onclick="sendQuickPrompt('What is my total spending by category this month?')" class="glass-pill hover:bg-slate-700/30 px-3.5 py-1.5 rounded-full transition whitespace-nowrap text-[var(--text-main)] font-semibold">
-          📈 Spending by category
+        <button onclick="sendQuickPrompt('What is my total spending by category this month?')" class="glass-pill hover:bg-slate-700/30 px-3.5 py-1.5 rounded-full transition whitespace-nowrap text-[var(--text-main)] font-semibold flex items-center gap-1.5">
+          <i class="fa-solid fa-chart-pie text-cyan-500 text-[10px]"></i>
+          <span>Spending by category</span>
         </button>
-        <button onclick="sendQuickPrompt('What is the room rent limit per day for normal hospitalization?')" class="glass-pill hover:bg-slate-700/30 px-3.5 py-1.5 rounded-full transition whitespace-nowrap text-[var(--text-main)] font-semibold">
-          🏥 Health insurance room rent limit
+        <button onclick="sendQuickPrompt('What is the room rent limit per day for normal hospitalization?')" class="glass-pill hover:bg-slate-700/30 px-3.5 py-1.5 rounded-full transition whitespace-nowrap text-[var(--text-main)] font-semibold flex items-center gap-1.5">
+          <i class="fa-solid fa-hospital text-cyan-500 text-[10px]"></i>
+          <span>Health insurance room rent limit</span>
         </button>
       </div>
 
@@ -1081,21 +1085,31 @@
         // Render Budgets
         const bContainer = document.getElementById('budget-bars');
         bContainer.innerHTML = '';
-        data.budgets.forEach(b => {
-          const pct = Math.min(100, Math.round((b.spent / b.limit) * 100));
-          const colorClass = pct > 90 ? 'bg-rose-500' : (pct > 75 ? 'bg-amber-500' : 'bg-cyan-600');
-          bContainer.innerHTML += `
-            <div>
-              <div class="flex justify-between text-xs font-bold mb-1 text-[var(--text-main)]">
-                <span class="capitalize">${b.category}</span>
-                <span class="font-mono text-[var(--text-sub)]">₹${b.spent.toLocaleString()} / ₹${b.limit.toLocaleString()} (${pct}%)</span>
-              </div>
-              <div class="w-full bg-black/10 dark:bg-black/30 rounded-full h-2 overflow-hidden border border-cyan-500/20">
-                <div class="${colorClass} h-2 rounded-full" style="width: ${pct}%"></div>
-              </div>
+        if (!data.budgets || data.budgets.length === 0) {
+          bContainer.innerHTML = `
+            <div class="p-4 rounded-xl glass-subcard text-center space-y-1">
+              <i class="fa-solid fa-bullseye text-cyan-500 text-base"></i>
+              <div class="text-xs font-bold text-[var(--text-main)]">No Category Budgets Set</div>
+              <p class="text-[10px] text-[var(--text-muted)]">Upload a billing document or set spending limits to track budget progress.</p>
             </div>
           `;
-        });
+        } else {
+          data.budgets.forEach(b => {
+            const pct = Math.min(100, Math.round((b.spent / b.limit) * 100));
+            const colorClass = pct > 90 ? 'bg-rose-500' : (pct > 75 ? 'bg-amber-500' : 'bg-cyan-600');
+            bContainer.innerHTML += `
+              <div>
+                <div class="flex justify-between text-xs font-bold mb-1 text-[var(--text-main)]">
+                  <span class="capitalize">${b.category}</span>
+                  <span class="font-mono text-[var(--text-sub)]">₹${b.spent.toLocaleString()} / ₹${b.limit.toLocaleString()} (${pct}%)</span>
+                </div>
+                <div class="w-full bg-black/10 dark:bg-black/30 rounded-full h-2 overflow-hidden border border-cyan-500/20">
+                  <div class="${colorClass} h-2 rounded-full" style="width: ${pct}%"></div>
+                </div>
+              </div>
+            `;
+          });
+        }
 
         // Render Bills
         const billsContainer = document.getElementById('bills-list');
