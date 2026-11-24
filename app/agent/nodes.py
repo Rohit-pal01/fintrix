@@ -189,7 +189,7 @@ def compose_answer_node(state: AgentState) -> AgentState:
             context_summary += f"Document Snippets: {[r['text'] for r in state.doc_result.get('results', [])]}\n"
 
         ai_narrative = llm_client.complete(
-            f"Based STRICTLY on these tool results, write a concise, helpful answer to the user's question:\n{context_summary}",
+            f"User Question: {state.question}\nEvidence:\n{context_summary}\nProvide a direct, concise 1-2 sentence answer without repeating section labels or boilerplate meta-text.",
             system_prompt=COMPOSER_PROMPT
         )
         if ai_narrative:
