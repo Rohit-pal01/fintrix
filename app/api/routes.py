@@ -267,39 +267,50 @@ def ingest_transactions(req: IngestTransactionsRequest, db: Session = Depends(ge
     return {"status": "success", **res}
 
 @router.get("/summary")
-def get_financial_summary(user_id: int = 1, db: Session = Depends(get_db)):
-    """Provides high-level financial dashboard statistics with dynamic user ledger support."""
+def get_financial_summary(user_id: int = 1, period: str = "1m", db: Session = Depends(get_db)):
+    """Provides high-level financial dashboard statistics with dynamic user ledger & timeframe support."""
     # Check if this user has transactions
     user_txns_count = db.query(Transaction).filter_by(user_id=user_id).count()
 
     if user_txns_count > 0:
-        # For baseline demo (user 1), calculate monthly debits for the current active month (2026-11)
-        # so monthly budget compares 1 month of spending against a 1-month budget!
-        if user_id == 1:
-            spending = db.query(
-                func.coalesce(Category.name, "Transfers & Other").label("cat_name"), 
-                func.coalesce(func.sum(Transaction.amount), 0).label("total")
-            ).select_from(Transaction).outerjoin(
-                Category, 
-                Transaction.category_id == Category.category_id
-            ).filter(
-                Transaction.user_id == 1,
-                Transaction.direction == 'debit',
-                Transaction.txn_date >= '2026-11-01'
-            ).group_by(func.coalesce(Category.name, "Transfers & Other")).all()
-        else:
-            # For user-uploaded statement, calculate debits across their uploaded statement ledger
-            spending = db.query(
-                func.coalesce(Category.name, "Transfers & Other").label("cat_name"), 
-                func.coalesce(func.sum(Transaction.amount), 0).label("total")
-            ).select_from(Transaction).outerjoin(
-                Category, 
-                Transaction.category_id == Category.category_id
-            ).filter(
-                Transaction.user_id == user_id,
-                Transaction.direction == 'debit'
-            ).group_by(func.coalesce(Category.name, "Transfers & Other")).all()
+        from datetime import timedelta
+        latest_date = db.query(func.max(Transaction.txn_date)).filter(Transaction.user_id == user_id).scalar()
+        if not latest_date:
+            latest_date = date(2026, 11, 20)
 
+        # Calculate start_date based on period filter (1m, 3m, 6m, 1y, all)
+        start_date = None
+        period_label = "All Time"
+        if period == "1m":
+            start_date = latest_date.replace(day=1)
+            period_label = latest_date.strftime("%B %Y")
+        elif period == "3m":
+            start_date = latest_date - timedelta(days=90)
+            period_label = "Last 3 Months"
+        elif period == "6m":
+            start_date = latest_date - timedelta(days=180)
+            period_label = "Last 6 Months"
+        elif period == "1y":
+            start_date = latest_date - timedelta(days=365)
+            period_label = "Last 1 Year"
+        else:
+            start_date = None
+            period_label = "All Time"
+
+        query = db.query(
+            func.coalesce(Category.name, "Transfers & Other").label("cat_name"), 
+            func.coalesce(func.sum(Transaction.amount), 0).label("total")
+        ).select_from(Transaction).outerjoin(
+            Category, 
+            Transaction.category_id == Category.category_id
+        ).filter(
+            Transaction.user_id == user_id,
+            Transaction.direction == 'debit'
+        )
+        if start_date:
+            query = query.filter(Transaction.txn_date >= start_date)
+
+        spending = query.group_by(func.coalesce(Category.name, "Transfers & Other")).all()
         category_summary = {s[0]: float(s[1]) for s in spending if float(s[1]) > 0}
 
         # If categories were uncategorized or only grouped as general, break down by top transactions
@@ -312,7 +323,7 @@ def get_financial_summary(user_id: int = 1, db: Session = Depends(get_db)):
 
         # Budgets: Calculate clean milestone ladder ceilings for each unique category
         # Guarantees each category appears exactly once with distinct, realistic percentages (e.g. 75%, 77%, 85%)
-        # and never repeats or blows up to identical 100% full-red bars.
+        # and adapts gracefully across any selected timeframe!
         import math
         budget_summary = []
         for cat_name, spent in category_summary.items():
@@ -362,7 +373,8 @@ def get_financial_summary(user_id: int = 1, db: Session = Depends(get_db)):
         ]
 
         return {
-            "current_month": "Personal Statement Ledger",
+            "current_month": period_label,
+            "period": period,
             "is_demo": False,
             "category_spending": category_summary,
             "budgets": budget_summary,
@@ -371,7 +383,7 @@ def get_financial_summary(user_id: int = 1, db: Session = Depends(get_db)):
     else:
         # Fall back to demo user 1 statistics for new visitors with 0 uploads
         if user_id != 1:
-            demo_data = get_financial_summary(user_id=1, db=db)
+            demo_data = get_financial_summary(user_id=1, period=period, db=db)
             demo_data["is_demo"] = True
             return demo_data
 

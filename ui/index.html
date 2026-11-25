@@ -655,14 +655,31 @@
 
     <!-- VIEW 3: FINANCIAL SUMMARY -->
     <section id="view-summary" class="hidden space-y-6">
-      <div class="flex items-center justify-between pb-2 border-b border-cyan-500/20">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-2 border-b border-cyan-500/20 gap-3">
         <div>
-          <h2 class="text-lg font-bold text-[var(--text-main)]">Monthly Financial Overview</h2>
-          <p class="text-xs font-medium text-[var(--text-sub)]">Real-time metrics calculated directly from PostgreSQL transactions.</p>
+          <h2 class="text-lg font-bold text-[var(--text-main)]">Financial Overview</h2>
+          <p id="summary-period-subtitle" class="text-xs font-medium text-[var(--text-sub)]">Real-time metrics calculated directly from PostgreSQL transactions.</p>
         </div>
-        <button onclick="loadFinancialSummary()" class="text-xs glass-pill px-3 py-1.5 rounded-full transition font-semibold text-[var(--text-main)]">
-          <i class="fa-solid fa-rotate-right mr-1 text-cyan-500"></i> Refresh Data
-        </button>
+        
+        <!-- Timeframe Filter Buttons -->
+        <div class="flex items-center space-x-1 overflow-x-auto text-xs glass-pill px-2.5 py-1 rounded-full self-start sm:self-auto shadow-inner">
+          <span class="opacity-70 uppercase font-bold text-[9px] tracking-wider text-[var(--text-sub)] px-1">Period:</span>
+          <button onclick="setTimeframe('1m')" id="tf-1m" class="tf-btn tab-btn active px-3 py-1 rounded-full text-xs font-bold transition">
+            1 Month
+          </button>
+          <button onclick="setTimeframe('3m')" id="tf-3m" class="tf-btn tab-btn px-3 py-1 rounded-full text-xs font-medium transition">
+            3 Months
+          </button>
+          <button onclick="setTimeframe('6m')" id="tf-6m" class="tf-btn tab-btn px-3 py-1 rounded-full text-xs font-medium transition">
+            6 Months
+          </button>
+          <button onclick="setTimeframe('1y')" id="tf-1y" class="tf-btn tab-btn px-3 py-1 rounded-full text-xs font-medium transition">
+            1 Year
+          </button>
+          <button onclick="setTimeframe('all')" id="tf-all" class="tf-btn tab-btn px-3 py-1 rounded-full text-xs font-medium transition">
+            All Time
+          </button>
+        </div>
       </div>
 
       <!-- Demo Fallback Notice Banner -->
@@ -1231,11 +1248,33 @@
       }
     }
 
+    let currentSummaryPeriod = '1m';
+
+    function setTimeframe(tf) {
+      currentSummaryPeriod = tf;
+      document.querySelectorAll('.tf-btn').forEach(b => {
+        b.classList.remove('active', 'font-bold');
+        b.classList.add('font-medium');
+      });
+      const activeBtn = document.getElementById('tf-' + tf);
+      if (activeBtn) {
+        activeBtn.classList.add('active', 'font-bold');
+        activeBtn.classList.remove('font-medium');
+      }
+      loadFinancialSummary();
+    }
+
     async function loadFinancialSummary() {
       try {
         const uid = await getOrInitUserId();
-        const res = await fetch(`/api/summary?user_id=${uid}`);
+        const res = await fetch(`/api/summary?user_id=${uid}&period=${currentSummaryPeriod}`);
         const data = await res.json();
+
+        // Update Subtitle with exact period
+        const subTitle = document.getElementById('summary-period-subtitle');
+        if (subTitle && data.current_month) {
+          subTitle.innerText = `Displaying transactions for ${data.current_month} (${data.is_demo ? 'Demo Portfolio' : 'Statement Ledger'}).`;
+        }
 
         // Toggle Demo Banner
         const demoBanner = document.getElementById('summary-demo-banner');
