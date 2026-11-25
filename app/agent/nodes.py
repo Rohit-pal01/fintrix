@@ -240,18 +240,24 @@ def compose_answer_node(state: AgentState) -> AgentState:
             answer_parts.append("No matching transactions were found for the specified period.")
             confidence = "medium"
 
-    # Document Citation and Grounding
+    # Document Citation and Grounding (supports multi-document & cross-file citations)
     if state.doc_result:
         results = state.doc_result.get("results", [])
         if results:
+            seen_doc_pages = set()
+            for r in results[:5]:
+                doc_key = (r["doc"], r["page"])
+                if doc_key not in seen_doc_pages:
+                    seen_doc_pages.add(doc_key)
+                    citations.append({
+                        "type": "document",
+                        "doc": r["doc"],
+                        "page": r["page"],
+                        "section": r.get("section", "General"),
+                        "snippet": r["text"][:160] + "..."
+                    })
+            # Primary document narrative summary
             top_chunk = results[0]
-            citations.append({
-                "type": "document",
-                "doc": top_chunk["doc"],
-                "page": top_chunk["page"],
-                "section": top_chunk["section"],
-                "snippet": top_chunk["text"][:160] + "..."
-            })
             answer_parts.append(f"According to {top_chunk['doc']} (Page {top_chunk['page']}, {top_chunk['section']}): \"{top_chunk['text']}\"")
         else:
             answer_parts.append("No matching terms were found in your uploaded documents.")
