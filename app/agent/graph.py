@@ -28,8 +28,31 @@ class FinanceCopilotAgent:
         if state.route in ("sql", "both") and db is not None:
             state = execute_sql_node(state, db)
 
-        if state.route in ("documents", "both") and self.retriever is not None:
+        # Smart Fallback Loop:
+        # If SQL was executed but yielded 0 rows, or only returned an internal guest session name (Guest_...),
+        # automatically fallback to search documents so user questions never fail due to routing misclassification!
+        sql_empty_or_guest = False
+        if state.route == "sql" and state.sql_result:
+            rows = state.sql_result.get("rows", [])
+            row_count = state.sql_result.get("row_count", 0)
+            if row_count == 0:
+                sql_empty_or_guest = True
+            elif row_count == 1 and isinstance(rows[0], dict):
+                first_val = list(rows[0].values())[0] if rows[0] else ""
+                if str(first_val).startswith("Guest_"):
+                    sql_empty_or_guest = True
+
+        if (state.route in ("documents", "both") or sql_empty_or_guest) and self.retriever is not None:
             state = retrieve_docs_node(state, self.retriever)
+
+        # Reverse Fallback: If document search found 0 results, check SQL as backup
+        doc_empty = False
+        if state.route == "documents" and state.doc_result:
+            if not state.doc_result.get("results"):
+                doc_empty = True
+
+        if doc_empty and db is not None and not state.sql_result:
+            state = execute_sql_node(state, db)
 
         # Step 3: Compose Answer
         state = compose_answer_node(state)
