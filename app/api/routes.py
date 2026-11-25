@@ -567,14 +567,8 @@ def trigger_eval_run(config_name: str = "hybrid_rerank", db: Session = Depends(g
         "routing": routing_metrics
     }
 
-    run_record = EvalRun(
-        config_name=config_name,
-        metrics=all_metrics
-    )
-    db.add(run_record)
-    db.commit()
-
-    return {"run_id": run_record.run_id, "config_name": config_name, "metrics": all_metrics}
+    # Ephemeral benchmark execution: return metrics immediately without accumulating test bloat in database
+    return {"run_id": "live", "config_name": config_name, "metrics": all_metrics}
 
 @router.get("/eval/runs")
 def list_eval_runs(db: Session = Depends(get_db)):
