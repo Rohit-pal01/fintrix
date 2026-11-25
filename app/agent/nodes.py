@@ -13,46 +13,6 @@ from app.db.models import Trace
 
 DISCLAIMER_TEXT = "This is informational and not financial advice."
 
-def parse_target_amount(text: str) -> Optional[float]:
-    """Parse monetary amounts including Indian numbering units (lakh, crore, k, L, Cr) and prepositions from user questions."""
-    t = text.lower().replace(',', '')
-    
-    # 1. Crore / Cr (e.g. 1.5 crore, 2.5cr, 1 cr)
-    cr_match = re.search(r'(\d+(?:\.\d+)?)\s*(?:crore|cr)\b', t)
-    if cr_match:
-        return float(cr_match.group(1)) * 10000000.0
-        
-    # 2. Lakh / Lac / L (e.g. 10 lakh, 2.5 lac, 10l, 1.5l)
-    lakh_match = re.search(r'(\d+(?:\.\d+)?)\s*(?:lakh|lac|lacs|lakhs|l)\b', t)
-    if lakh_match:
-        return float(lakh_match.group(1)) * 100000.0
-        
-    # 3. K (e.g. 50k, 80 k)
-    k_match = re.search(r'(\d+(?:\.\d+)?)\s*k\b', t)
-    if k_match:
-        return float(k_match.group(1)) * 1000.0
-        
-    # 4. Currency symbols or currency words (e.g. ₹50000, rs 50000, 50000 rupee, 50000 inr)
-    curr_match = re.search(r'(?:rs\.?|inr|₹)\s*(\d+(?:\.\d+)?)', t)
-    if curr_match:
-        return float(curr_match.group(1))
-    curr_suffix = re.search(r'(\d+(?:\.\d+)?)\s*(?:rupees?|rs\.?|inr|bucks)', t)
-    if curr_suffix:
-        return float(curr_suffix.group(1))
-        
-    # 5. Prepositions before amounts (e.g. of 20000, for 20000, worth 20000, cost 20000, costing 20000, around 20000)
-    prep_match = re.search(r'(?:cost|costing|worth|for|of|at|around|upto)\s*(\d+(?:\.\d+)?)', t)
-    if prep_match:
-        return float(prep_match.group(1))
-        
-    # 6. Fallback: Any standalone number >= 500 (likely a purchase price, excluding calendar years)
-    for num in re.findall(r'\b(\d+(?:\.\d+)?)\b', t):
-        val = float(num)
-        if val >= 500 and val not in (2024, 2025, 2026, 2027):
-            return val
-            
-    return None
-
 def classify_and_plan_node(state: AgentState) -> AgentState:
     """Classifies user inquiry into sql, documents, both, or refuse using 2-tier semantic classification."""
     q = state.question.lower().strip()
@@ -199,16 +159,7 @@ def compose_answer_node(state: AgentState) -> AgentState:
             # Build narrative
             if "available_balance" in first_row:
                 bal = float(first_row.get("available_balance", 0.0))
-                target_amt = parse_target_amount(state.question)
-                if target_amt:
-                    if bal >= target_amt:
-                        rem = bal - target_amt
-                        answer_parts.append(f"Yes, you have sufficient funds to make this purchase. Your verified available balance is ₹{bal:,.2f}, which is sufficient to purchase for ₹{target_amt:,.2f}, leaving a remaining balance of ₹{rem:,.2f}.")
-                    else:
-                        shortfall = target_amt - bal
-                        answer_parts.append(f"No, you cannot afford this purchase tomorrow. Your verified available balance is ₹{bal:,.2f}, which is insufficient for a ₹{target_amt:,.2f} purchase. You have a shortfall of ₹{shortfall:,.2f}.")
-                else:
-                    answer_parts.append(f"Your current verified available account balance is ₹{bal:,.2f}.")
+                answer_parts.append(f"Your current verified available account balance is ₹{bal:,.2f}.")
             elif "total_food_spending" in first_row or "food_spend_last_month" in first_row:
                 val = first_row.get("food_spend_last_month") or first_row.get("total_food_spending", 0)
                 answer_parts.append(f"You spent ₹{val:,.2f} on food last month.")
@@ -309,13 +260,15 @@ def verify_answer_node(state: AgentState) -> AgentState:
     sql_rows = state.sql_result.get("rows", []) if state.sql_result else []
     doc_results = state.doc_result.get("results", []) if state.doc_result else []
 
-    # Collect numbers from Question (such as target purchase amounts)
+    # Collect numbers from Question
     valid_numbers = set()
-    q_target = parse_target_amount(state.question)
-    if q_target:
-        valid_numbers.add(q_target)
+    for n in re.findall(r'(?<![A-Za-z0-9_])(?:\$|₹)?(-?\d[\d,]*(?:\.\d+)?)(?![A-Za-z0-9_])', state.question):
+        try:
+            valid_numbers.add(float(n.replace(',', '')))
+        except ValueError:
+            pass
 
-    # Collect numbers from SQL rows and arithmetic relationships
+    # Collect numbers from SQL rows
     for row in sql_rows:
         for val in row.values():
             try:
@@ -324,9 +277,6 @@ def verify_answer_node(state: AgentState) -> AgentState:
                 valid_numbers.add(round(v, 2))
                 valid_numbers.add(abs(v))
                 valid_numbers.add(round(abs(v), 2))
-                if q_target:
-                    valid_numbers.add(round(abs(q_target - v), 2))
-                    valid_numbers.add(round(abs(q_target - abs(v)), 2))
             except (ValueError, TypeError):
                 pass
 
