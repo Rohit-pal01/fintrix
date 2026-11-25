@@ -265,6 +265,7 @@ def compose_answer_node(state: AgentState) -> AgentState:
                 confidence = "medium"
 
     full_text = " ".join(answer_parts) if answer_parts else "Could not generate an answer."
+    state.grounded_text = full_text
 
     # If Live AI is active, enhance wording while preserving grounded numbers
     if llm_client.is_live_ai_enabled():
@@ -359,6 +360,12 @@ def verify_answer_node(state: AgentState) -> AgentState:
     if unmatched:
         state.final_answer["confidence"] = "low"
         state.final_answer["warning"] = f"Detected numbers not grounded in SQL query or documents: {unmatched}"
+        # Guardrail: Prevent hallucinated numbers from reaching the user by overriding with grounded DB text
+        if state.grounded_text and state.grounded_text != "Could not generate an answer.":
+            state.final_answer["answer"] = state.grounded_text
+            state.is_verified = True
+            return state
+        state.final_answer["answer"] = "I cannot fulfill this request because the generated figures could not be grounded in your verified records."
         state.is_verified = False
         return state
 

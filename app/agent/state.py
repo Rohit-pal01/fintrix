@@ -20,6 +20,7 @@ class AgentState(BaseModel):
     tool_calls: List[Dict[str, Any]] = Field(default_factory=list)
     sql_result: Optional[Dict[str, Any]] = None
     doc_result: Optional[Dict[str, Any]] = None
+    grounded_text: Optional[str] = None
     final_answer: Optional[Dict[str, Any]] = None
     is_verified: bool = False
     error: Optional[str] = None
