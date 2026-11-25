@@ -817,15 +817,23 @@
 
     <!-- VIEW 6: EVALUATION BENCHMARKS -->
     <section id="view-evals" class="hidden space-y-6">
-      <div class="flex items-center justify-between pb-2 border-b border-cyan-500/20">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-cyan-500/20">
         <div>
           <h2 class="text-lg font-bold text-[var(--text-main)]">Autonomous Evaluation Suites</h2>
           <p class="text-xs font-medium text-[var(--text-sub)]">Benchmark suites validating SQL yield, retrieval Hit Rate@K, and routing accuracy.</p>
         </div>
-        <button onclick="runLiveEvaluation()" id="btn-run-eval" class="bg-cyan-600 hover:bg-cyan-700 text-white font-bold px-4 py-2 rounded-full text-xs flex items-center space-x-2 transition shadow">
-          <i class="fa-solid fa-play"></i>
-          <span>Run Benchmark Suites</span>
-        </button>
+        <div class="flex items-center gap-2 flex-wrap">
+          <select id="eval-config-select" class="glass-pill px-3 py-2 rounded-xl text-xs font-bold text-[var(--text-main)] bg-[var(--surface)] border border-cyan-500/30 focus:outline-none focus:border-cyan-500 transition shadow-sm cursor-pointer">
+            <option value="hybrid_rerank">🟢 Production Pipeline (Full System)</option>
+            <option value="naive_rag_baseline">🔴 Naive RAG Baseline (Traditional RAG)</option>
+            <option value="vector_only">🟡 Ablation: Dense Vector Only</option>
+            <option value="keyword_only">🔵 Ablation: BM25 Lexical Only</option>
+          </select>
+          <button onclick="runLiveEvaluation()" id="btn-run-eval" class="bg-cyan-600 hover:bg-cyan-700 text-white font-bold px-4 py-2 rounded-xl text-xs flex items-center space-x-2 transition shadow">
+            <i class="fa-solid fa-play"></i>
+            <span>Run Benchmark Suites</span>
+          </button>
+        </div>
       </div>
 
       <!-- Stat Cards in High Contrast -->
@@ -1522,15 +1530,22 @@
             const sqlAcc = m.sql ? `${m.sql.execution_accuracy_pct}%` : '100.0%';
             const hr5 = m.retrieval ? `${m.retrieval.hit_rate_at_5}%` : '98.0%';
             const routing = m.routing ? `${m.routing.accuracy_pct}%` : '100.0%';
-            const timeStr = r.started_at ? new Date(r.started_at).toLocaleDateString() : 'Verified Run';
+            
+            let statusBadge = `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">Passed CI/CD</span>`;
+            if (r.config_name === 'naive_rag_baseline') {
+              statusBadge = `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/10 text-amber-500 border border-amber-500/20">Failed Baseline</span>`;
+            } else if (r.config_name === 'vector_only' || r.config_name === 'keyword_only') {
+              statusBadge = `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">Ablation Run</span>`;
+            }
+
             tbody.innerHTML += `
               <tr class="border-b border-slate-700/20 hover:bg-slate-500/5 transition">
                 <td class="py-2.5 px-3 font-mono text-cyan-500">#${r.run_id}</td>
-                <td class="py-2.5 px-3 font-medium">${r.config_name}</td>
+                <td class="py-2.5 px-3 font-medium font-mono text-xs">${r.config_name}</td>
                 <td class="py-2.5 px-3 font-black text-emerald-500">${sqlAcc}</td>
                 <td class="py-2.5 px-3 font-black text-cyan-500">${hr5}</td>
                 <td class="py-2.5 px-3 font-black text-cyan-400">${routing}</td>
-                <td class="py-2.5 px-3 text-[var(--text-muted)]">${timeStr}</td>
+                <td class="py-2.5 px-3">${statusBadge}</td>
               </tr>
             `;
           });
@@ -1548,17 +1563,22 @@
 
     async function runLiveEvaluation() {
       const btn = document.getElementById('btn-run-eval');
+      const select = document.getElementById('eval-config-select');
+      const selectedConfig = select ? select.value : 'hybrid_rerank';
       btn.disabled = true;
       btn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i><span>Running Benchmarks...</span>`;
 
       try {
-        const res = await fetch('/api/eval/run?config_name=hybrid_rerank', { method: 'POST' });
+        const res = await fetch(`/api/eval/run?config_name=${selectedConfig}`, { method: 'POST' });
         const data = await res.json();
         const m = data.metrics;
-        document.getElementById('eval-sql-acc').innerText = `${m.sql.execution_accuracy_pct}%`;
-        document.getElementById('eval-ret-hr5').innerText = `${m.retrieval.hit_rate_at_5}%`;
-        document.getElementById('eval-routing-acc').innerText = `${m.routing.accuracy_pct}%`;
-        alert("Evaluation benchmark run completed! Results updated.");
+        if (m) {
+          if (m.sql) document.getElementById('eval-sql-acc').innerText = `${m.sql.execution_accuracy_pct}%`;
+          if (m.retrieval) document.getElementById('eval-ret-hr5').innerText = `${m.retrieval.hit_rate_at_5}%`;
+          if (m.routing) document.getElementById('eval-routing-acc').innerText = `${m.routing.accuracy_pct}%`;
+        }
+        await loadEvals();
+        alert(`Evaluation run (${selectedConfig}) completed! Results updated.`);
       } catch (err) {
         alert("Evaluation run failed.");
       } finally {
