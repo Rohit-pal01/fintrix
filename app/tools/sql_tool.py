@@ -54,6 +54,13 @@ CRITICAL RULES:
    Query the true net available balance by adding account opening balance to ledger transactions:
    SELECT (COALESCE((SELECT opening_balance FROM accounts WHERE user_id = {user_id} LIMIT 1), 0) + COALESCE((SELECT SUM(CASE WHEN direction = 'credit' THEN amount ELSE -amount END) FROM transactions WHERE user_id = {user_id}), 0)) AS available_balance;
 6. Financial ledger tables only record mathematical transactions, opening balances, and budgets. Customer personal identity (bank account number, acc no, a/c no, customer name, holder name, address, branch, IFSC, phone) and contract terms are stored in document PDF files and must NEVER be queried via SQL. If the user asks for account numbers or personal details, do NOT query account_id or users.name.
+7. Metaphors & Idiom Translation:
+   - "burn cash", "burning through money", "bleeding cash", "hole in pocket", "splurging", "spending like water" -> Calculate total debits / expenses:
+     SELECT COALESCE(SUM(amount), 0) AS total_spent FROM transactions WHERE user_id = {user_id} AND direction = 'debit';
+   - "cushion", "nest egg", "rainy day fund", "safety net", "emergency stash", "dough", "financial health" -> Query available balance:
+     SELECT (COALESCE((SELECT opening_balance FROM accounts WHERE user_id = {user_id} LIMIT 1), 0) + COALESCE((SELECT SUM(CASE WHEN direction = 'credit' THEN amount ELSE -amount END) FROM transactions WHERE user_id = {user_id}), 0)) AS available_balance;
+   - "in the red", "over budget", "tighten belt" -> Query budget vs actual spending:
+     SELECT b.limit_amount AS budget_limit, COALESCE(SUM(t.amount), 0) AS actual_spent, (b.limit_amount - COALESCE(SUM(t.amount), 0)) AS remaining_budget FROM budgets b JOIN categories c ON b.category_id = c.category_id LEFT JOIN transactions t ON t.category_id = c.category_id AND t.user_id = b.user_id AND t.direction = 'debit' WHERE b.user_id = {user_id} GROUP BY b.limit_amount;
 """
 
 FEW_SHOT_EXAMPLES = [
@@ -120,8 +127,9 @@ def deterministic_text_to_sql(question: str, user_id: int) -> str:
         "october": 10, "oct": 10, "november": 11, "nov": 11, "december": 12, "dec": 12
     }
 
-    # Affordability / Purchase / Balance queries (handles any phrasing: "is it possible to get a bike for 1.5 lakh", "can my wallet handle", "am I capable of acquiring an apartment", "what is my balance")
-    balance_inquiry = any(k in q for k in ["balance", "how much money", "available funds", "my savings", "net worth", "current balance"])
+    # Affordability / Purchase / Balance queries (handles any phrasing & financial metaphors:
+    # "is it possible to get a bike for 1.5 lakh", "can my wallet handle", "rainy day fund", "nest egg", "cushion", "safety net", "what is my balance")
+    balance_inquiry = any(k in q for k in ["balance", "how much money", "available funds", "my savings", "net worth", "current balance", "cushion", "nest egg", "rainy day", "safety net", "emergency fund", "stash", "dough", "financial standing"])
     feasibility_words = ["can i", "could i", "can we", "is it possible", "am i able", "able to", "capable of", "handle", "permit", "allow", "feasible", "afford", "enough", "wallet", "pocket", "bandwidth", "do i have"]
     intent_words = ["want to", "planning to", "thinking of", "would like to", "wish to", "hope to", "tomorrow", "next week", "future"]
     action_words = ["buy", "purchase", "get", "take", "acquire", "order", "book", "spend on"]
@@ -135,6 +143,11 @@ def deterministic_text_to_sql(question: str, user_id: int) -> str:
     if balance_inquiry or has_feasibility or (has_intent and (has_action or has_asset)) or (has_action and has_asset):
         return (f"SELECT (COALESCE((SELECT opening_balance FROM accounts WHERE user_id = {user_id} LIMIT 1), 0) + "
                 f"COALESCE((SELECT SUM(CASE WHEN direction = 'credit' THEN amount ELSE -amount END) FROM transactions WHERE user_id = {user_id}), 0)) AS available_balance;")
+
+    # High spending / burning cash / bleed money metaphors
+    if any(k in q for k in ["burn", "burning", "bleed", "bleeding", "hole in", "splurge", "splurging", "spending like water"]):
+        return (f"SELECT COALESCE(SUM(amount), 0) AS total_spent "
+                f"FROM transactions WHERE user_id = {user_id} AND direction = 'debit';")
 
     # Credit / deposit / credited in month (e.g. "total amount credited in may month", "how many time amount credited in may")
     if any(k in q for k in ["credit", "deposit", "credited", "deposited", "received"]):
