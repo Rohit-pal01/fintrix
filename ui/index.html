@@ -1164,7 +1164,7 @@
       const traceId = data.trace_id;
 
       let citationsHtml = '';
-      if (citations.length > 0) {
+      if (citations.length > 0 || data.is_verified === false) {
         citationsHtml = `
           <div class="pt-2 flex flex-wrap items-center gap-2">
             <span class="text-[11px] text-[var(--text-muted)] font-semibold">Source:</span>
@@ -1191,6 +1191,12 @@
                 `;
               }
             }).join('')}
+            ${data.is_verified === false ? `
+              <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-amber-500/10 text-amber-700 dark:text-amber-300 text-[11px] font-semibold border border-amber-500/30" title="Numbers in this answer could not be fully grounded against verified database records">
+                <i class="fa-solid fa-triangle-exclamation text-amber-500 text-[10px]"></i>
+                <span>Unverified calculation</span>
+              </span>
+            ` : ''}
           </div>
         `;
       }
