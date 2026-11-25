@@ -3,7 +3,7 @@
 ROUTER_PROMPT = """You are the master router of a verifiable personal finance copilot.
 Your job is to determine the optimal execution route for the user's inquiry:
 - 'sql': The question requires aggregation, arithmetic, balances, transaction history, budgets, bills, spending by category/merchant.
-- 'documents': The question asks about policy terms, loan contracts, interest rates, penalty rules, fees, coverage exclusions from PDFs.
+- 'documents': The question asks about policy terms, loan contracts, interest rates, penalty rules, fees, coverage exclusions from PDFs, OR statement metadata and header details (e.g. account holder name, customer name, address, account number, branch, IFSC code, CIF, nomination, bank details).
 - 'both': The question requires comparing structured transactions/balances against document terms (e.g. Can I afford prepayment with fee? Did hospital bill exceed room rent cap?).
 - 'refuse': The question asks for live stock trades, dangerous SQL commands, out-of-scope non-financial topics, or access to other users' data.
 - 'clarify': The question is completely ambiguous.

@@ -51,6 +51,7 @@ CRITICAL RULES:
 5. For affordability, purchase feasibility, or available balance inquiries (e.g. "Can I buy a car of 10 lakh?", "Can I afford X?", "What is my balance?", "Do I have enough money?", "what is my current balance"):
    Query the true net available balance by adding account opening balance to ledger transactions:
    SELECT (COALESCE((SELECT opening_balance FROM accounts WHERE user_id = {user_id} LIMIT 1), 0) + COALESCE((SELECT SUM(CASE WHEN direction = 'credit' THEN amount ELSE -amount END) FROM transactions WHERE user_id = {user_id}), 0)) AS available_balance;
+6. Never query users.name or database tables for bank account holder name, customer name, address, or branch. Those are statement-level document metadata extracted from uploaded PDF documents, not database user records.
 """
 
 FEW_SHOT_EXAMPLES = [

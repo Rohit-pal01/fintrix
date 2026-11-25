@@ -86,7 +86,9 @@ def classify_and_plan_node(state: AgentState) -> AgentState:
         "coverage", "exclusion", "grace period", "maternity", "terms and conditions",
         "contract", "specified in", "document", "documents", "pdf", "file", "uploaded",
         "resume", "cv", "cgpa", "grade", "college", "university", "education",
-        "experience", "project", "skills", "according to", "in my"
+        "experience", "project", "skills", "according to", "in my",
+        "account holder", "holder name", "account name", "customer name", "account number",
+        "address", "adress", "branch", "ifsc", "cif", "micr", "nominee", "nomination", "bank details"
     ]
     if any(k in q for k in doc_indicators):
         state.route = "documents"
