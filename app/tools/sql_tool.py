@@ -311,8 +311,20 @@ def deterministic_text_to_sql(question: str, user_id: int) -> str:
 def generate_sql(question: str, schema_context: str, user_id: int, feedback: Optional[str] = None) -> str:
     """Generate SQL from question using Live AI LLM (Gemini, OpenAI, Groq) or deterministic compiler."""
     if llm_client.is_live_ai_enabled():
-        system_prompt = f"{schema_context}\n\nCRITICAL: Return ONLY the raw SQL query. Do not wrap in markdown quotes. Single SELECT statement only."
-        prompt = f"Write a SQL query for user_id={user_id} to answer this question: '{question}'."
+        system_prompt = f"""{schema_context}
+
+CRITICAL INSTRUCTIONS FOR SQL GENERATION:
+1. Return ONLY the raw SQL query. Single SELECT statement only. No explanations, no markdown backticks.
+2. UNIVERSAL METAPHOR & COLLOQUIAL INTENT RESOLUTION:
+   The user may express their questions using any metaphor, idiom, colloquialism, or indirect phrasing (e.g., "what's the damage", "can my pocket take the hit", "am I bleeding dry", "do I have enough gas in the tank", "how fat was my paycheck", "splurging", "in the red", "financial health"):
+   - DEDUCTION OF INTENT: Always translate the underlying financial meaning into structured database terms:
+     * Metaphors for spending/loss/damage/bleeding/splurge/outflow -> Calculate debits: SUM(amount) WHERE direction = 'debit'
+     * Metaphors for money left/cushion/gas in the tank/surviving/standing/affordability -> Query net available balance (opening balance + credits - debits)
+     * Metaphors for paycheck/dough/bread/bacon/haul/earnings -> Calculate credits: SUM(amount) WHERE direction = 'credit'
+     * Metaphors for budget health/tightening belts/in the red -> Query budgets vs actual transactions
+3. Always scope queries to user_id = {user_id}. Never query personal identity or bank account numbers via SQL.
+"""
+        prompt = f"User Question: '{question}'\nGenerate the single optimal SQL query for user_id={user_id} based on the financial intent:"
         if feedback:
             prompt += f"\nPrevious attempt failed with error: {feedback}. Please fix the SQL."
 

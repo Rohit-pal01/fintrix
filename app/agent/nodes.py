@@ -113,7 +113,7 @@ def classify_and_plan_node(state: AgentState) -> AgentState:
             semantic_prompt = f"""Classify the user's financial inquiry into exactly one route: 'sql', 'documents', 'both', or 'refuse'.
 
 Definitions:
-- 'sql': Inquiries requiring mathematical calculation, transaction histories, spending totals, ledger balances, budgets, or bills.
+- 'sql': Inquiries requiring mathematical calculation, transaction histories, spending totals, ledger balances, budgets, bills, OR financial metaphors/colloquialisms (e.g. "what's the damage", "burning through cash", "gas in the tank", "can my pocket take the hit", "splurge", "dough", "cushion", "bleeding").
 - 'documents': Inquiries about textual clauses, rules, policy terms, agreements, OR statement header/metadata (e.g. account numbers, account holder names, addresses, IFSC, branch, nominee).
 - 'both': Inquiries comparing live ledger amounts against document terms/limits.
 - 'refuse': Inquiries asking to buy stocks, execute DDL/DML, or out-of-scope non-financial topics.
