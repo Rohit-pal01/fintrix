@@ -29,12 +29,19 @@ class FinanceCopilotAgent:
             state = execute_sql_node(state, db)
 
         # Smart Bidirectional Fallback Loop:
-        # If SQL was executed but yielded 0 rows, automatically fallback to search documents
-        # so questions regarding statement text never fail due to routing misclassification.
+        # If SQL was executed but yielded 0 rows, or if SQL returned internal database row IDs
+        # when the user was asking for statement metadata, automatically fallback to search documents.
         sql_empty = False
         if state.route == "sql" and state.sql_result:
             if state.sql_result.get("row_count", 0) == 0:
                 sql_empty = True
+            rows = state.sql_result.get("rows", [])
+            if rows and len(rows) == 1:
+                first_row_keys = list(rows[0].keys())
+                if first_row_keys in (["account_id"], ["name"]):
+                    q_lower = state.question.lower()
+                    if any(k in q_lower for k in ["account no", "account number", "acc no", "a/c", "holder name", "customer name"]):
+                        sql_empty = True
 
         if (state.route in ("documents", "both") or sql_empty) and self.retriever is not None:
             state = retrieve_docs_node(state, self.retriever)

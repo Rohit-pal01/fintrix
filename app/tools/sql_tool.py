@@ -25,8 +25,11 @@ class RunSQLOutput(BaseModel):
 
 SCHEMA_DESCRIPTIONS = """
 Database Schema (PostgreSQL/SQLite compatible):
+- users (user_id INT PRIMARY KEY, name TEXT)
+  * Represents the web application user login session (e.g. 'Guest_c2be49'). This is NOT the customer name or bank account holder name. Customer names are only in document PDF files.
 - accounts (account_id INT PRIMARY KEY, user_id INT, account_type TEXT, bank_name TEXT, opening_balance NUMERIC)
   * account_type values: 'savings', 'current', 'credit_card', 'loan'
+  * IMPORTANT: account_id is an internal database serial ID (e.g. 1, 2, 28), NOT a bank account number! Real bank account numbers (e.g. 00000010111171171) are NOT stored in SQL; they only exist in statement PDF documents.
 - categories (category_id INT PRIMARY KEY, name TEXT UNIQUE, type TEXT)
   * name values: 'food', 'rent', 'utilities', 'transport', 'entertainment', 'shopping', 'healthcare', 'education', 'travel', 'groceries', 'insurance', 'investments', 'salary', 'freelance', 'dividends', 'cashback'
   * type values: 'income', 'expense'
@@ -50,7 +53,7 @@ CRITICAL RULES:
 5. For affordability, purchase feasibility, or available balance inquiries (e.g. "Can I buy a car of 10 lakh?", "Can I afford X?", "What is my balance?", "Do I have enough money?", "what is my current balance"):
    Query the true net available balance by adding account opening balance to ledger transactions:
    SELECT (COALESCE((SELECT opening_balance FROM accounts WHERE user_id = {user_id} LIMIT 1), 0) + COALESCE((SELECT SUM(CASE WHEN direction = 'credit' THEN amount ELSE -amount END) FROM transactions WHERE user_id = {user_id}), 0)) AS available_balance;
-6. Financial ledger tables only record mathematical transactions, balances, and budgets. Customer personal identity, address, branch, and contract clauses are stored in document PDF files and must never be queried via SQL.
+6. Financial ledger tables only record mathematical transactions, opening balances, and budgets. Customer personal identity (bank account number, acc no, a/c no, customer name, holder name, address, branch, IFSC, phone) and contract terms are stored in document PDF files and must NEVER be queried via SQL. If the user asks for account numbers or personal details, do NOT query account_id or users.name.
 """
 
 FEW_SHOT_EXAMPLES = [

@@ -54,10 +54,10 @@ def parse_target_amount(text: str) -> Optional[float]:
     return None
 
 def classify_and_plan_node(state: AgentState) -> AgentState:
-    """Classifies user inquiry into sql, documents, both, or refuse."""
+    """Classifies user inquiry into sql, documents, both, or refuse using 2-tier semantic classification."""
     q = state.question.lower().strip()
 
-    # Refusal / Safety checks
+    # Tier 0: Refusal / Safety checks
     if any(k in q for k in ["drop table", "delete from", "insert into", "user 2", "other user", "weather in", "buy 100 shares", "stock investment advice to double"]):
         state.route = "refuse"
         state.final_answer = {
@@ -69,7 +69,7 @@ def classify_and_plan_node(state: AgentState) -> AgentState:
         }
         return state
 
-    # Both (Mixed questions)
+    # Both (Mixed questions: cross-referencing arithmetic ledger against policy limits/clauses)
     if ("prepay" in q and ("afford" in q or "saving" in q or "balance" in q)) or \
        ("hospital" in q and "room rent" in q) or \
        ("premium" in q and "sum insured" in q) or \
@@ -79,46 +79,64 @@ def classify_and_plan_node(state: AgentState) -> AgentState:
         state.plan = ["sql", "documents", "compose"]
         return state
 
-    # Documents queries
-    doc_indicators = [
-        "penalty", "lock-in", "policy", "agreement", "waiting period", "room rent",
-        "icu", "foreclosure", "apr", "bonus", "cashless", "clause", "tariff",
-        "coverage", "exclusion", "grace period", "maternity", "terms and conditions",
-        "contract", "specified in", "document", "documents", "pdf", "file", "uploaded",
-        "resume", "cv", "cgpa", "grade", "college", "university", "education",
-        "experience", "project", "skills", "according to", "in my",
-        "account holder", "holder name", "account name", "customer name", "account number",
-        "address", "adress", "branch", "ifsc", "cif", "micr", "nominee", "nomination", "bank details"
+    # Tier 1A: High-precision regex patterns for Document & Statement Header inquiries
+    # Captures all variations: "account no", "acc no", "a/c no", "acct num", "holder name", "cif", "ifsc", etc.
+    doc_patterns = [
+        r'\b(?:acc(?:ount)?\.?\s*(?:no|num|number|#)|a/c\s*(?:no|num|number)?)\b',
+        r'\b(?:holder|customer|beneficiary|nominee|signatory)\s*name\b',
+        r'\b(?:account|holder)\s*name\b',
+        r'\b(?:ifsc|micr|cif|pan|gstin|branch|swift)\b',
+        r'\b(?:addr(?:ess)?|adress)\b',
+        r'\b(?:penalty|lock-in|policy|agreement|waiting period|room rent|icu|foreclosure|apr|bonus|cashless|clause|tariff|coverage|exclusion|grace period|maternity|terms and conditions|contract|specified in|document|documents|pdf|file|uploaded|resume|cv|cgpa|grade|college|university|education|experience|project|skills|according to|in my)\b'
     ]
-    if any(k in q for k in doc_indicators):
+    if any(re.search(pat, q) for pat in doc_patterns):
         state.route = "documents"
         state.plan = ["documents", "compose"]
         return state
 
-    # SQL queries
-    sql_indicators = [
-        "spend", "spent", "spending", "food", "grocery", "groceries", "category", 
-        "merchant", "salary", "income", "budget", "bill", "bills", "transaction",
-        "balance", "how much", "highest", "top 5", "top 3", "total", "cost",
-        "credit", "credited", "deposit", "deposited", "how many", "count", "frequency",
-        "times", "debit", "debited", "withdraw", "withdrawal", "transferred", "received", "inflow", "outflow",
-        "buy", "purchase", "afford", "enough", "get", "wallet", "pocket", "capable", "possible", "permit", "allow",
-        "car", "bike", "laptop", "phone", "flat", "house", "trip", "ticket", "gadget", "watch"
+    # Tier 1B: High-precision regex patterns for SQL Ledger & Mathematical inquiries
+    sql_patterns = [
+        r'\b(?:how much|total|highest|lowest|average|sum|count|top\s*\d+|how many|frequency|times)\b',
+        r'\b(?:spend|spent|spending|expense|expenses|cost|costing|budget|budgets)\b',
+        r'\b(?:balance|savings balance|wallet|pocket|afford|purchase|buy|enough)\b',
+        r'\b(?:salary|income|credit|credited|deposit|deposited|debit|debited|inflow|outflow|withdraw|withdrawal)\b',
+        r'\b(?:transaction|transactions|bill|bills|merchant|merchants|category|categories|groceries|food|shopping|rent|utilities)\b'
     ]
-    if any(k in q for k in sql_indicators):
+    if any(re.search(pat, q) for pat in sql_patterns):
         state.route = "sql"
         state.plan = ["sql", "compose"]
         return state
 
-    # If question mentions uploaded file or document search, route to documents
-    if "uploaded" in q or "pdf" in q or "doc" in q or "file" in q:
+    # Tier 2: LLM Semantic Intent Classification (Dynamically routes any unseen phrasing or unique document)
+    if llm_client.is_live_ai_enabled():
+        try:
+            semantic_prompt = f"""Classify the user's financial inquiry into exactly one route: 'sql', 'documents', 'both', or 'refuse'.
+
+Definitions:
+- 'sql': Inquiries requiring mathematical calculation, transaction histories, spending totals, ledger balances, budgets, or bills.
+- 'documents': Inquiries about textual clauses, rules, policy terms, agreements, OR statement header/metadata (e.g. account numbers, account holder names, addresses, IFSC, branch, nominee).
+- 'both': Inquiries comparing live ledger amounts against document terms/limits.
+- 'refuse': Inquiries asking to buy stocks, execute DDL/DML, or out-of-scope non-financial topics.
+
+Question: "{state.question}"
+
+Return ONLY one word: sql, documents, both, or refuse."""
+            raw_classification = llm_client.complete(semantic_prompt, temperature=0.0).strip().lower()
+            for r in ["documents", "both", "refuse", "sql"]:
+                if r in raw_classification:
+                    state.route = r
+                    state.plan = ["sql", "documents", "compose"] if r == "both" else ([r, "compose"] if r != "refuse" else [])
+                    return state
+        except Exception:
+            pass
+
+    # Default to documents if asking who/what/where/which, otherwise sql
+    if any(w in q for w in ["who", "what", "where", "which", "whom", "whose"]):
         state.route = "documents"
         state.plan = ["documents", "compose"]
-        return state
-
-    # Default to SQL for general inquiries about accounts or finances
-    state.route = "sql"
-    state.plan = ["sql", "compose"]
+    else:
+        state.route = "sql"
+        state.plan = ["sql", "compose"]
     return state
 
 def execute_sql_node(state: AgentState, db: Session) -> AgentState:
