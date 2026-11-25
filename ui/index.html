@@ -823,11 +823,11 @@
           <p class="text-xs font-medium text-[var(--text-sub)]">Benchmark suites validating SQL yield, retrieval Hit Rate@K, and routing accuracy.</p>
         </div>
         <div class="flex items-center gap-2 flex-wrap">
-          <select id="eval-config-select" class="glass-pill px-3 py-2 rounded-xl text-xs font-bold text-[var(--text-main)] bg-[var(--surface)] border border-cyan-500/30 focus:outline-none focus:border-cyan-500 transition shadow-sm cursor-pointer">
-            <option value="hybrid_rerank">🟢 Production Pipeline (Full System)</option>
-            <option value="naive_rag_baseline">🔴 Naive RAG Baseline (Traditional RAG)</option>
-            <option value="vector_only">🟡 Ablation: Dense Vector Only</option>
-            <option value="keyword_only">🔵 Ablation: BM25 Lexical Only</option>
+          <select id="eval-config-select" class="px-3 py-2 rounded-xl text-xs font-semibold border border-cyan-500/30 focus:outline-none focus:border-cyan-500 transition shadow-sm cursor-pointer" style="background-color: #0b1329; color: #f1f5f9;">
+            <option value="hybrid_rerank" style="background-color: #0b1329; color: #f1f5f9;">Production: Full Hybrid Rerank</option>
+            <option value="naive_rag_baseline" style="background-color: #0b1329; color: #f1f5f9;">Baseline: Traditional Naive RAG</option>
+            <option value="vector_only" style="background-color: #0b1329; color: #f1f5f9;">Component Test: Dense Vector Only</option>
+            <option value="keyword_only" style="background-color: #0b1329; color: #f1f5f9;">Component Test: BM25 Lexical Only</option>
           </select>
           <button onclick="runLiveEvaluation()" id="btn-run-eval" class="bg-cyan-600 hover:bg-cyan-700 text-white font-bold px-4 py-2 rounded-xl text-xs flex items-center space-x-2 transition shadow">
             <i class="fa-solid fa-play"></i>
@@ -1531,11 +1531,11 @@
             const hr5 = m.retrieval ? `${m.retrieval.hit_rate_at_5}%` : '98.0%';
             const routing = m.routing ? `${m.routing.accuracy_pct}%` : '100.0%';
             
-            let statusBadge = `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">Passed CI/CD</span>`;
+            let statusBadge = `<span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">Passed CI/CD Baseline</span>`;
             if (r.config_name === 'naive_rag_baseline') {
-              statusBadge = `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/10 text-amber-500 border border-amber-500/20">Failed Baseline</span>`;
+              statusBadge = `<span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-500/10 text-amber-400 border border-amber-500/30">Failed Baseline</span>`;
             } else if (r.config_name === 'vector_only' || r.config_name === 'keyword_only') {
-              statusBadge = `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">Ablation Run</span>`;
+              statusBadge = `<span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-cyan-500/10 text-cyan-400 border border-cyan-500/30">Component Test</span>`;
             }
 
             tbody.innerHTML += `
